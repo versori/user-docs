@@ -34,7 +34,13 @@
           "pages": [
             "features/actions/overview",
             "features/actions/transformer",
-            "features/actions/databuilder"
+            "features/actions/databuilder",
+            "features/actions/filter",
+            "features/actions/datamapper",
+            "features/actions/batch",
+            "features/actions/delay",
+            "features/actions/splitter",
+            "features/actions/trigger"
           ]
         }
       ]

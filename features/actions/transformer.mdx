@@ -1,0 +1,22 @@
+---
+title: "Transformer"
+description: "The transformer action is a drag and drop action that allows you to transform the data in your workflow."
+---
+
+The transformer takes a source input and a target output, allowing you to expand objects, iterate over arrays, and use selectors from previous nodes in your boards.
+
+### Initial Configuration
+
+The initial configuration of transformer assumes the source and target are the nearest connected nodes. To initialise the transformer, click configure:
+
+<Frame caption="Initial transformer config">
+  <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-config.png" />
+</Frame>
+
+#### Override Input
+
+Additionally - you can configure the input to be from any previous node in your flow, this currently only supports selecting the $body property (the entire body of the selected node).
+
+<Frame caption="Override transformer input">
+  <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-override-input.png" />
+</Frame>
