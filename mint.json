@@ -5,7 +5,7 @@
     "dark": "https://storage.googleapis.com/versori-assets/brand/versori/versori-word-white.svg",
     "light": "https://storage.googleapis.com/versori-assets/brand/versori/versori-word-black.svg"
   },
-  "favicon": "favicon.png",
+  "favicon": "favicon.svg",
   "colors": {
     "primary": "#00ADBA",
     "light": "#00ADBA",
