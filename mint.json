@@ -25,11 +25,32 @@
     },
     {
       "group": "Features",
-      "pages": ["features/boards", "features/apps"]
+      "pages": [
+        "features/apps",
+        "features/boards",
+        "features/board-editor",
+        {
+          "group": "Actions",
+          "pages": [
+            "features/actions/overview",
+            "features/actions/transformer",
+            "features/actions/databuilder"
+          ]
+        }
+      ]
     },
     {
       "group": "How-to Guides",
-      "pages": ["how-to-guides/onboard-an-app", "how-to-guides/create-a-board"]
+      "pages": [
+        {
+          "group": "Onboarding Apps",
+          "pages": [
+            "how-to-guides/onboarding-apps/rest-api",
+            "how-to-guides/onboarding-apps/graphql-api",
+            "how-to-guides/onboarding-apps/sql-app"
+          ]
+        }
+      ]
     }
   ]
 }
