@@ -5,7 +5,7 @@
     "dark": "https://storage.googleapis.com/versori-assets/brand/versori/versori-word-white.svg",
     "light": "https://storage.googleapis.com/versori-assets/brand/versori/versori-word-black.svg"
   },
-  "favicon": "https://storage.googleapis.com/versori-assets/brand/versori/versori-icon-black.svg",
+  "favicon": "favicon.png",
   "colors": {
     "primary": "#00ADBA",
     "light": "#00ADBA",
@@ -25,11 +25,14 @@
     },
     {
       "group": "Features",
-          "pages": ["features/boards", "features/apps", {
-            "group": "Apps > Types",
-            "pages": ["features/app-types/rest-api"]
-          }]
-      }]
+      "pages": [
+        "features/boards",
+        "features/apps",
+        {
+          "group": "Apps > Types",
+          "pages": ["features/app-types/rest-api"]
+        }
+      ]
     },
     {
       "group": "How-to Guides",
