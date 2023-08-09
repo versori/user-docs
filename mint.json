@@ -25,7 +25,11 @@
     },
     {
       "group": "Features",
-      "pages": ["features/apps", "features/boards"]
+          "pages": ["features/boards", "features/apps", {
+            "group": "Apps > Types",
+            "pages": ["features/app-types/rest-api"]
+          }]
+      }]
     },
     {
       "group": "How-to Guides",
