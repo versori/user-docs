@@ -1,3 +1,56 @@
 ---
-title: Board Editor
+title: "Board Editor"
+description: "The Board Editor is your main tool for creating and editing boards. It is a visual tool that allows you to create and edit boards by dragging and dropping components onto the board."
 ---
+
+The Board Editor provides a simple drag and drop interface for building out your flows.
+
+### What is a Board?
+
+A board consists of `Nodes` and `Edges` - these define the flow of data through your workflow.
+
+### Nodes
+
+Nodes are the building blocks of your workflow. There are two types of nodes:
+
+- **Apps** - The external systems that you want to consume or send data from and to.
+- **Actions** - Tools that implement various forms of logic within your workflows. They can be used to transform data, perform conditional logic, and more.
+
+#### App Nodes
+
+When placing an App node on the board editor, you will need to select the Connection (from your previously connected app) - that you wish to use to make your requests against. Depending on the method you used to connect to the app - this may be an API Key, or your account that you logged into on the specific external system.
+
+App nodes consist of multiple Operations - these are the individual endpoints/functions that are available for each app. For example, the `Create Contact` operation for the `HubSpot` app.
+
+#### Action Nodes
+
+Action nodes are the tools you would use to perform various forms of logic within your workflow. They can be used to transform data, perform conditional logic, and more.
+
+Read more about Action Nodes [here](/features/actions/overview).
+
+### Edges
+
+Edges are the line connections between nodes. They define the flow of data through your workflow. Edges can be connected to both App and Action nodes, with some Actions having multiple connection points (Datamapper).
+
+### Dock
+
+The dock exists in the lower part of the board editor. We currently have two tabs in the dock:
+
+- **Config**
+- **Execution Logs**
+
+{/* SCREENSHOT HERE */}
+
+#### Config
+
+The Config tab displays the listener urls for any webhooks that you have present on your board. These URL's are generated once you publish. You will need these to tell your external systems where to send data events to, so that Switchboard can process them. Each URL is unique.
+
+{/* SCREENSHOT HERE */}
+
+#### Execution Logs
+
+The Execution Logs are an advanced feature for debugging issues within your flows. These display the internal logs of Switchboard as processed by each node. You can use these to debug issues within your workflow. You can also use these to see the data that is being passed between nodes.
+
+{/* EXPAND HERE */}
+
+{/* SCREENSHOT HERE */}
