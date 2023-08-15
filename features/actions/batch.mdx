@@ -1,0 +1,24 @@
+---
+title: "Batch"
+description: "The Batch action allows you to aggregate requests into a single output format."
+---
+
+The Batch action allows you to aggregate requests into a single output format/file. Optionally you can configure a delay so that the Batch action acts as a catch-net for incoming requests, and will then process them in batches as per the defined delay.
+
+### Configuration
+
+<Note>The Batch action must receive an input in CSV format.</Note>
+
+Currently, the batch action only supports input and output types of CSV format. `Header Rows` must be defined in the same shape as the target format.
+
+<Frame caption="Supported Format and Header Rows Config">
+  <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/delay/batch-config.png" />
+</Frame>
+
+#### Delay (optional)
+
+The delay can be set by Seconds, Minutes, Hours, or Days. The delay is the time between the first request and the last request in the batch. The batch action will wait for the delay to expire before processing the batch.
+
+<Frame caption="Delay Config">
+  <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/delay/batch-delay.png" />
+</Frame>
