@@ -1,0 +1,22 @@
+---
+title: "Splitter"
+description: "The Splitter Action accepts a List input and splits each item to be processed individually."
+---
+
+The Splitter must be configured with a Selector to define it's input - this Selector must me a List/Array type. The Splitter will then iterate over each item in the List and process it individually.
+
+Everything beyond the Splitter will be executed for each item in the List - so consider this in your flows. For example, if you have a Splitter with a List of 10 items, and then a Slack Action, you will send 10 Slack messages.
+
+### Configuration
+
+The config for Splitter consists of `Item Event Type` - which currently is defined to a default value for you - you can mostly leave this alone.
+
+Then we have `Item Content Type Override` - as it's name suggests, can be used to override the output content type - otherwise it will be inherited from the Selector you've chosen - for the most part this can be left blank.
+
+Finally there is the `Selector` - this is the important part, and is used to define the List/Array of items to be processed.
+
+<Warning>The property selected must be an `array` type</Warning>
+
+<Frame caption='For example - "Contacts" is an "array" type'>
+  <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/splitter/splitter-config.png" />
+</Frame>
