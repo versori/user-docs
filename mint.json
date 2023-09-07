@@ -58,6 +58,7 @@
         },
         "how-to-guides/create-a-board",
         "how-to-guides/connect-to-an-app",
+        "how-to-guides/adding-a-webhook",
         "how-to-guides/configure-datamapper"
       ]
     }
