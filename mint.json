@@ -56,7 +56,8 @@
             "how-to-guides/onboarding-apps/sql-app"
           ]
         },
-        "how-to-guides/connect-to-an-app"
+        "how-to-guides/connect-to-an-app",
+        "how-to-guides/configure-datamapper"
       ]
     }
   ]
