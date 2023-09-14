@@ -49,18 +49,22 @@
       "group": "How-to Guides",
       "pages": [
         {
-          "group": "Onboarding Apps",
+          "group": "Apps",
           "pages": [
-            "how-to-guides/onboarding-apps/rest-api",
-            "how-to-guides/onboarding-apps/graphql-api",
-            "how-to-guides/onboarding-apps/sql-app"
+            {
+              "group": "Onboarding Apps",
+              "pages": [
+                "how-to-guides/apps/onboarding-apps/rest-api",
+                "how-to-guides/apps/onboarding-apps/graphql-api",
+                "how-to-guides/apps/onboarding-apps/sql-app"
+              ]
+            }
           ]
         },
         "how-to-guides/create-a-board",
         "how-to-guides/connect-to-an-app",
         "how-to-guides/adding-a-webhook",
-        "how-to-guides/using-selectors",
-        "how-to-guides/configure-datamapper"
+        "how-to-guides/using-selectors"
       ]
     }
   ]
