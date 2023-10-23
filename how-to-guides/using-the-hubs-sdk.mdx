@@ -1,0 +1,160 @@
+---
+title: "How to use the Versori Hubs SDK"
+description: "The Hubs SDK enables integrations into your service ......"
+---
+
+## Add the SDK
+
+#### Script tag
+
+You can add the SDK in a script tag. This loads the main object Versori to the global window scope of the browser.
+
+```htmk title="index.html"
+<script src="pathToSDK" type="module" crossorigin></script>
+```
+
+## Initialise SDK
+
+The SDK main Object provides an initialise function, accepting an object of options.
+
+```js title="/src/components/integrationComponent.js"
+function IntegrationComponent(props) {
+  window.Versori.initHubs({
+    userId: [USER_ID],
+    organisationId: [ORGANISATION_ID],
+    finaliseTo: [YOUR_ENDPOINT],
+    onConnected: (connection, connectionInfo) => {},
+    onDisconnected: () => {},
+    onComplete: () => {},
+    onError: (error) => {
+      console.log(error.message, error.description);
+    },
+    onInitialised: () => {},
+  });
+}
+```
+
+### Options
+
+#### userId (type: string, required: true)
+
+The user ID for the current logged in user.
+
+#### orgId (type: string, required: true)
+
+The organisation ID for your Versori platform subscription where your Hubs are located.
+
+#### finaliseTo (type: string, optional: true)
+
+The finaliseTo option is intended to be used as a direct url the SDK can POST connection details to after a connection has been made.
+
+An example of this might be `https://clientUrl/api/receiveConnectionDetails`, where connection information will be sent directly.
+
+#### onComplete (type: Function, optional: true)
+
+The onComplete callback is called if a finaliseTo url is provided to a POST endpoint and the request was succesful. Here is where Frontend updates and any subseuqent processes can be handled.
+
+#### onConnected (type: Function, optional: true)
+
+The onConnected callback is used to return the connection details to the frontend after a connection is made to the integration. Returns App credential details and contextual information for Hub, Board and connected App.
+
+<Warning>
+  **Warning:** The SDK is intended to be used with one of either option -
+  `finaliseTo` or `onConnected`. If `finaliseTo` is provided it will take
+  precedence and the `onConnected` callback will not be called. If you require
+  control over how the information is sent to your Backend then the
+  `onConnected` callback would be the preferred option.
+</Warning>
+
+#### onDisconnected (type: Function, required: true)
+
+The onDisconnected callback can be used to trigger a request to your backend where a request to the Versori DELETE user endpoint can be made.
+
+#### onError (type: Function, required: true)
+
+The onError callback is triggered at any point in the flow when an error would prevent a connection being made. Useful to communicate to the user an error has occured.
+
+#### onInitialised (type: Function, optional: true)
+
+The onInitialised callback is called when the SDK has completed its mounted setup and the SDK is ready. Useful to handle any Front end updates dependant on the SDK being available.
+
+---
+
+## To Connect
+
+Connections are triggered from elements containing specific data-attributes.
+
+Below is an example of the data-attributes that are required per integration. What type of element you use is up to you, the important part is the data-attributes.
+
+```jsx title="frontend/src/components/integrationComponent.js"
+function IntegrationComponent(props) {
+    ...
+    return (
+        <button
+            data-vhubs
+            data-vhubid=[YOUR_HUB_ID]
+            data-vhubboardid=[YOUR_BOARD_ID]
+        >
+            Connect
+        </button>
+    );
+}
+```
+
+---
+
+## Valid Authentication types
+
+The Versori Hubs SDK supports OAuth2 (oidc), API Key, and Basic authentication (username, password).
+
+---
+
+## Finalise Users Integration
+
+Once a user has connected to Versori, it is required that you authenticate the user in your Service and after send a POST request to the Versori create user endpoint.
+
+`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
+
+```js title="backend/src/services/user/createUser.js"
+function createUser(props) {
+    const body = {
+        environments: [
+            {
+                connectionId: connection.connection.id,
+                credentialId: connection.connection.credentialId,
+                key: connection.info.appKey,
+                variables: null,
+            },
+            ...add any extra environments needed
+        ],
+        id: userId,
+        variables: null,
+    }
+    const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
+    const data = await response.json();
+
+    console.log(data);
+}
+```
+
+---
+
+## Disconnect User from Integration
+
+To disconnect a user, a POST request must be made to the Versori delete user endpoint
+
+`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
+
+```js title="backend/src/services/user/deleteUser.js"
+function deleteUser(props) {
+    const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
+        method: 'DELETE'
+    })
+    const data = await response.json();
+
+    console.log(data);
+}
+```

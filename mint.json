@@ -29,6 +29,7 @@
         "features/apps",
         "features/boards",
         "features/board-editor",
+        "features/hubs-sdk",
         {
           "group": "Actions",
           "pages": [
@@ -64,7 +65,8 @@
         "how-to-guides/create-a-board",
         "how-to-guides/connect-to-an-app",
         "how-to-guides/adding-a-webhook",
-        "how-to-guides/using-selectors"
+        "how-to-guides/using-selectors",
+        "how-to-guides/using-the-hubs-sdk"
       ]
     }
   ]
