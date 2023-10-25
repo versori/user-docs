@@ -8,13 +8,23 @@ description: "The Hubs SDK is a tool that allows the users of your Product to in
 An integration is essentially an App that has been configured in a board inside a Hub for your organisation. An example of this might be; When an event in your Product occurs, an update is pushed to an external service for the user to utilise.
 Using dynamic connections inside the board, the Versori Hubs SDK allows users of your Product to connect to this integration, providing their authentication details. This is a powerful tool, expanding your Product and increasing user satisfaction.
 
-## Process flow
+## Process flows
 
-At a high level the process flow to connect a user looks like:
+At a high level, the flow to connect a user or disconect a user are:
 
-- The User clicks connect on an integration and authenticates
-- On succesful connection, your backend will handle saving connection and credential details
+### Connect and create
+
+- User clicks connect on an integration and authenticates
+- On succesful authentication and connection, your backend will handle saving connection and credential details
 - Your backend will then POST the connection info to the Versori createUser endpoint to save the user
+- Handle UI updates
+
+### Disconnect and delete
+
+- User clicks disconnect on an integration
+- Disconnected callback triggered to front end, your backend will carry out any essential clean up
+- Your backend will then DELETE to the Versori deleteUser endpoint to delete the user
+- Handle UI updates
 
 ## How To
 
