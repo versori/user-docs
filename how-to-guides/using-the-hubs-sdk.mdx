@@ -196,6 +196,12 @@ in your system before then sending a POST request to the Versori create user end
 `https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
 <Warning>
+  **WARNING:** From a system architecture decision, we do not support email as a
+  unique userId. Characters pertaining to the regex \A[-/_=\.a-zA-Z0-9]+\z are
+  valid.
+</Warning>
+
+<Warning>
   **Note:** Providing a `finaliseTo` endpoint will send connection details
   directly to your Backend and the `onConnection` callback will not be
   triggered.
@@ -203,6 +209,7 @@ in your system before then sending a POST request to the Versori create user end
 
 ```js title="backend/src/services/user/createUser.js"
 app.post('/backendCreateUserEndpoint', (req, res) => {
+    const { orgId, hubId, boardId } = req.body
     let body = req.body
 
     // Optional: Extend body with any extra environments and dynamic variables.
@@ -244,8 +251,15 @@ To disconnect a user, the onDisconnected callback can be used to send a POST req
 
 `https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
+<Warning>
+  **WARNING:** From a system architecture decision, we do not support email as a
+  unique userId. Characters pertaining to the regex \A[-/_=\.a-zA-Z0-9]+\z are
+  valid.
+</Warning>
+
 ```js title="backend/src/services/user/deleteUser.js"
-app.post('/backendDeleteUserEndpoint', () => {
+app.post('/backendDeleteUserEndpoint', (req, res) => {
+    const { orgId, hubId, boardId } = req.body
     const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
         method: 'DELETE',
         headers: {
