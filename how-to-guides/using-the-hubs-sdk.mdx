@@ -1,6 +1,6 @@
 ---
 title: "How to use the Versori Hubs SDK"
-description: "The Hubs SDK enables integrations into your service ......"
+description: "The Hubs SDK enables users to authenticate and onboard into external integrations that are connected to your product"
 ---
 
 ## Add the SDK
@@ -9,7 +9,7 @@ description: "The Hubs SDK enables integrations into your service ......"
 
 You can add the SDK in a script tag. This loads the main object Versori to the global window scope of the browser.
 
-```htmk title="index.html"
+```html title="index.html"
 <script src="pathToSDK" type="module" crossorigin></script>
 ```
 
@@ -22,7 +22,7 @@ function IntegrationComponent(props) {
   window.Versori.initHubs({
     userId: [USER_ID],
     orgId: [ORGANISATION_ID],
-    apiKey: [PUBLIC_KEY],
+    apiKey: [YOUR_READ_API_KEY],
     finaliseTo: [YOUR_ENDPOINT],
     onConnected: (connection, connectionInfo) => {},
     onDisconnected: (connectionInfo) => {},
@@ -110,7 +110,7 @@ function IntegrationComponent(props) {
 
 ## UI handling
 
-You will be responsible to update the UI after a user has been created or deleted. It is required a [data-connected] attribute be set/unset on the element. Internally, on initalisation, the SDK sets a [data-connected] attribute, for each already connected integration, on the element you have provided the required data-attributes on.
+You will be responsible to update the UI after a user has been created or deleted. It is required a [data-connected] attribute be set/unset on the element. Internally, on initalisation, the SDK sets a [data-connected] attribute, for each already connected integration, on the element you have provided the required hub and board data-attributes on.
 
 <Warning>
   **Warning:** It is imperative the [data-connected] is toggled on
@@ -177,9 +177,9 @@ The Versori Hubs SDK supports OAuth2 (oidc), API Key, and Basic authentication (
 
 ---
 
-## Finalise Users Integration
+## Create User for Integration
 
-Once a user has connected to Versori, the onConnected callback will provide connection information that you can use when sending a request to your Backend before then sending a POST request to the Versori create user endpoint.
+Once a user has authenticated to the Integration, the onConnected callback will provide connection information that you can use when sending a request to your Backend to authenticate the user in your system before then sending a POST request to the Versori create user endpoint.
 
 `https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
@@ -190,7 +190,7 @@ Once a user has connected to Versori, the onConnected callback will provide conn
 </Warning>
 
 ```js title="backend/src/services/user/createUser.js"
-function createUser(props) {
+app.post('/backendCreateUserEndpoint', () => {
     const body = {
         environments: [
             {
@@ -201,18 +201,37 @@ function createUser(props) {
             },
             ...add any extra environments needed
         ],
-        id: userId,
+        id: [USER_ID],
         variables: null,
     }
     const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
         method: 'POST',
+        headers: {
+            Authorization: `Bearer [YOUR_WRITE_API_KEY]`,
+        },
         body: JSON.stringify(body)
     })
     const data = await response.json();
 
     console.log(data);
-}
+})
+
 ```
+
+<Note>
+  As the user, you are required to set any variables in the create user request body.
+  Variables is an object of key value pairs.
+
+    ```
+        variables: {
+            key: value
+        }
+    ```
+
+**Please note:** variables must match what has been set for the dynamic variables in the associated Hub Board in the Versori
+UI.
+
+</Note>
 
 ---
 
@@ -223,14 +242,18 @@ To disconnect a user, the onDisconnected callback can be used to send a POST req
 `https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
 ```js title="backend/src/services/user/deleteUser.js"
-function deleteUser(props) {
+app.post('/backendDeleteUserEndpoint', () => {
     const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer [YOUR_WRITE_API_KEY]`,
+        },
     })
     const data = await response.json();
 
     console.log(data);
-}
+})
+
 ```
 
 ## Destroy
