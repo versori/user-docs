@@ -190,7 +190,8 @@ The Versori Hubs SDK supports OAuth2 (oidc), API Key, and Basic authentication (
 
 ## Create User for Integration
 
-Once a user has authenticated to the Integration, the onConnected callback will provide connection information that you can use when sending a request to your Backend to authenticate the user in your system before then sending a POST request to the Versori create user endpoint.
+Once a user has authenticated to the Integration, the onConnected callback will provide connection information that you can use when sending a request to your Backend to authenticate the user
+in your system before then sending a POST request to the Versori create user endpoint.
 
 `https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
@@ -201,20 +202,11 @@ Once a user has authenticated to the Integration, the onConnected callback will 
 </Warning>
 
 ```js title="backend/src/services/user/createUser.js"
-app.post('/backendCreateUserEndpoint', () => {
-    const body = {
-        environments: [
-            {
-                connectionId: connection.connection.id,
-                credentialId: connection.connection.credentialId,
-                key: connection.info.appKey,
-                variables: null,
-            },
-            ...add any extra environments needed
-        ],
-        id: [USER_ID],
-        variables: null,
-    }
+app.post('/backendCreateUserEndpoint', (req, res) => {
+    let body = req.body
+
+    // Optional: Extend body with any extra environments and dynamic variables.
+
     const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
         method: 'POST',
         headers: {
