@@ -7,10 +7,21 @@ description: "The Hubs SDK enables users to authenticate and onboard into extern
 
 #### Script tag
 
-You can add the SDK in a script tag. This loads the main object Versori to the global window scope of the browser.
+Add the SDK and CSS. This loads the main object Versori to the global window scope of the browser.
 
 ```html title="index.html"
-<script src="pathToSDK" type="module" crossorigin></script>
+<head>
+  ...
+  <script
+    src="https://storage.googleapis.com/versori-staging-assets/hubs-sdk/index.mjs"
+    type="module"
+    crossorigin
+  ></script>
+  <link
+    rel="stylesheet"
+    href="https://storage.googleapis.com/versori-staging-assets/hubs-sdk/style.css"
+  />
+</head>
 ```
 
 ## Initialise SDK
