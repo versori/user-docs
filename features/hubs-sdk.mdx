@@ -15,7 +15,7 @@ At a high level, the flow to connect a user or disconect a user are:
 ### Connect and create
 
 - User clicks connect on an integration and authenticates
-- On succesful authentication and connection, your backend will handle saving connection and credential details
+- On succesful authentication and connection, your backend will authenticate the user, and optionally save the connection and credential details
 - Your backend will then POST the connection info to the Versori createUser endpoint to save the user
 - Handle UI updates
 
