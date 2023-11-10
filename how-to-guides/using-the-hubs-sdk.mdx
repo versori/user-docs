@@ -228,6 +228,27 @@ app.post('/backendCreateUserEndpoint', (req, res) => {
 
 ```
 
+Create User request body structure
+
+```js
+    {
+        environments: [
+            {
+                connectionId: [CONNECTION_ID],
+                credentialId: [CREDENTIAL_ID],
+                key: [APP_KEY],
+                variables: {
+                    [KEY]: [VALUE]
+                },
+            },
+        ],
+        id: userId,
+        variables: {
+            [KEY]: [VALUE]
+        },
+    }
+```
+
 <Note>
   As the user, you are required to set any variables in the create user request body.
   Variables is an object of key value pairs.
