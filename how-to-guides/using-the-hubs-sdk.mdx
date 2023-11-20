@@ -13,13 +13,13 @@ Add the SDK and CSS. This loads the main object Versori to the global window sco
 <head>
   ...
   <script
-    src="https://storage.googleapis.com/versori-staging-assets/hubs-sdk/index.mjs"
+    src="https://assets.versori.io/a/hubs/sdk/1.0.0/index.mjs"
     type="module"
     crossorigin
   ></script>
   <link
     rel="stylesheet"
-    href="https://storage.googleapis.com/versori-staging-assets/hubs-sdk/style.css"
+    href="https://assets.versori.io/a/hubs/sdk/1.0.0/style.css"
   />
 </head>
 ```
@@ -193,7 +193,7 @@ The Versori Hubs SDK supports OAuth2 (oidc), API Key, and Basic authentication (
 Once a user has authenticated to the Integration, the onConnected callback will provide connection information that you can use when sending a request to your Backend to authenticate the user
 in your system before then sending a PUT request to the Versori create user endpoint.
 
-`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
+`https://platform.versori.com/apis/hubs-sdk/v1/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
 <Warning>
   **WARNING:** From a system architecture decision, we do not support email as a
@@ -214,7 +214,7 @@ app.post('/backendCreateUserEndpoint', (req, res) => {
 
     // Optional: Extend body with any extra environments and dynamic variables.
 
-    const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
+    const reponse = fetch(`https://platform.versori.com/apis/hubs-sdk/v1/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
         method: 'PUT',
         headers: {
             Authorization: `Bearer [YOUR_WRITE_API_KEY]`,
@@ -270,7 +270,7 @@ UI.
 
 To disconnect a user, the onDisconnected callback can be used to send a POST request to your Backend before sending a DELETE request to the Versori delete user endpoint
 
-`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
+`https://platform.versori.com/apis/hubs-sdk/v1/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`
 
 <Warning>
   **WARNING:** From a system architecture decision, we do not support email as a
@@ -281,7 +281,7 @@ To disconnect a user, the onDisconnected callback can be used to send a POST req
 ```js title="backend/src/services/user/deleteUser.js"
 app.post('/backendDeleteUserEndpoint', (req, res) => {
     const { orgId, hubId, boardId } = req.body
-    const reponse = fetch(`https://platform.versori.com/apis/switchboard/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
+    const reponse = fetch(`https://platform.versori.com/apis/hubs-sdk/v1/organisations/{orgId}/hubs/{hubId}/boards/{boardId}/users/{userId}`, {
         method: 'DELETE',
         headers: {
             Authorization: `Bearer [YOUR_WRITE_API_KEY]`,
