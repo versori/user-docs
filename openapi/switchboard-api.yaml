@@ -1,0 +1,5562 @@
+openapi: 3.0.3
+info:
+  title: Switchboard API
+  description: The Switchboard API provides users the ability to manage their Apps, Integrations and Workflows
+  version: 0.0.1-alpha.0
+servers:
+  - url: "https://api.switchboard.svc.versori.io/v1alpha1/"
+    description: Production server
+  - url: "http://localhost:8080/v1alpha1/"
+    description: Localhost
+paths:
+  /transformer/preview:
+    post:
+      operationId: PreviewTransformer
+      summary: Preview the output of a transformer.
+      description: |
+        Preview the output of a transformer. This endpoint is useful for testing a transformer before creating an integration.
+      requestBody:
+        $ref: "#/components/requestBodies/TransformerPreviewRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/TransformerPreviewResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards:
+    get:
+      operationId: GetBoards
+      description: |
+        Retrieves the boards belonging to a given organisation.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateBoard
+      description: |
+        Create a new Board for the provided organisation. No request body required as all parameters
+        provided by server.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateBoardRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/myFirstBoard:
+    post:
+      operationId: CreateMyFirstBoard
+      description: |
+        Create a Demo Board for the provided organisation. No request body required as all parameters
+        provided by server.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}:
+    get:
+      operationId: GetBoard
+      description: |
+        Retrieves an existing board by ID for the given organisation.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateBoard
+      description: |
+        Update an existing board, by ID for the given organisation.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateBoardRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteBoard
+      description: |
+        Delete an Board by ID in the current organisation.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs:
+    get:
+      operationId: GetHubs
+      description: |
+        Retrieves the hubs belonging to a given organisation.
+      tags:
+        - hubs
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetHubsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateHub
+      description: |
+        Create a new Hub for the provided organisation. No request body required as all parameters
+        provided by server.
+      tags:
+        - hubs
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateHubRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetHubResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs/{hubId}:
+    get:
+      operationId: GetHub
+      description: |
+        Retrieves an existing hub by ID for the given organisation.
+      tags:
+        - hubs
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetHubResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateHub
+      description: |
+        Update an existing hub, by ID for the given organisation.
+      tags:
+        - hubs
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateHubRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetHubResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteHub
+      description: |
+        Delete a Hub by ID in the current organisation.
+      tags:
+        - hubs
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteHubResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs/{hubId}/boards:
+    get:
+      operationId: ListHubBoards
+      description: |
+        Retrieves the boards belonging to a given hub and organisation.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: deployed
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateHubBoard
+      description: |
+        Creates a board associated with the given Hub ID.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CreateHubBoardRequest"
+      responses:
+        201:
+          $ref: "#/components/responses/GetBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs/{hubId}/boards/{boardId}/integration-info:
+    get:
+      operationId: IntegrationInfo # not sure on this operation name
+      description: |
+        Retrieves all the information needed that a user needs to fill out to use a Hub integration.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/ConnectIntegrationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs/{hubId}/users/{userId}:
+    get:
+      operationId: GetUserHubBoards
+      description: |
+        Retrieves a pagniated list of boards belonging to a given user and hub.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs/{hubId}/boards/{boardId}/users:
+    get:
+      operationId: ListHubBoardUsers
+      description: |
+        Retrieves all users of a hub board.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/ListHubBoardUsersResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/hubs/{hubId}/boards/{boardId}/users/{userid}:
+    post:
+      operationId: CreateBoardUser
+      description: |
+        Internal endpoint meant to link a dynamic user to a board.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          $ref: "#/components/responses/BoardUsersResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteBoardUser
+      description: |
+        Internal endpoint meant to unlink a dynamic user to a board.
+        This would indicate a user has removed an integration from the hub.
+      tags:
+        - hubs
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: hubId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          $ref: "#/components/responses/BoardUsersResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/actors/{actorId}/code/preview:
+    post:
+      operationId: PreviewCodeAction
+      summary: Preview the output of a Code Action.
+      tags:
+        - boards
+        - code
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: actorId
+          in: path
+          required: true
+          schema:
+            type: string
+      description: |
+        Preview the output of a Code Action. This endpoint is useful for testing a Code Action.
+      requestBody:
+        $ref: "#/components/requestBodies/CodePreviewRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/CodePreviewResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/actors/{actionId}/test:
+    post:
+      operationId: BoardTest
+      description: |
+        BoardTest finds the webhook url from within the cluster for a board and sends a POST request to it
+        with the data in the payload.
+      tags:
+        - boards
+        - test
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: actionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/BoardTestRequest"
+      responses:
+        202:
+          $ref: "#/components/responses/BoardTestResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/publish:
+    post:
+      operationId: PublishBoard
+      description: |
+        Publish a board at the revision specified by the provided event ID. This is an asynchronous action, callers 
+        should await for a `BoardPublishedEvent` over the websocket API (recommended) or poll GetBoard until 
+        `publishedEventId` matches the event ID which has been provided to publish. 
+
+        If the request has caused a board to schedule then this request will always return 202.
+
+        If this request succeeds but then an error occurs in scheduling, a `BoardPublishFailedEvent` will be produced 
+        over the websocket API; this functionality is not currently available over the REST API.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/PublishBoardRequest"
+      responses:
+        202:
+          $ref: "#/components/responses/PublishBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/unpublish:
+    post:
+      operationId: UnpublishBoard
+      description: |
+        UnpublishBoard stops the board execution. This is an asynchronous request and will respond with a "202 Accepted"
+        to acknowledge that the board has been scheduled for termination. A `BoardUnpublishedEvent` will be emitted once
+        the board has actually been terminated which can be listened for over the websocket API.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UnpublishBoardRequest"
+      responses:
+        202:
+          $ref: "#/components/responses/UnpublishBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/out-of-date-board-nodes:
+    get:
+      operationId: ListOutOfDateNodesForBoard
+      description: |
+        ListOutOfDateNodesForBoard will list for a single board the nodes which are using an operation for a schema which is not
+        the one currently assigned to the corresponding app.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/ListOutOfDateBoardNodesResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/variables:
+    get:
+      description: |
+        Get the JSON schema for the variables of a board.
+      operationId: GetBoardVariablesSchema
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetVariablesSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      description: |
+        Update or create the JSON schema for the variables of a board.
+      operationId: CreateOrUpdateBoardVariablesSchema
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CreateOrUpdateBoardVariablesSchemaRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardVariablesSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/variables/global:
+    put:
+      description: |
+        Updates or creates the global variable schema for a board.
+      operationId: UpdateBoardGlobalVariablesSchema
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateVariableSchemaRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardVariablesSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/variables/dynamic:
+    put:
+      description: |
+        Updates or creates the dynamic variable schema for a board.
+      operationId: UpdateBoardDynamicVariablesSchema
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateVariableSchemaRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetBoardVariablesSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/out-of-date-board-nodes:
+    get:
+      operationId: ListOutOfDateBoardNodes
+      description: |
+        ListOutOfDateBoardNodes will list all of the board nodes which are using an operation for a schema which is not
+        the one currently assigned to the corresponding app.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/ListOutOfDateBoardNodesResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/actors/{actorId}/code/logs:
+    get:
+      operationId: CodePreviewExecutionLogs
+      description: |
+        CodePreviewExecutionLogs will list for a single code action the execution logs stored in the Google Cloud logging.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: actorId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: dateTo
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        200:
+          $ref: "#/components/responses/ListExecutionLogsForCodeActionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/boards/{boardId}/execution-logs:
+    get:
+      operationId: ListExecutionLogsForBoard
+      description: |
+        ListExecutionLogsForBoard will list for a single published board the execution logs stored in the Google Cloud logging.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: dateTo
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: actor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/ListExecutionLogsForBoardResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/board-instances/{boardId}/incoming-webhooks/{nodeId}:
+    post:
+      operationId: IncomingBoardWebhook
+      description: |
+        Trigger a board webhook execution.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The request body of the webhook.
+              oneOf:
+                - type: object
+                  additionalProperties: true
+      responses:
+        202:
+          description: OK
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/board-instances/{boardId}/trigger-execution:
+    post:
+      operationId: TriggerBoardExecution
+      description: |
+        Trigger a board to execute specific start-nodes.
+      tags:
+        - boards
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/TriggerBoardExecutionRequest"
+      responses:
+        202:
+          $ref: "#/components/responses/TriggerBoardExecutionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/data-mappings:
+    get:
+      operationId: GetDataMappings
+      description: |
+        Retrieves the data mappings belonging to a given organisation.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateDataMapping
+      description: |
+        Create a new DataMapping for the provided organisation.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateDataMappingRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/data-mappings/{mappingId}:
+    get:
+      operationId: GetDataMapping
+      description: |
+        Retrieves an existing data mapping by ID for the given organisation.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateDataMapping
+      description: |
+        Update an existing data mapping, by ID for the given organisation.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateDataMappingRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteDataMapping
+      description: |
+        Delete a DataMapping by ID in the current organisation.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteDataMappingResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/data-mappings/{mappingId}/entries:
+    get:
+      operationId: GetDataMappingEntries
+      description: |
+        Retrieves the data mapping entries belonging to a given organisation and mapping.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingEntriesResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateDataMappingEntry
+      description: |
+        Create a new DataMappingEntry for the provided organisation and mapping.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CreateDataMappingEntryRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingEntryResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/data-mappings/{mappingId}/entries/{entryId}:
+    get:
+      operationId: GetDataMappingEntry
+      description: |
+        Retrieves an existing data mapping entry by ID for the given organisation and mapping.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingEntryResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateDataMappingEntry
+      description: |
+        Update an existing data mapping entry by ID for the given organisation and mapping.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateDataMappingEntryRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetDataMappingEntryResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteDataMappingEntry
+      description: |
+        Delete a DataMappingEntry by ID in the current organisation and mapping.
+      tags:
+        - data-mappings
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: mappingId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteDataMappingEntryResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /apps:
+    get:
+      operationId: GetPublicApps
+      description: |
+        Retrieves public Apps not owned by this organisation Apps, as a paginated response.
+      tags:
+        - apps
+      parameters:
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,rating:desc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetPublicAppsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /apps/{appId}:
+    get:
+      operationId: GetPublicApp
+      description: |
+        Retrieves an existing public App by ID. If the app is not public an error will be returned.
+      tags:
+        - apps
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetPublicAppResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/apps:
+    get:
+      operationId: GetApps
+      description: |
+        Retrieves all Apps owned by this organisation as a paginated response.
+      tags:
+        - apps
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,rating:desc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetAppsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateApp
+      description: |
+        Create a new App for the provided organisation
+      tags:
+        - apps
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateAppRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetAppResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/apps/{appId}:
+    get:
+      operationId: GetApp
+      description: |
+        Retrieves an existing App for by ID in the current organisation.
+      tags:
+        - apps
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetAppResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateApp
+      description: |
+        Update an existing App for by ID in the current organisation.
+      tags:
+        - apps
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateAppRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/GetAppResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteApp
+      description: |
+        Delete an App by ID in the current organisation.
+      tags:
+        - apps
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteAppResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/apps/{appId}/operation-builder:
+    post:
+      operationId: BuildSchemaOperationForApp
+      description: >-
+        BuildSchemaOperationForApp validates and uses the schema builder to fill in any possible fields on a proposed new schema operation for an app.
+      tags:
+        - apps
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: AppId is the app identifier
+      requestBody:
+        $ref: "#/components/requestBodies/BuildSchemaOperationRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/BuildSchemaOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/apps/{appId}/operations:
+    get:
+      operationId: GetAppOperations
+      description: |
+        Retrieve the set of all operations available for the App specified by appId.
+      tags:
+        - operations
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetAppOperationsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateAppOperation
+      description: |
+        Create a new operation for the App in the provided organisation
+      tags:
+        - operations
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CreateAppOperationRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/CreateAppOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/apps/{appId}/operations/{operationId}:
+    delete:
+      operationId: DeleteAppOperation
+      description: |
+        Delete the schema operation belonging to an app.
+      tags:
+        - operations
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteAppOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/apps/{appId}/operations/{operationId}/schema:
+    get:
+      operationId: GetAppOperationSchema
+      description: |
+        Retrieve the input and output schema for a given operation belonging to an app.
+      tags:
+        - operations
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetAppOperationSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas:
+    get:
+      operationId: GetSchemas
+      description: |
+        Retrieves all Schemas owned by this organisation as a paginated response.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,rating:desc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetSchemasResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateSchema
+      description: >-
+        Create a new schema, which can be used to create an App and in the future be used to reconfigure an existing 
+        App.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateSchemaRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/CreateSchemaSyncResponse"
+        201:
+          $ref: "#/components/responses/CreateSchemaAsyncResponse"
+  /organisations/{organisationId}/schemas/{id}/info:
+    get:
+      operationId: GetSchemaInfo
+      description: >-
+        GetSchemaInfo returns information about a schema. This replaces the deprecated operation `SchemaInfo`.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID is the schema identifier
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{schemaId}}"
+      responses:
+        200:
+          $ref: "#/components/responses/GetSchemaInfoResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}:
+    delete:
+      operationId: DeleteSchema
+      description: >-
+        DeleteSchema deletes an unpublished schema.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID is the schema identifier
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{schemaId}}"
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/clone:
+    post:
+      operationId: CloneSchema
+      description: >-
+        CloneSchema clones an existing schema.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID is the schema identifier
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{schemaId}}"
+      responses:
+        200:
+          $ref: "#/components/responses/CloneSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/publish:
+    post:
+      operationId: PublishSchema
+      description: >-
+        PublishSchema publishes an existing schema.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID is the schema identifier
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{schemaId}}"
+      responses:
+        200:
+          $ref: "#/components/responses/PublishSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/operations:
+    get:
+      operationId: GetSchemaOperations
+      description: |
+        Retrieve the set of all operations available for the Schema specified by id.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetSchemaOperationsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateSchemaOperation
+      description: |
+        Create a new operation for the Schema in the provided organisation
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CreateSchemaOperationRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/CreateSchemaOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/operations/{operationId}:
+    delete:
+      operationId: DeleteSchemaOperation
+      description: |
+        Delete the schema operation belonging to an schema.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteSchemaOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateSchemaOperation
+      description: |
+        Updates or creates a schema operation.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateSchemaOperationRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/UpdateSchemaOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    get:
+      operationId: GetOperationSchema
+      description: |
+        Retrieve the input and output schema for a given operation belonging to an schema.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: operationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetOperationSchemaResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/components:
+    get:
+      operationId: GetSchemaComponents
+      description: |
+        Retrieve the set of all schema components available for the Schema specified by id.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetSchemaComponentsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    post:
+      operationId: CreateSchemaComponents
+      description: >-
+        Create a batch of schema components.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CreateSchemaComponentsRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/CreateSchemaComponentsResponse"
+  /organisations/{organisationId}/schemas/{id}/components/{ref}:
+    get:
+      operationId: GetSchemaComponent
+      description: |
+        Retrieves definition of an existing schema component by ref for the current schema.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ref
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetSchemaComponentResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateSchemaComponent
+      description: |
+        Update a schema component.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ref
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateSchemaComponentRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/UpdateSchemaComponentResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteSchemaComponent
+      description: |
+        Deletes a schema component, along with any other components referencing it.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ref
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteSchemaComponentResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/delete-components:
+    post:
+      operationId: DeleteSchemaComponents
+      description: >-
+        DeleteSchemaComponents deletes a list of schema components, along with any others depending on them.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID is the schema identifier
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{schemaId}}"
+      requestBody:
+        $ref: "#/components/requestBodies/DeleteSchemaComponentsRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteSchemaComponentsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/operation-builder:
+    post:
+      operationId: BuildSchemaOperation
+      description: >-
+        BuildSchemaOperation validates and uses the schema builder to fill in any possible fields on a proposed new schema operation.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: OrganisationID is the ID of the organisation that the schema belongs to.
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{organisationId}}"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID is the schema identifier
+          examples:
+            postman:
+              summary: Use as a variable in a Postman request
+              value: "{{schemaId}}"
+      requestBody:
+        $ref: "#/components/requestBodies/BuildSchemaOperationRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/BuildSchemaOperationResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schemas/{id}/import:
+    put:
+      operationId: ImportSchemaOperations
+      deprecated: true
+      description: |
+        ImportSchemaOperations adds the operations for a schema the database for faster retrieval.
+
+        Deprecated: This endpoint is no longer supported as schemas are automatically imported using the 
+        `CreateSchema` (POST /organisations/{organisationId}/schemas) operation. This endpoint will be replaced with a
+        reimport endpoint in the future, in the meantime this may be used when the `force` parameter is set to true.
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: force
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        200:
+          $ref: "#/components/responses/SchemaInfoResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schema-utils/{schemaType}/import:
+    post:
+      deprecated: true
+      operationId: CreateSchemaOperations
+      description: |
+        Create a schema record and import the operations to store locally as DB records.
+
+        Deprecated in favour of CreateSchema (POST /organisations/{organisationId}/schemas)
+      tags:
+        - schemas
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - $ref: "#/components/parameters/SchemaType"
+      requestBody:
+        $ref: "#/components/requestBodies/ImportSchemaFromURLRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/SchemaInfoResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schema-utils/{schemaType}/signed-url:
+    get:
+      operationId: GetSchemaSignedURL
+      description: |
+        Retrieve a signed URL for uploading a schema specification
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - $ref: "#/components/parameters/SchemaType"
+      responses:
+        200:
+          $ref: "#/components/responses/SchemaSignedURLResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schema-utils/{schemaType}/source-url:
+    post:
+      operationId: UploadSchemaFromURL
+      description: |
+        Upload a schema document based on a source URL. The server will download this URL and upload to object
+        storage automatically.
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - $ref: "#/components/parameters/SchemaType"
+      requestBody:
+        $ref: "#/components/requestBodies/UploadSchemaFromURLRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/UploadSchemaFromURLResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/schema-utils/{schemaType}/info:
+    post:
+      operationId: SchemaInfo
+      deprecated: true
+      description: |
+        SchemaInfo processes the schema referenced by the provided URL and returns information to allow a user to create
+        an App.
+
+        Deprecated: This endpoint is no longer supported, users should create a Schema using the `CreateSchema`
+        (POST /organisations/{organisationId}/schemas) operation, and use the `GetSchemaInfo` operation to retrieve
+        this information.
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - $ref: "#/components/parameters/SchemaType"
+      requestBody:
+        $ref: "#/components/requestBodies/SchemaInfoRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/SchemaInfoResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/connected-apps:
+    get:
+      operationId: GetConnectedApps
+      description: |
+        Retrieves a page of Apps which have connections for an organisation.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: "#/components/parameters/SortParam"
+      responses:
+        200:
+          $ref: "#/components/responses/GetConnectedAppsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/connections:
+    post:
+      operationId: CreateConnection
+      description: |
+        Creates a connection between an organisation and an App. This is to be used by authentication methods which the 
+        user can explicitly configure, such as API Key and Basic Auth. For OAuth2/OIDC connections, users should call
+        the InitialiseConnection endpoint instead.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateConnectionRequest"
+      responses:
+        201:
+          $ref: "#/components/responses/CreateConnectionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    get:
+      operationId: GetConnections
+      description: |
+        Retrieves connections for an organisation, potentially filtering by appId. The response is structured as a page
+        but currently the response returns all items. Consumers wishing to be backwards compatible should not assume
+        this API will always return all items.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: appId
+          description: Optionally filter connections by an App ID
+          in: query
+          required: false
+          schema:
+            type: string
+          example: "01FQ2PJ5QVA5H2A8J4V9ZA8NJS"
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - $ref: "#/components/parameters/SortParam"
+      responses:
+        200:
+          $ref: "#/components/responses/GetConnectionsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/connections/{connectionId}:
+    get:
+      operationId: GetConnection
+      description: |
+        Retrieves an existing Connection by ID in the current organisation.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: connectionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetConnectionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateConnection
+      description: |
+        Updates an existing Connection by ID in the current organisation.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: connectionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateConnectionRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/UpdateConnectionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteConnection
+      description: |
+        Deletes a connection, and unpublishes all boards referencing it.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: connectionId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "01FQ2PJ5QVA5H2A8J4V9ZA8NJS"
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteConnectionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/connection-init:
+    post:
+      operationId: InitialiseConnection
+      description: |
+        InitialiseConnection is used to initiate a connection of an App to a user's organisation. Different connections
+        require different auth methods (or even no auth method at all), this endpoint returns the necessary
+        configuration required to establish that connection.
+      tags:
+        - connections
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/InitConnectionRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/InitConnectionResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/credentials:
+    post:
+      operationId: CreateCredential
+      description: |
+        CreateCredential allows users to create new Credentials. Valid requests which return a credential marked as
+        "invalid" is normal behaviour, but the credential won't be usable until it's updated to become valid.
+      tags:
+        - credentials
+        - not-implemented
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      requestBody:
+        $ref: "#/components/requestBodies/CreateCredentialRequest"
+      responses:
+        201:
+          $ref: "#/components/responses/CreateCredentialResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    get:
+      operationId: GetCredentials
+      description: |
+        Retrieves all Credentials owned by this organisation as a paginated response.
+      tags:
+        - credentials
+        - not-implemented
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: first
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: before
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: after
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          examples:
+            single column ascending:
+              summary: Single column search in ascending order
+              value: id:asc
+            single column descending:
+              summary: Single column search in descending order
+              value: name:desc
+            multiple columns:
+              summary: Multiple column search
+              value: name:asc,rating:desc,id:desc
+          schema:
+            type: string
+            pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+      responses:
+        200:
+          $ref: "#/components/responses/GetCredentialsResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/credentials/{credentialId}:
+    get:
+      operationId: GetCredential
+      description: |
+        Retrieves an existing Credential by ID in the current organisation.
+      tags:
+        - credentials
+        - not-implemented
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/GetCredentialResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    put:
+      operationId: UpdateCredential
+      description: |
+        Updates an existing Credential by ID in the current organisation.
+      tags:
+        - credentials
+        - not-implemented
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateCredentialRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/UpdateCredentialResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      operationId: DeleteCredential
+      description: |
+        Deletes an existing Credential by ID in the current organisation.
+      tags:
+        - credentials
+        - not-implemented
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+        - name: credentialId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: "#/components/responses/DeleteCredentialResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /organisations/{organisationId}/signed-url:
+    get:
+      operationId: GetSignedURL
+      description: |
+        Retrieve a signed URL for uploading assets
+      parameters:
+        - name: organisationId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "101"
+      responses:
+        200:
+          $ref: "#/components/responses/SignedURLResponse"
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+  /connections/oauth2/callback:
+    get:
+      # We have two options for implementing this URL:
+      # 1. The UI forwards the request to the API
+      # 2. We have some istio routes which send the UI request to the API which in turn redirects to the UI.
+      operationId: FinaliseConnectionCallback
+      description: |
+        FinaliseConnectionCallback is the redirect URL to exchange an authorization code for an access token in an
+        OAuth2.0 authorization code grant. It must be noted that the real callback URL configured with the
+        OAuth2.0 provider should be a Switchboard URL (prompted to the user at app-creation time) and not this API URL.
+      tags:
+        - apps
+        - oauth_callback
+      parameters:
+        - name: code
+          description: The authorization code to exchange for an access token.
+          in: query
+          schema:
+            type: string
+        - name: state
+          description: |
+            This value is generated by the `/organisations/{organisationId}/connection-init` operation and is an opaque
+            string and should have no meaning to external clients. Internally, it's used to verify the flow was
+            initialised by Switchboard and connect the authorisation grant to the user/organisation who initiated it.
+          in: query
+          schema:
+            type: string
+        - name: error
+          description: |
+            An error code by the OAuth2.0 provider indicating a problem occurred during the grant.
+          in: query
+          schema:
+            type: string
+        - name: error_description
+          description: |
+            A human-readable error message associated to the error code specified in the `error` parameter.
+          in: query
+          schema:
+            type: string
+      responses:
+        201:
+          $ref: "#/components/responses/CreateCredentialResponse"
+        204:
+          description: |
+            The callback has been handled successfully, there is no response to this request. In a browser context, the 
+            user should be redirected back to a suitable location.
+        default:
+          $ref: "#/components/responses/ErrorResponse"
+components:
+  schemas:
+    TransformerPreviewInput:
+      type: object
+      properties:
+        input:
+          type: string
+          description: The input data to the transformer.
+        transform:
+          type: string
+          description: The configuration of the transformer.
+        overrides:
+          type: array
+          items:
+            type: object
+            properties:
+              actorid:
+                type: string
+              input:
+                type: string
+      required:
+        - input
+        - transform
+    CodePreviewInput:
+      type: object
+      properties:
+        selectors:
+          type: object
+          description: The selector data form the code action.
+        data:
+          type: object
+          description: The input data form the code action.
+        code:
+          type: string
+          description: The code data form the code action.
+        userId:
+          type: string
+          description: Id of the user.
+      required:
+        - selectors
+        - data
+        - code
+        - userId
+    TransformerPreviewOutput:
+      type: object
+      properties:
+        output:
+          type: object
+          description: The output data from the transformer.
+      required:
+        - output
+    CodePreviewOutput:
+      type: object
+      properties:
+        output:
+          type: object
+          description: The output data from the transformer.
+        executionId:
+          type: string
+          description: Id of the execution that can be used to search logs.
+      required:
+        - output
+        - executionId
+    App:
+      type: object
+      properties:
+        id:
+          type: string
+        orgId:
+          type: string
+        name:
+          type: string
+        public:
+          type: boolean
+        server:
+          $ref: "#/components/schemas/Server"
+        schemaMetadata:
+          $ref: "#/components/schemas/SchemaMetadata"
+        supportedAuthConfigs:
+          description: |
+            SupportedAuthConfigs is a list of authentication standards which can be used to connect a user's account to
+            this app. At least one auth type needs to be valid for the App to be used by a user.
+          type: array
+          items:
+            $ref: "#/components/schemas/AppAuthConfig"
+        imageUrl:
+          type: string
+        schema:
+          $ref: "#/components/schemas/Schema"
+        schemaId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - orgId
+        - name
+        - public
+        - server
+        - schemaMetadata
+        - schema
+        - createdAt
+        - updatedAt
+    SchemaMetadata:
+      type: object
+      properties:
+        type:
+          description: |
+            Type denotes the type of schema the corresponding App is backed by. Currently the only supported value is
+            "openapi", but other types such as "soap", "graphql" and "grpc" are on the roadmap.
+          type: string
+        version:
+          description: |
+            Version denotes the version of the schema specification. This property is contextual based on the schema
+            type, for example openapi schemas will contain the OpenAPI specification version (currently only 3.0.x is
+            supported), but `grpc` APIs could be "proto2" or "proto3".
+          type: string
+        url:
+          description: |
+            URL is the private address for accessing the schema. This is not guaranteed to be publicly accessible and
+            could be a non-HTTP protocol (i.e. gs:// or s3://)
+          type: string
+      required:
+        - type
+        - version
+        - url
+    Schema:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          description: |
+            Type denotes the type of schema the corresponding App is backed by. Currently the only supported value is
+            "openapi", but other types such as "soap", "graphql" and "grpc" are on the roadmap.
+          type: string
+        version:
+          description: |
+            Version denotes the version of the schema specification. This property is contextual based on the schema
+            type, for example openapi schemas will contain the OpenAPI specification version (currently only 3.0.x is
+            supported), but `grpc` APIs could be "proto2" or "proto3".
+          type: string
+        sourceUrl:
+          description: |
+            URL is the private address for accessing the schema. This is not guaranteed to be publicly accessible and
+            could be a non-HTTP protocol (i.e. gs:// or s3://)
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - version
+        - sourceUrl
+        - createdAt
+        - updatedAt
+    SchemaComponent:
+      type: object
+      properties:
+        schemaId:
+          type: string
+          description: |
+            The ID of the schema this object belongs to.
+        ref:
+          type: string
+          description: |
+            The ref of the schema object, for OpenAPI this will be how operations ref to this object with the ref field.
+        definition:
+          description: The definition of the schema object following OpenAPI specification.
+          type: object
+      required:
+        - ref
+        - definition
+    SchemaComponentsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/SchemaComponent"
+    CreateSchemaComponentsRequestBody:
+      type: object
+      properties:
+        replaceExisting:
+          type: boolean
+        components:
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemaComponent"
+      required:
+        - components
+    DeleteSchemaComponentsRequestBody:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+      required:
+        - ids
+    SchemaCreate:
+      description: >-
+        SchemaCreate is the request body for creating a new schema.
+      type: object
+      properties:
+        url:
+          description: >-
+            URL is the address where the schema file is hosted. This may be an externally accessible http(s):// URL, or
+            a gs:// URL which Switchboard is granted access to.
+          type: string
+        type:
+          description: >-
+            Type is the schema type being created. The only type currently supported is "openapi".
+          type: string
+        async:
+          description: >-
+            Async is a flag to indicate whether the schema should be created asynchronously. This will result in a 
+            201 Accepted response for which the response body will be different to the regular synchronous response.
+          type: boolean
+      required:
+        - url
+        - type
+    SchemaImportJob:
+      description: >-
+        SchemaImportJob describes a asynchronous job which is importing a new schema.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier of the job.
+          type: string
+        schema_id:
+          description: >-
+            SchemaID is the ID of the schema being imported. Performing a request to GetSchema with this ID before the 
+            job is completed will result in a 404 response.
+          type: string
+        status:
+          description: >-
+            Status denotes the current status of the job. 
+
+            This enum may have values added in minor version increments, which can break backwards compatability in 
+            languages which are implement strongly-typed enums. To overcome this, if a consumer receives a value which 
+            it is not aware of, it should be treated as if it was received as "Unknown".
+          type: string
+          enum:
+            - Unknown
+            - Pending
+            - Success
+            - Failed
+        messages:
+          description: Messages contains a list of messages to be presented to the user
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemaImportJobMessage"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        completedAt:
+          description: CompletedAt is the time at which the job was either marked as status "Success" or "Failure".
+          type: string
+          format: date-time
+      required:
+        - id
+        - schema_id
+        - status
+        - messages
+        - createdAt
+        - updatedAt
+    SchemaImportJobMessage:
+      description: >-
+        SchemaImportJobMessage represents a message to be presented to the user during a schema import job.
+      type: object
+      properties:
+        text:
+          description: Text is the message to be presented to the user.
+          type: string
+        type:
+          description: Type denotes the type of message, one of "info", "warning" or "error".
+          type: string
+        timestamp:
+          description: Timestamp is the time at which the message was created.
+          type: string
+          format: date-time
+      required:
+        - text
+        - type
+        - timestamp
+    HubAppAuthConfig:
+      type: object
+      properties:
+        authType:
+          type: string
+          enum: ["oidc", "oauth2", "apikey", "httpBasicAuth"]
+        connectionId:
+          type: string
+        data:
+          $ref: "#/components/schemas/AppAuthConfigData"
+    AppAuthConfig:
+      description: |
+        AppAuthConfig describes how an organisation can authenticate with an app.
+      type: object
+      properties:
+        type:
+          description: |
+            Type denotes the method of authentication. Valid values are: `"oidc"`, `"oauth2"`, `"apikey"`, `"httpBasicAuth"
+          type: string
+        isValid:
+          description: |
+            IsValid is true if and only if the `data` field is populated with all the required information to enable
+            an organisation to connect to the App via this auth type. It is allowed for an App to have invalid auth
+            configs providing there is at least one valid.
+          type: boolean
+        data:
+          $ref: "#/components/schemas/AppAuthConfigData"
+      required:
+        - type
+        - isValid
+        - data
+    AppAuthConfigData:
+      type: object
+      description: |
+        AppAuthConfigData should JSON-marshal to one of the types specified in the jsonschema oneOf:
+
+        - AppAuthConfigOIDC
+        - AppAuthConfigOAuth2
+        - AppAuthConfigApiKey
+        - AppAuthConfigHTTPRefresh
+        - AppAuthConfigHTTPBasicAuth
+      oneOf:
+        - $ref: "#/components/schemas/AppAuthConfigOIDC"
+        - $ref: "#/components/schemas/AppAuthConfigOAuth2"
+        - $ref: "#/components/schemas/AppAuthConfigApiKey"
+        - $ref: "#/components/schemas/AppAuthConfigHTTPRefresh"
+        - $ref: "#/components/schemas/AppAuthConfigHTTPBasicAuth"
+    AppAuthConfigOIDC:
+      description: |
+        AppAuthConfigOIDC specifies the configuration for authenticating using the OpenID Connect specification.
+      type: object
+      properties:
+        discoveryUrl:
+          description:
+            Takes precedent over the endpoint properties. If this property is set, it will be queried and override
+            any defined endpoint properties.
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          description: |
+            ClientSecret is the OAuth2.0 client's secret. This should be write-only, and not be viewable after
+            creation.
+          type: string
+        scopes:
+          $ref: "#/components/schemas/Scopes"
+    AppAuthConfigOAuth2:
+      type: object
+      properties:
+        flowType:
+          type: string
+          enum: ["authorizationCode", "clientCredentials"]
+          description: |
+            FlowType is the type of OAuth2 Flow supported. Valid values are `authorizationCode` and `clientCredentials`.
+        authorizationEndpoint:
+          type: string
+        tokenEndpoint:
+          type: string
+        clientId:
+          type: string
+        clientSecret:
+          description: |
+            ClientSecret is the OAuth2.0 client's secret. This should be write-only, and not be viewable after
+            creation.
+          type: string
+        scopes:
+          $ref: "#/components/schemas/Scopes"
+    AppAuthConfigApiKey:
+      type: object
+      properties:
+        name:
+          description: |
+            Name is the header, query param or cookie name which the API key should be provided as.
+          type: string
+        in:
+          description: |
+            In denotes where the API key should be set when calling the API. Possible values are: `"query"`,
+            `"header"` or `"cookie"`.
+          type: string
+      required:
+        - name
+        - in
+    AppAuthConfigHTTPBasicAuth:
+      type: object
+      properties:
+        user:
+          description: |
+            User is the identifier to perform the basic authentication.
+          type: string
+        password:
+          description: |
+            Password is the secret used to perform the basic authentication.
+          type: string
+      required:
+        - user
+        - password
+    AppAuthConfigHTTPRefresh:
+      type: object
+      properties:
+        tokenEndpoint:
+          description: |
+            TokenEndpoint is the URL to use to Request a token.
+          type: string
+        method:
+          description: The http method to use for the token request.
+          type: string
+          enum:
+            [
+              "GET",
+              "PUT",
+              "POST",
+              "DELETE",
+              "OPTIONS",
+              "HEAD",
+              "PATCH",
+              "TRACE",
+            ]
+        tokenTTL:
+          description: |
+            TokenTTL is the duration in seconds for a token to last before refreshing to get a new one.
+          type: integer
+          x-go-type: int64
+        secretIn:
+          description: |
+            SecretIn denotes where the client secret should be set when calling the API. Possible values are: `"header"` or `"body"`.
+          type: string
+        headerDestination:
+          description: |
+            HeaderDestination is used if `"in"` is set to `"header"` to specify the header key for the ClientSecret data to be sent with.
+            This can be empty if the `"in"` is not set to `"header"`.
+          type: string
+        headers:
+          description: |
+            Headers is a list of static headers to send along with the token request.
+          type: object
+          x-go-type: map[string][]string
+        selector:
+          description: |
+            Selector is an expression to evaluate to obtain the token from the Response returned from the TokenEndpoint.
+            This always extracts from the body response from the TokenEndpoint.
+          type: string
+        name:
+          description: |
+            Name is the header, query param or cookie name which the token should be provided as.
+          type: string
+        in:
+          description: |
+            In denotes where the token should be set when calling the API. Possible values are: `"query"`,
+            `"header"` or `"cookie"`.
+          type: string
+        prefix:
+          description: |
+            Prefix contains any prefix that should be used to set the token in the header, such as `"Bearer"`.
+          type: string
+      required:
+        - tokenEndpoint
+        - method
+        - tokenTTL
+        - secretIn
+        - selector
+        - name
+        - in
+        - prefix
+    AppAuthConfigCreate:
+      description: |
+        AppAuthConfigCreate describes how an organisation can authenticate with an app.
+      type: object
+      properties:
+        type:
+          description: |
+            Type denotes the method of authentication. Valid values are: `"oidc"`, `"oauth2"` or `"apikey"`.
+          type: string
+        data:
+          $ref: "#/components/schemas/AppAuthConfigData"
+      required:
+        - type
+        - data
+    AppsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/App"
+    SchemasPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Schema"
+    AppCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        public:
+          type: boolean
+        server:
+          $ref: "#/components/schemas/Server"
+        authConfigs:
+          description: |
+            AuthConfigs is a list of authentication standards which can be used to connect a user's account to
+            this app. At least one auth type needs to be valid for the App to be used by a user.
+          type: array
+          items:
+            $ref: "#/components/schemas/AppAuthConfigCreate"
+        imageUrl:
+          type: string
+        schemaId:
+          description: The ID of the Schema instance.
+          type: string
+      required:
+        - name
+        - public
+        - server
+        - authConfigs
+        - schemaId
+    BoardNode:
+      type: object
+      properties:
+        boardID:
+          type: string
+        nodeId:
+          type: string
+        appId:
+          type: string
+        app:
+          $ref: "#/components/schemas/App"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - boardID
+        - nodeId
+        - appId
+        - createdAt
+        - updatedAt
+    BoardNodesPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/BoardNode"
+    ExecutionLogNode:
+      type: object
+      properties:
+        severity:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        payload:
+          type: string
+      required:
+        - severity
+        - timestamp
+        - summary
+        - payload
+    ExecutionLogInfo:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+      required:
+        - totalCount
+    ExecutionLogNodesPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/ExecutionLogInfo"
+        - type: object
+          properties:
+            items:
+              description: |
+                List of execution logs for a single board.
+              type: array
+              items:
+                $ref: "#/components/schemas/ExecutionLogNode"
+    Operation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            The ID of the operation, for OpenAPI this will be the `operationId` field if set, otherwise the request's 
+            type and path.
+          example: "GET /organisations/{organisationId}/apps/{appId}"
+        path:
+          type: string
+          description: The endpoint path for use in finding the path in the API spec.
+        method:
+          type: string
+          description: Method is the HTTP method of the request.
+        name:
+          type: string
+          description: A human-friendly name based on the operation ID.
+        description:
+          type: string
+          description: A human-friendly description of what this operation does.
+        type:
+          type: string
+          description: |
+            Type is the type of operation, possible values are "request" and "callback":
+              - "request" indicates that the operation is initiated by Switchboard
+              - "callback" indicates that the operation is initiated by the application and sends data to Switchboard
+      required:
+        - id
+        - path
+        - method
+        - name
+        - type
+    OperationsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Operation"
+    OperationParameter:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the operation parameter.
+        type:
+          type: string
+          description: The type of the operation parameter.
+          enum: ["string", "integer", "number", "boolean"]
+        location:
+          type: string
+          description: The location of the operation parameter.
+          enum: ["path", "query", "header", "cookie"]
+      required:
+        - name
+        - type
+        - location
+    OperationRequest:
+      type: object
+      properties:
+        parameters:
+          type: array
+          items:
+            $ref: "#/components/schemas/OperationParameter"
+        body:
+          type: object
+          description: The request body of the operation.
+          properties: {}
+    OperationResponse:
+      type: object
+      description: The response body of the operation.
+      properties: {}
+    OperationCallbacks:
+      type: object
+      description: The callbacks of the operation.
+      properties: {}
+    OperationSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: |
+            The ID of the operation, for OpenAPI this will be the `operationId` field if set, otherwise the request's 
+            type and path.
+        method:
+          description: The http method that the operation uses.
+          type: string
+          enum:
+            [
+              "GET",
+              "PUT",
+              "POST",
+              "DELETE",
+              "OPTIONS",
+              "HEAD",
+              "PATCH",
+              "TRACE",
+              "SQL",
+            ]
+        description:
+          type: string
+          description: A human-friendly description of what this operation does.
+        name:
+          type: string
+          description: A human-friendly name based on the operation ID.
+        schemaId:
+          type: string
+          description: |
+            The ID of the schema this object belongs to.
+        path:
+          description: The path used to call the operation.
+          type: string
+        request:
+          $ref: "#/components/schemas/OperationRequest"
+        response:
+          $ref: "#/components/schemas/OperationResponse"
+        callbacks:
+          $ref: "#/components/schemas/OperationCallbacks"
+        components:
+          type: object
+          description: An optional map of components the operation refers to indexed by ref.
+      required:
+        - schemaId
+    Hub:
+      type: object
+      properties:
+        id:
+          type: string
+        orgId:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - orgId
+        - name
+        - createdAt
+        - updatedAt
+    HubCreate:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    ConnectIntegration:
+      type: object
+      properties:
+        connections:
+          type: array
+          items:
+            $ref: "#/components/schemas/HubApp"
+        variables:
+          type: object
+    HubApp:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        imageUrl:
+          type: string
+        listenerUrl:
+          type: string
+          description: |
+            ListenerUrl is the URL which webhooks will send data to Switchboard. This is only populated if the
+            app has a listener URL configured.
+        requiresUserAuth:
+          type: boolean
+          description: |
+            RequiresUserAuth is true if the app requires the user of the integration to authenticate with the app before it can be used.
+            Apps that have this set to true, should be the only ones shown in the client's UI. The other apps are
+            only really returned due to the possiblity of them having a listener URL which the user may need to configure
+            webhooks with.
+        authConfig:
+          $ref: "#/components/schemas/HubAppAuthConfig"
+    HubBoardUsers:
+      type: array
+      items:
+        $ref: "#/components/schemas/HubBoardUser"
+    HubBoardUser:
+      type: object
+      properties:
+        userId:
+          type: string
+        boardId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - userId
+        - boardId
+        - createdAt
+        - updatedAt
+    Board:
+      type: object
+      properties:
+        id:
+          type: string
+        orgId:
+          type: string
+        name:
+          type: string
+        hubId:
+          type: string
+        status:
+          $ref: "#/components/schemas/BoardStatus"
+        activePublishInfo:
+          $ref: "#/components/schemas/BoardPublishInfo"
+        recentPublishHistory:
+          description: |
+            RecentPublishHistory is an array of BoardPublishInfo containing up to the last 5 publishes for a board. If 
+            full history is required, users should use the ListPublishHistory operation for a paginated view.
+          type: array
+          items:
+            $ref: "#/components/schemas/BoardPublishInfo"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - orgId
+        - name
+        - status
+        - createdAt
+        - updatedAt
+    BoardCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        hubId:
+          type: string
+        # TODO: need to add proper types for CRDT objects
+        nodes:
+          x-go-type: board.Nodes
+          x-go-type-import:
+            path: versori.dev/switchboard-api/pkg/board
+          type: object
+        edges:
+          x-go-type: board.Edges
+          x-go-type-import:
+            path: versori.dev/switchboard-api/pkg/board
+          type: object
+      required:
+        - name
+    HubBoardCreate:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    BoardTestPayload:
+      type: object
+    BoardPublishCommand:
+      type: object
+      properties:
+        lastEventId:
+          type: string
+      required:
+        - lastEventId
+    BoardUnpublishCommand:
+      type: object
+      properties:
+        taskId:
+          type: string
+      required:
+        - taskId
+    BoardTestResult:
+      description: |
+        BoardTestResult is used to indicate if the test request has been sent.
+      type: object
+    BoardPublishResult:
+      description: |
+        BoardPublishResult is used to indicate if the publish request has been accepted. The actual scheduling is 
+        done in the background and does not indicate the board is ready to accept data.
+      type: object
+      properties:
+        ok:
+          type: boolean
+        taskId:
+          type: string
+      required:
+        - ok
+    BoardUnpublishResult:
+      description: |
+        BoardUnpublishResult is used to indicate if the unpublish request has been accepted. The actual scheduling is 
+        done in the background and does not indicate the board has terminated.
+      type: object
+      properties:
+        ok:
+          type: boolean
+      required:
+        - ok
+    BoardPublishResultMessage:
+      type: object
+      properties:
+        type:
+          description: One of, "info", "warn" or "error"
+          type: string
+        message:
+          description: The main message to display to the user
+          type: string
+        details:
+          description: An optional field containing further information relating to the message.
+          type: array
+          items:
+            type: string
+      required:
+        - type
+        - message
+    BoardStatus:
+      description: |
+        BoardStatus is used to indicate the status of a board. The "unknown" status is used in case of inconsistencies 
+        in the database with the Board scheduler and the API cannot deduce the correct status without administrator 
+        intervention. 
+
+        If the status is "unknown", then clients should assume it's in a draft/published state based on 
+        whether the board has an "activePublishInfo" field. If a board cannot be published due to it already 
+        being published and the "activePublishInfo" field is null, users should contact support.
+      type: string
+      enum:
+        - unknown
+        - draft
+        - publishing
+        - published
+        - unpublishing
+    BoardPublishInfo:
+      type: object
+      description: BoardPublishInfo provides information on a published board instance
+      properties:
+        id:
+          type: string
+        taskId:
+          description: |
+            TaskID is a unique identifier for the execution of a board. Each time a board is (re)published a new task ID
+            will be generated.
+          type: string
+        lastEventId:
+          description: |
+            LastEventID is the last observed event before this board was published. This may not be the last event on 
+            the stream for this board, since the observer may not have replayed all events at the time of publish. As 
+            such, the version of the board which will be executed is defined by this field, and not necessarily the 
+            latest event on the stream.
+          type: string
+        listeners:
+          type: array
+          items:
+            $ref: "#/components/schemas/BoardListener"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - taskId
+        - lastEventId
+        - listeners
+        - createdAt
+        - updatedAt
+    BoardListener:
+      description: |
+        BoardListener provides information on where a board is listening for external events.
+      type: object
+      properties:
+        id:
+          type: string
+        appNodeId:
+          description: |
+            AppNodeID is the identifier of the App Node to which this listener's operation belongs to.
+          type: string
+        operationNodeId:
+          description: |
+            OperationNodeID is the identifier of the Operation within the App Node, which is listening for data from an
+            external source.
+          type: string
+        url:
+          description: |
+            URL is the address for where the Node specified by NodeID is listening. Downstream services (such as 
+            webhooks) should be configured with this URL.
+          type: string
+        contentType:
+          description: |
+            ContentType is the "content-type" header for which data should be sent with. Initially only 
+            "application/json" is supported but other content types may be added in the future.
+          type: string
+        security:
+          description: |
+            Security defines any parameters which external services must supply in order for Switchboard to acknowledge
+            an incoming event. If this is defined but an external service does not supply matching information, the 
+            event will be ignored.
+          type: object
+        additionalHeaders:
+          description: |
+            AdditionalHeaders describes any other headers which the downstream service must supply with the request.
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - appNodeId
+        - operationNodeId
+        - url
+        - contentType
+        - createdAt
+        - updatedAt
+    BoardsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Board"
+    HubsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Hub"
+    TriggerBoardExecution:
+      type: object
+      properties:
+        nodeIds:
+          description: |
+            NodeIDs is a list of Node IDs which should be manually triggered. At least one ID must be provided.
+          type: array
+          minItems: 1
+          items:
+            type: string
+      required:
+        - nodeIds
+    BoardTriggered:
+      description: |
+        BoardTriggered is used to indicate if the trigger request has been accepted. The actual scheduling is 
+        done in the background and does not indicate the board has finished execution yet.
+      type: object
+      properties:
+        ok:
+          description: |
+            OK denotes whether the request was handled successfully. If this field is true, then all nodeIds from the 
+            request were successfully triggered, otherwise at least one nodeId failed to trigger.
+          type: boolean
+        nodes:
+          description: |
+            Nodes provides info on which nodes were triggered and if any failed.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/BoardNodeTriggered"
+      required:
+        - ok
+        - nodes
+    BoardNodeTriggered:
+      description: |
+        BoardNodeTriggered is used to indicate if the trigger request has been accepted for a particular node. Similar 
+        to BoardTriggered, the actual scheduling is done in the background and does not indicate the board has finished 
+        execution yet.
+      type: object
+      properties:
+        ok:
+          description: |
+            OK denotes whether the request was handled successfully. If this field is true, then the node was triggered, 
+            otherwise the node failed to trigger.
+          type: boolean
+        message:
+          description: |
+            Message contains a human-friendly message to display to the user in response to their trigger request.
+          type: string
+      required:
+        - ok
+        - message
+    DataMappingDefinition:
+      description: This defines which fields from the source map to fields in the target in a data mapping.
+      type: object
+      properties:
+        sourceField:
+          type: string
+        targetField:
+          type: string
+    DataMapping:
+      type: object
+      properties:
+        id:
+          type: string
+        orgId:
+          type: string
+        sourceApp:
+          $ref: "#/components/schemas/App"
+        sourceSchemaId:
+          type: string
+        targetApp:
+          $ref: "#/components/schemas/App"
+        targetSchemaId:
+          type: string
+        definition:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataMappingDefinition"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - orgId
+        - sourceAppId
+        - sourceSchemaId
+        - targetAppId
+        - targetSchemaId
+        - definition
+    DataMappingsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/DataMapping"
+    DataMappingCreate:
+      description: |
+        DataMappingCreate is the request body to create a new data mapping. The ID is automatically generated and the
+        organisation ID is defined by the request's path parameter.
+      type: object
+      properties:
+        sourceAppId:
+          description: The ID of the source App instance.
+          type: string
+        sourceSchemaId:
+          description: |
+            The ID of the source app operation, for OpenAPI this will be the `operationId` field if set, otherwise the
+            request's type and path.
+          type: string
+        targetAppId:
+          description: The ID of the target App instance.
+          type: string
+        targetSchemaId:
+          description: |
+            The ID of the target app operation, for OpenAPI this will be the `operationId` field if set, otherwise the
+            request's type and path.
+          type: string
+        definition:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataMappingDefinition"
+      required:
+        - id
+        - orgId
+        - sourceAppId
+        - sourceSchemaId
+        - targetAppId
+        - targetSchemaId
+        - definition
+    DataMappingUpdate:
+      description: |
+        DataMappingUpdate is the request body to update a credential. The ID and organisation ID fields are taken from
+        the URL path.
+      type: object
+      properties:
+        sourceAppId:
+          description: The ID of the source App instance.
+          type: string
+        sourceSchemaId:
+          description: |
+            The ID of the source app operation, for OpenAPI this will be the `operationId` field if set, otherwise the
+            request's type and path.
+          type: string
+        targetAppId:
+          description: The ID of the target App instance.
+          type: string
+        targetSchemaId:
+          description: |
+            The ID of the target app operation, for OpenAPI this will be the `operationId` field if set, otherwise the
+            request's type and path.
+          type: string
+        definition:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataMappingDefinition"
+      required:
+        - id
+        - orgId
+        - sourceAppId
+        - sourceSchemaId
+        - targetAppId
+        - targetSchemaId
+        - definition
+    DataMappingEntry:
+      type: object
+      properties:
+        id:
+          type: string
+        mapping:
+          $ref: "#/components/schemas/DataMapping"
+        sourceValue:
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+        targetValue:
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - orgId
+        - mappingId
+        - sourceValue
+        - targetValue
+    DataMappingEntriesPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/DataMappingEntry"
+    DataMappingEntryCreate:
+      description: |
+        DataMappingEntryCreate is the request body to create a new data mapping. The ID is automatically generated and
+        the organisation ID and mapping ID is defined by the request's path parameter.
+      type: object
+      properties:
+        sourceValue:
+          description: The source value of the mapping entry.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+        targetValue:
+          description: The target value of the mapping entry.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+      required:
+        - id
+        - orgId
+        - mappingId
+        - sourceValue
+        - targetValue
+    DataMappingEntryUpdate:
+      description: |
+        DataMappingEntryUpdate is the request body to update a credential. The ID and organisation ID and Mapping ID
+        fields are taken from the URL path.
+      type: object
+      properties:
+        sourceValue:
+          description: The source value of the mapping entry.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+        targetValue:
+          description: The target value of the mapping entry.
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+      required:
+        - id
+        - orgId
+        - mappingId
+        - sourceValue
+        - targetValue
+    Connection:
+      type: object
+      properties:
+        id:
+          type: string
+        orgId:
+          type: string
+        name:
+          type: string
+        app:
+          $ref: "#/components/schemas/App"
+        authConfig:
+          $ref: "#/components/schemas/AppAuthConfig"
+        credentialId:
+          type: string
+        usedByBoards:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConnectionBoardReference"
+      required:
+        - id
+        - orgId
+        - name
+        - app
+        - authType
+        - credentialId
+    ConnectionBoardReference:
+      description: Describes which boards a connection is in use by.
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    CreateConnectionRequestBody:
+      type: object
+      description: |
+        CreateConnectionRequestBody is the request body to create a new connection. The ID is automatically generated 
+        and the organisation ID is defined by the request's path parameter.
+      properties:
+        name:
+          type: string
+        appId:
+          type: string
+        authType:
+          type: string
+        data:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/ConnectionDataAPIKey"
+            - $ref: "#/components/schemas/ConnectionDataHTTPBasicAuth"
+            - $ref: "#/components/schemas/ConnectionDataSecret"
+            - $ref: "#/components/schemas/ConnectionDataOAuth2ClientCredentials"
+      required:
+        - name
+        - appId
+        - authType
+        - data
+    UpdateConnectionRequestBody:
+      type: object
+      description: |
+        UpdateConnectionRequestBody is the request body to update an existing connection. This will replace the existing
+        connection details.
+      properties:
+        name:
+          type: string
+        data:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/ConnectionDataAPIKey"
+            - $ref: "#/components/schemas/ConnectionDataHTTPBasicAuth"
+            - $ref: "#/components/schemas/ConnectionDataSecret"
+            - $ref: "#/components/schemas/ConnectionDataOAuth2ClientCredentials"
+      required:
+        - name
+        - data
+    ConnectionDataAPIKey:
+      description: |
+        ConnectionDataAPIKey is the data element of a connection which is using an apikey authentication type.
+      properties:
+        apiKey:
+          type: string
+      required:
+        - apiKey
+    ConnectionDataHTTPBasicAuth:
+      description: |
+        ConnectionDataHTTPBasicAuth is the data element of a connection which is using a HTTP Basic Auth authentication type.
+      properties:
+        user:
+          type: string
+        password:
+          type: string
+      required:
+        - user
+        - password
+    ConnectionDataSecret:
+      description: |
+        ConnectionDataSecret is the data element of a connection for an authentication type requiring a secret (eg HTTPRefresh).
+      properties:
+        secret:
+          type: string
+      required:
+        - secret
+    ConnectionDataOAuth2ClientCredentials:
+      description: |
+        ConnectionDataOAuth2ClientCredentials is the data element of a connection for OAuth2 using the client_credentials flow.
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        additionalParameters:
+          type: string
+          description: |
+            AdditionalParameters is a URL-encoded query string which can be used to be pass extra parameters the OAuth2 
+            provider.
+          example: audience=https://example.com
+        issueToken:
+          type: boolean
+          description: |
+            IssueToken is a flag which indicates whether the connection should issue a token when it is created. The 
+            request to create/update a connection will fail if this is true and issuing fails.
+          default: false
+      required:
+        - clientId
+        - clientSecret
+    ConnectedAppsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/ConnectedApp"
+          required:
+            - items
+    ConnectedApp:
+      type: object
+      description: ConnectedApp provides an overview of all connections associated to an app for a given organisation.
+      properties:
+        app:
+          $ref: "#/components/schemas/App"
+        connections:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConnectionOverview"
+      required:
+        - app
+        - connections
+    ConnectionOverview:
+      type: object
+      description: |
+        ConnectionOverview provides minimal information on a connection. This information can be used to link through to
+        a connection details page via its ID.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - name
+    ConnectionsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Connection"
+          required:
+            - items
+    InitConnectionRequestBody:
+      type: object
+      properties:
+        appId:
+          type: string
+        authType:
+          type: string
+      required:
+        - appId
+        - authType
+    InitConnectionResponseBody:
+      type: object
+      properties:
+        action:
+          $ref: "#/components/schemas/InitConnectionAction"
+      required:
+        - action
+    InitConnectionAction:
+      type: object
+      properties:
+        redirect:
+          $ref: "#/components/schemas/InitConnectionActionRedirect"
+        form:
+          $ref: "#/components/schemas/InitConnectionActionForm"
+    InitConnectionActionRedirect:
+      description: |
+        InitConnectionActionRedirect tells the user agent to redirect to the provided URL to complete the connection.
+        This is most likely to perform an OAuth2.0 authorization code grant, but there may be other protocols in the
+        future. In the case of an OAuth2.0 flow, the redirect URL will be back to switchboard to complete the connection
+        process, this will be transparent to the user.
+      type: object
+      properties:
+        url:
+          description: The URL to redirect the user
+          type: string
+      required:
+        - url
+    InitConnectionActionForm:
+      description: |
+        InitConnectionActionForm tells the user agent to render a form requesting additional information from the user
+        such as api-key or basic-auth credentials.
+      type: object
+      properties:
+        schema:
+          description: |
+            This is to be some kind of schema used to generate a HTML form. The exact details of this schema are not
+            known at the time of writing.
+          type: object
+    SchemaSignedURLResponseBody:
+      description: |
+        SchemaSignedURLResponseBody is the response to allow user-agents upload a schema to our internal storage and
+        provide a URL for use when creating the associated App.
+      type: object
+      properties:
+        uploadURL:
+          description: |
+            The URL used to upload the object, this includes parameters containing the signature of the ServiceAccount
+            which authorised the upload
+          type: string
+        url:
+          description: |
+            The URL to identify the schema. This is not publicly accessible and is to be used when creating an App.
+          type: string
+      required:
+        - uploadURL
+        - url
+    SignedURLResponseBody:
+      description: |
+        SignedURLResponseBody is the response to allow user-agents to upload assets to our internal storage.
+      type: object
+      properties:
+        uploadURL:
+          description: |
+            The URL used to upload the object, this includes parameters containing the signature of the ServiceAccount
+            which authorised the upload
+          type: string
+        url:
+          description: |
+            The URL to identify the asset.
+          type: string
+      required:
+        - uploadURL
+        - url
+    ImportSchemaFromURLRequestBody:
+      type: object
+      properties:
+        url:
+          description: |
+            The URL which can be used to download the schema document.
+          type: string
+      required:
+        - url
+    UploadSchemaFromURLRequestBody:
+      type: object
+      properties:
+        sourceURL:
+          description: |
+            SourceURL is the URL which can be used to download the original schema document.
+          type: string
+      required:
+        - sourceURL
+    UploadSchemaFromURLResponseBody:
+      type: object
+      properties:
+        url:
+          description: |
+            The URL to identify the schema. This is not publicly accessible and is to be used when creating an App.
+          type: string
+      required:
+        - url
+    SchemaInfoRequestBody:
+      type: object
+      properties:
+        sourceURL:
+          description: |
+            SourceURL is the URL which can be used to download the original schema document.
+          type: string
+      required:
+        - sourceURL
+    SchemaInfo:
+      properties:
+        id:
+          description: |
+            The ID of the Schema record if it is stored.
+          type: string
+        title:
+          description: |
+            Title is calculated from the parsed schema. Not all schemas contain this information so may be null.
+          type: string
+        availableServers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Server"
+        schemaMetadata:
+          $ref: "#/components/schemas/SchemaMetadata"
+        supportedAuthConfigs:
+          description: |
+            SupportedAuthConfigs is a list of authentication standards which can be used to connect a user's account to
+            this app. At least one auth type needs to be valid for the App to be used by a user.
+          type: array
+          items:
+            $ref: "#/components/schemas/AppAuthConfig"
+      required:
+        - availableServers
+        - schemaMetadata
+        - supportedAuthConfigs
+    CreateCredentialRequestBody:
+      description: |
+        CreateCredentialRequestBody is the request body to create a new credential. The ID is automatically generated
+        and the organisation ID is defined by the request's path parameter.
+      properties:
+        name:
+          description: Name is the credential name.
+          type: string
+        data:
+          description: Data is a map of string keys to string base64 encoded values for the actual credential data.
+          type: object
+        type:
+          $ref: "#/components/schemas/CredentialType"
+        redactFields:
+          description: |
+            RedactFields is a list of fields within data which once created should not be returned to the user. This
+            property is only applicable for "Default" credential types. Credentials of other types have their own
+            redaction list internally and this field will be ignored.
+          type: array
+          items:
+            type: string
+        expiresAt:
+          description: |
+            ExpiresAt allows the user to specify when Switchboard should automatically delete the credential.
+          type: string
+          format: date-time
+      required:
+        - name
+        - data
+        - type
+    UpdateCredentialRequestBody:
+      description: |
+        UpdateCredentialRequestBody is the request body to update a credential. The ID and OrganisationID fields are
+        taken from the URL path.
+      properties:
+        name:
+          description: Name is the credential name.
+          type: string
+        data:
+          description: Data is a map of string keys to string base64 encoded values for the actual credential data.
+          type: object
+        type:
+          $ref: "#/components/schemas/CredentialType"
+        redactFields:
+          description: |
+            RedactFields is a list of fields within data which once created should not be returned to the user. This
+            property is only applicable for "Default" credential types. Credentials of other types have their own
+            redaction list internally and this field will be ignored.
+          type: array
+          items:
+            type: string
+        expiresAt:
+          description: |
+            ExpiresAt allows the user to specify when Switchboard should automatically delete the credential.
+          type: string
+          format: date-time
+      required:
+        - name
+        - data
+        - type
+    CredentialsPage:
+      description: CredentialPage is a page of credentials.
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/Credential"
+    Credential:
+      description: |
+        Credential holds sensitive data not owned by Versori. Users can create credentials so that Versori systems can
+        authenticate to external services on behalf of the user.
+      properties:
+        id:
+          description: ID is the identifier for the credential.
+          type: string
+        organisationID:
+          description: OrganisationID is the ID of the organisation which owns this credential.
+        name:
+          description: Name is the credential name.
+          type: string
+        data:
+          description: Data is a map of string keys to string base64 encoded values for the actual credential data.
+          type: object
+        type:
+          $ref: "#/components/schemas/CredentialType"
+        redactFields:
+          description: |
+            RedactFields is a list of fields within data which once created should not be returned to the user. This
+            property is only applicable for "Default" credential types. Credentials of other types have their own
+            redaction list internally and this field will be ignored.
+          type: array
+          items:
+            type: string
+        expiresAt:
+          description: |
+            ExpiresAt allows the user to specify when Switchboard should automatically delete the credential.
+          type: string
+          format: date-time
+      required:
+        - id
+        - organisationID
+        - name
+        - data
+        - type
+    CredentialType:
+      description: |
+        Type provides additional context to what data the credential contains. Certain types dictate that certain fields
+        must be set in order for the credential to be considered valid:
+
+        - "Default" is the default type for a Credential. Data may contain arbitrary properties and will always be
+          considered valid.
+        - "OAuth2Refresh" signifies the credential is to be used for issuing OAuth 2.0 access tokens based on a refresh
+          token. The credential data must json-marshal into a CredentialDataOAuth2Refresh in order to be valid.
+          Credentials of this type may only be created or updated via the connections APIs, not by the credentials APIs.
+        - "Raw" signifies the credential contains a value which can be used until the credential expires (or never if
+          the credential has no expiry). The credential data must json-marshal into a CredentialDataRaw in order to be
+          valid.
+        - "BasicAuth" signifies the credential contains credentials to be used in HTTP Basic authentication schemes. The
+          credential data must json-marshal into a CredentialDataBasicAuth in order to be valid.
+      type: string
+    CredentialDataOAuth2Refresh:
+      description: |
+        CredentialDataOAuth2Refresh holds the configuration required to issue access tokens from a refresh token.
+      properties:
+        clientID:
+          description: |
+            ClientID is the identifier for the OAuth2 client.
+          type: string
+        clientSecret:
+          description: |
+            ClientSecret is the credential for the OAuth2 client.
+          type: string
+        tokenURL:
+          description: |
+            TokenURL is where requests should be made to issue an access token in exchange for a refresh token.
+          type: string
+        authStyle:
+          description: |
+            AuthStyle denotes how the client ID and secret should be sent to the token URL. The default is to
+            auto-detect.
+          type: string
+        refreshToken:
+          description: |
+            RefreshToken is the token issued to the client when they manually authorise it.
+          type: string
+      required:
+        - clientID
+        - clientSecret
+        - tokenURL
+        - refreshToken
+    CredentialDataRaw:
+      description: |
+        CredentialDataRaw holds a single value which can be used to store an arbitrary secret like an API key or
+        password.
+      properties:
+        raw:
+          description: Raw is the raw value which this credential manages
+          type: string
+      required:
+        - raw
+    CredentialDataBasicAuth:
+      description: |
+        CredentialDataBasicAuth holds credentials to authenticate to a HTTP server protected by Basic Authentication.
+      properties:
+        username:
+          description: |
+            Username is the basic-auth username.
+          type: string
+        password:
+          description: |
+            Password is the basic-auth password.
+          type: string
+      required:
+        - username
+        - password
+    Server:
+      type: object
+      properties:
+        name:
+          description: |
+            Description is a human-friendly name for this server address. If a friendly name isn't available then this
+            defaults to the URL.
+          type: string
+        url:
+          description: |
+            URL is the server address listening for requests.
+          type: string
+      required:
+        - name
+        - url
+    Scopes:
+      description: |
+        Scopes is a map of scopes this API supports, with the scope name as keys and a description as the value.
+        It may not be required to specify them all to connect the App.
+      type: object
+      x-go-type: map[string]string
+    DeletedResource:
+      type: object
+      properties:
+        id:
+          type: string
+    PageInfo:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        next:
+          type: string
+        prev:
+          type: string
+      required:
+        - totalCount
+    BoardVariablesSchema:
+      description: |
+        BoardVariablesSchema is the schema definition for board variables.
+      type: object
+      properties:
+        dynamic:
+          $ref: "#/components/schemas/VariablesSchema"
+        global:
+          $ref: "#/components/schemas/VariablesSchema"
+    VariablesSchema:
+      type: object
+    EmptySchema:
+      type: object
+      description: Empty placeholder schema
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        extensions:
+          type: object
+      required:
+        - code
+        - message
+  parameters:
+    SchemaType:
+      name: schemaType
+      description: |
+        SchemaType is the type of schema which an App implements. The only supported values are currently "openapi", but
+        is planned to be extended to include gRPC, GraphQL and SOAP.
+      in: path
+      required: true
+      schema:
+        type: string
+    SortParam:
+      name: sort
+      in: query
+      required: false
+      examples:
+        single column ascending:
+          summary: Single column search in ascending order
+          value: id:asc
+        single column descending:
+          summary: Single column search in descending order
+          value: name:desc
+        multiple columns:
+          summary: Multiple column search
+          value: name:asc,rating:desc,id:desc
+      schema:
+        type: string
+        pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+  requestBodies:
+    TransformerPreviewRequest:
+      description: |
+        Payload to pass configuration and preview input data to the transformer.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TransformerPreviewInput"
+    CodePreviewRequest:
+      description: |
+        Payload to pass configuration and preview input data to the Code Action.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CodePreviewInput"
+    CreateAppRequest:
+      description: |
+        Payload to create a new App.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AppCreate"
+    UpdateAppRequest:
+      description: |
+        Payload to update an existing App.
+
+        The `id` and `orgId` fields are immutable and must match the fields from the URL. This is a full replace/update,
+        any unset fields will be unset in the database, for partial updates see the PATCH method.
+      content:
+        application/json:
+          schema:
+            type: object
+            allOf:
+              - $ref: "#/components/schemas/App"
+    CreateSchemaRequest:
+      description: >-
+        CreateSchemaRequest is the request body for creating a new Schema.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaCreate"
+    CreateSchemaComponentsRequest:
+      description: >-
+        CreateSchemaComponentsRequest is the request body for creating a new batch of Schema Components.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreateSchemaComponentsRequestBody"
+    DeleteSchemaComponentsRequest:
+      description: >-
+        DeleteSchemaComponentsRequest is the request body for deleting a batch of Schema Components.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeleteSchemaComponentsRequestBody"
+    UpdateSchemaComponentRequest:
+      description: >-
+        UpdateSchemaComponentRequest is the request body for updating a Schema Components.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaComponent"
+    CreateAppOperationRequest:
+      description: >-
+        CreateAppOperationRequest is the request body for creating a new Operation for an App.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    CreateSchemaOperationRequest:
+      description: >-
+        CreateSchemaOperationRequest is the request body for creating a new Operation for a Schema.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    CreateBoardRequest:
+      description: |
+        Payload to create a new App.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardCreate"
+    CreateHubBoardRequest:
+      description: |
+        Payload to create a new Board belonging to a Hub.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HubBoardCreate"
+    CreateHubRequest:
+      description: |
+        Payload to create a new Hub.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HubCreate"
+    UpdateBoardRequest:
+      description: |
+        Payload to update an existing Board.
+
+        The `id` and `orgId` fields are immutable and must match the fields from the URL. This is a full replace/update,
+        any unset fields will be unset in the database.
+      content:
+        application/json:
+          schema:
+            type: object
+            allOf:
+              - $ref: "#/components/schemas/Board"
+    UpdateHubRequest:
+      description: |
+        Payload to update an existing Hub.
+
+        The `id` and `orgId` fields are immutable and must match the fields from the URL. This is a full replace/update,
+        any unset fields will be unset in the database.
+      content:
+        application/json:
+          schema:
+            type: object
+            allOf:
+              - $ref: "#/components/schemas/Hub"
+    BoardTestRequest:
+      description: |
+        Payload to trigger a board to be published
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardTestPayload"
+    PublishBoardRequest:
+      description: |
+        Payload to trigger a board to be published
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardPublishCommand"
+    UnpublishBoardRequest:
+      description: |
+        UnpublishBoardRequest is the payload to schedule an executing Board to be terminated
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardUnpublishCommand"
+    TriggerBoardExecutionRequest:
+      description: |
+        TriggerBoardExecutionRequest is the payload to trigger a Board to be executed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TriggerBoardExecution"
+    CreateDataMappingRequest:
+      description: |
+        Payload to create a new DataMapping.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingCreate"
+    UpdateDataMappingRequest:
+      description: |
+        Payload to update an existing DataMapping.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingUpdate"
+    CreateDataMappingEntryRequest:
+      description: |
+        Payload to create a new DataMappingEntry.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingEntryCreate"
+    UpdateDataMappingEntryRequest:
+      description: |
+        Payload to update an existing DataMappingEntry.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingEntryUpdate"
+    CreateConnectionRequest:
+      description: CreateConnectionRequest is the payload for creating a new Connection.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreateConnectionRequestBody"
+          examples:
+            apikey:
+              description: Create a new connection using an API key.
+              value:
+                name: "My API Key"
+                appId: "01G01QZNWG0000000000000000"
+                authType: "apikey"
+                data:
+                  apiKey: "my-secret-key"
+    UpdateConnectionRequest:
+      description: UpdateConnectionRequest is the payload for updating an existing Connection.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateConnectionRequestBody"
+    InitConnectionRequest:
+      description: The parameters to initialise a new connection
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InitConnectionRequestBody"
+    UploadSchemaFromURLRequest:
+      description: |
+        UploadSchemaFromURLRequest contains the necessary parameters to upload a schema object from a source URL.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UploadSchemaFromURLRequestBody"
+    BuildSchemaOperationRequest:
+      description: |
+        BuildSchemaOperationRequest contains the necessary parameters to build a new schema operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    ImportSchemaFromURLRequest:
+      description: |
+        ImportSchemaFromURLRequest contains the necessary parameters to create a schema record from a URL.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ImportSchemaFromURLRequestBody"
+    SchemaInfoRequest:
+      description: |
+        GetSchemaInfoRequest contains the necessary parameters to retrieve schema info.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaInfoRequestBody"
+    CreateCredentialRequest:
+      description: |
+        CreateCredentialRequest is the request definition for creating a new credential.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CreateCredentialRequestBody"
+    UpdateCredentialRequest:
+      description: |
+        UpdateCredentialRequest is the request definition for updating an existing credential.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateCredentialRequestBody"
+    UpdateSchemaOperationRequest:
+      description: |
+        UpdateSchemaOperationRequest is the request definition for updating a schema operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    CreateOrUpdateBoardVariablesSchemaRequest:
+      description: |
+        CreateOrUpdateBoardVariablesSchemaRequest is the request definition for creating or updating a board variables schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardVariablesSchema"
+    UpdateVariableSchemaRequest:
+      description: |
+        UpdateVariableSchemaRequest is the request definition for updating a variable schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/VariablesSchema"
+  responses:
+    TransformerPreviewResponse:
+      description: |
+        The transformed data from the transformer.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TransformerPreviewOutput"
+    CodePreviewResponse:
+      description: |
+        The processed data from the code action.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CodePreviewOutput"
+    GetPublicAppsResponse:
+      description: A paginated result of Apps
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AppsPage"
+    GetPublicAppResponse:
+      description: A single App result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/App"
+    ConnectIntegrationResponse:
+      description: All information a hub user is required to provide to use an integration
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConnectIntegration"
+    GetBoardsResponse:
+      description: A paginated set of Boards
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardsPage"
+    GetBoardResponse:
+      description: A single Board result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Board"
+    GetHubsResponse:
+      description: A paginated set of Hubs
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HubsPage"
+    GetHubResponse:
+      description: A single Hub result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Hub"
+    ListHubBoardUsersResponse:
+      description: A paginated set of HubBoardUsers
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HubBoardUsers"
+    ListOutOfDateBoardNodesResponse:
+      description: A paginated set of BoardNodes
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardNodesPage"
+    ListExecutionLogsForBoardResponse:
+      description: A list of execution logs for a single board
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ExecutionLogNodesPage"
+    ListExecutionLogsForCodeActionResponse:
+      description: A list of execution logs for a code action
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ExecutionLogNodesPage"
+    BoardTestResponse:
+      description: The response after a test request has been sent.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardTestResult"
+    PublishBoardResponse:
+      description: The response after a board has been scheduled to execute.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardPublishResult"
+    UnpublishBoardResponse:
+      description: The response after a board has been scheduled to be terminated.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardUnpublishResult"
+    DeleteBoardResponse:
+      description: |
+        DeleteBoardResponse is returned after deleting an board.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    DeleteHubResponse:
+      description: |
+        DeleteHubResponse is returned after deleting an board.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    TriggerBoardExecutionResponse:
+      description: |
+        TriggerBoardExecutionResponse is returned after triggering a board to execute.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardTriggered"
+    BuildSchemaOperationResponse:
+      description: |
+        BuildSchemaOperationResponse is returned after a schema operation has been built.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    GetDataMappingsResponse:
+      description: A paginated set of DataMappings
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingsPage"
+    GetDataMappingResponse:
+      description: A single DataMapping result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMapping"
+    DeleteDataMappingResponse:
+      description: |
+        DeleteDataMappingResponse is returned after deleting a DataMapping.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    GetDataMappingEntriesResponse:
+      description: A paginated set of DataMappingEntries
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingEntriesPage"
+    GetDataMappingEntryResponse:
+      description: A single DataMappingEntry result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DataMappingEntry"
+    DeleteDataMappingEntryResponse:
+      description: |
+        DeleteDataMappingEntryResponse is returned after deleting a DataMappingEntry.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    GetAppsResponse:
+      description: A paginated result of Apps
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AppsPage"
+    GetSchemasResponse:
+      description: A paginated result of Schemas
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemasPage"
+    GetAppResponse:
+      description: A single App result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/App"
+    DeleteAppResponse:
+      description: |
+        DeleteAppResponse is the response definition after deleting an app.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    DeleteSchemaResponse:
+      description: |
+        DeleteSchemaResponse is the response definition after deleting a schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    GetAppOperationsResponse:
+      description: |
+        GetAppOperationsResponse is the response definition containing all Operations available to an App.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationsPage"
+    GetSchemaOperationsResponse:
+      description: |
+        GetSchemaOperationsResponse is the response definition containing all Operations available to a Schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationsPage"
+    GetAppOperationSchemaResponse:
+      description: |
+        GetAppOperationSchemaResponse is the response definition containing the schema for a given Operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    GetOperationSchemaResponse:
+      description: |
+        GetOperationSchemaResponse is the response definition containing the schema for a given Operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    DeleteAppOperationResponse:
+      description: |
+        DeleteAppOperationResponse is the response definition after deleting an operation for an app.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    CreateAppOperationResponse:
+      description: |
+        GetAppOperationSchemaResponse is the response definition containing the schema for a newly created Operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    DeleteSchemaOperationResponse:
+      description: |
+        DeleteSchemaOperationResponse is the response definition after deleting an operation for an schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    CreateSchemaOperationResponse:
+      description: |
+        CreateSchemaOperationResponse is the response definition containing the schema for a newly created Operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    GetSchemaComponentsResponse:
+      description: |
+        GetSchemaComponentsResponse is the response definition containing the schema types for a given App.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaComponentsPage"
+    GetSchemaComponentResponse:
+      description: |
+        GetSchemaComponentResponse is the response definition containing the schema type with given ref for a given App.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaComponent"
+    DeleteSchemaComponentResponse:
+      description: |
+        DeleteSchemaComponentResponse is the response definition after deleting a schema component.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    CreateSchemaComponentsResponse:
+      description: |
+        CreateSchemaComponentsResponse is the response definition after creating a batch of schema components.
+      content:
+        application/json:
+          schema:
+            properties:
+              components:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SchemaComponent"
+            required:
+              - components
+    DeleteSchemaComponentsResponse:
+      description: |
+        DeleteSchemaComponentsResponse is the response definition after deleting a list of schema components.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    UpdateSchemaComponentResponse:
+      description: |
+        UpdateSchemaComponentResponse is the response definition after updating a schema component.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaComponent"
+    UpdateSchemaOperationResponse:
+      description: |
+        UpdateSchemaOperationResponse is the response definition after updating a schema operation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperationSchema"
+    CreateSchemaSyncResponse:
+      description: |
+        CreateSchemaSyncResponse is the response definition after creating a schema synchronously.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Schema"
+    CreateSchemaAsyncResponse:
+      description: |
+        CreateSchemaAsyncResponse is the response definition after creating a schema asynchronously.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaImportJob"
+    GetSchemaInfoResponse:
+      description: >-
+        GetSchemaInfoResponse is the request body for getting the schema info of an existing Schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaInfo"
+    GetConnectedAppsResponse:
+      description: A paginated result of apps with associated ConnectionOverview data.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConnectedAppsPage"
+    GetConnectionsResponse:
+      description: A paginated result of Apps.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConnectionsPage"
+    GetConnectionResponse:
+      description: A single Connection result
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Connection"
+    CreateConnectionResponse:
+      description: A single Connection result.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Connection"
+    DeleteConnectionResponse:
+      description: |
+        DeleteConnectionResponse is the response definition after deleting a connection.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    UpdateConnectionResponse:
+      description: A single Connection result.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Connection"
+    InitConnectionResponse:
+      description: The configuration to initialise a new connection.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InitConnectionResponseBody"
+    SchemaSignedURLResponse:
+      description: SignedURLResponse contains a URL which can be used to upload a file to object storage.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaSignedURLResponseBody"
+    SignedURLResponse:
+      description: SignedURLResponse contains a URL which can be used to upload a file to object storage.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SignedURLResponseBody"
+    UploadSchemaFromURLResponse:
+      description: |
+        UploadSchemaFromURLResponse contains a URL which can be used to download an uploaded schema from object storage.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UploadSchemaFromURLResponseBody"
+    CloneSchemaResponse:
+      description: |
+        CloneSchemaResponse is the response containing the Schema of a cloned schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Schema"
+    PublishSchemaResponse:
+      description: |
+        PublishSchemaResponse is the response containing the Schema of a published schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Schema"
+    SchemaInfoResponse:
+      description: |
+        SchemaInfoResponse is the response containing the SchemaInfo of a schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SchemaInfo"
+    CreateCredentialResponse:
+      description: |
+        CreateCredentialResponse is the response containing the new credential.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Credential"
+    GetCredentialsResponse:
+      description: |
+        GetCredentialsResponse is the response containing the a page of credentials.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CredentialsPage"
+    GetCredentialResponse:
+      description: |
+        GetCredentialResponse is the response containing the requested credential.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Credential"
+    UpdateCredentialResponse:
+      description: |
+        UpdateCredentialResponse is the response containing the updated credential.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Credential"
+    DeleteCredentialResponse:
+      description: |
+        DeleteCredentialResponse is the request definition for creating a new credential.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DeletedResource"
+    GetBoardVariablesSchemaResponse:
+      description: |
+        GetBoardVariablesSchemaResponse is the response containing the board variables schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardVariablesSchema"
+    GetVariablesSchemaResponse:
+      description: |
+        GetVariablesSchemaResponse is the response containing the variables schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardVariablesSchema"
+    CreateOrUpdateBoardVariablesSchemaRequest:
+      description: |
+        CreateOrUpdateBoardVariablesSchemaRequest is the request definition for creating or updating a board variables schema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BoardVariablesSchema"
+    BoardUsersResponse:
+      description: |
+        BoardUsersResponse is a placeholder response. Right now the APi doesn't return a body.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EmptySchema"
+    ErrorResponse:
+      description: The default error response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: query
+      name: api_key
+security:
+  - apiKey: []
