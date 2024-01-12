@@ -379,11 +379,6 @@ paths:
           required: false
           schema:
             type: string
-        - name: deployed
-          in: query
-          required: false
-          schema:
-            type: boolean
         - name: sort
           in: query
           required: false
@@ -464,7 +459,7 @@ paths:
     get:
       operationId: GetUserHubBoards
       description: |
-        Retrieves a pagniated list of boards belonging to a given user and hub.
+        Retrieves a paginated list of boards belonging to a given user and hub.
       tags:
         - hubs
         - boards
@@ -2584,7 +2579,7 @@ paths:
     delete:
       operationId: DeleteConnection
       description: |
-        Deletes a connection, and unpublishes all boards referencing it.
+        Deletes a connection, and un-publishes all boards referencing it.
       tags:
         - connections
       parameters:
@@ -3304,11 +3299,22 @@ components:
             Headers is a list of static headers to send along with the token request.
           type: object
           x-go-type: map[string][]string
+          x-examples:
+            headers:
+              summary: Example headers to send
+              value: Payload `{"header1":["value1","value2"],"header2":["value3"]}`
         selector:
           description: |
             Selector is an expression to evaluate to obtain the token from the Response returned from the TokenEndpoint.
             This always extracts from the body response from the TokenEndpoint.
           type: string
+          x-examples:
+            token contained in a single level field:
+              summary: Extracting token from response `{"tok""my_token"}`
+              value: tok
+            token contained in a nested field:
+              summary: Extracting token from response `{"result"`:{"tok""my_token"}}`
+              value: result.tok
         name:
           description: |
             Name is the header, query param or cookie name which the token should be provided as.
@@ -3656,7 +3662,7 @@ components:
           description: |
             RequiresUserAuth is true if the app requires the user of the integration to authenticate with the app before it can be used.
             Apps that have this set to true, should be the only ones shown in the client's UI. The other apps are
-            only really returned due to the possiblity of them having a listener URL which the user may need to configure
+            only really returned due to the possibility of them having a listener URL which the user may need to configure
             webhooks with.
         authConfig:
           $ref: "#/components/schemas/HubAppAuthConfig"
@@ -5554,9 +5560,8 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   securitySchemes:
-    apiKey:
-      type: apiKey
-      in: query
-      name: api_key
+    bearerAuth:
+      type: http
+      scheme: bearer
 security:
-  - apiKey: []
+  - bearerAuth: []
