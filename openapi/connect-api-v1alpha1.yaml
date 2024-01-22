@@ -1,0 +1,3698 @@
+openapi: 3.1.0
+info:
+  title: Versori Connect API
+  version: 0.0.1
+  license:
+    name: UNLICENSED
+    identifier: UNLICENSED
+  description: |
+    The Connect API is a RESTful API that allows you to connect to your external systems to the Versori Platform.
+
+    The main component of the Connect API are Connections. Connections are split into the following components:
+    
+    - Protocol
+    - Authentication Scheme
+    - Environments
+    - Global Parameters
+    - Actions
+    - Triggers
+    - Definitions
+
+    ## Protocol
+
+    The protocol defines the transport mechanism used to communicate with your external system.
+
+    Currently we support the following protocols:
+    
+    - HTTP
+    - BigQuery
+
+    ## Authentication Scheme
+
+    The authentication scheme defines how the Versori Platform will authenticate with your external system. Different
+    schemes are applicable to different protocols.
+
+    ### HTTP
+
+    The following authentication schemes are supported for HTTP:
+    
+    - OAuth 2.0
+    - OIDC
+    - API Key (in header, query or cookie)
+    - Basic
+    - Bearer
+
+    ### BigQuery
+
+    The following authentication schemes are supported for BigQuery:
+    - OAuth 2.0
+    - Google service account JSON key file
+
+    ## Environments
+
+    Each Connection has at least one environment and additional environments can be added. Environments are used to
+    connect to different instances of your external system. For example, you may have a development, staging and
+    production environment, each with different credentials and addresses.
+
+    Each Environment must provide a Credential which satisfies one authentication scheme for the Connection.
+
+    Environments can define variables, which can be used to customise certain aspects of the Connection such as
+    default values for certain fields/parameters
+
+    Finally, some protocols may require specific configuration for each environment. For example, the HTTP Protocol
+    requires a base URL for each environment.
+
+    ## Global Parameters
+
+    Global Parameters allows a user to configure a set of parameters which can be used across multiple Actions. Within
+    the UI, whenever a user starts to create a new Action the UI will pre-populate the Action with the Global
+    Parameters. If the Action in question does not require any of these parameters the user may delete them before
+    saving.
+
+    When a user creates, updates or deletes a global parameter, the user will be prompted to choose which Actions should
+    reflect the change, with the ability to choose all, some or none.
+
+    ### HTTP Parameters
+
+    For HTTP Connections, the following parameter types may be set as Global Parameters:
+
+    - Path parameters
+    - Query parameters
+    - Headers
+
+    ## Actions
+
+    Actions define the actions that can be performed on your external system. An action may be defined and implemented
+    differently depending on the protocol. For example, an HTTP Action contains a method like GET, PUT, POST etc.,
+    whereas a BigQuery Actions will contain a SQL query.
+
+    ### HTTP
+
+    For HTTP Connections, each Action defines a single HTTP request.
+
+    The Action can contain inputs to customise the request, some inputs may also allow default values which can be
+    overridden when used within other Versori products. Default values can be defined using environment variables.
+
+    The supported HTTP inputs are:
+
+    - Path parameters
+    - Query parameters
+    - Headers
+    - Request body Definitions (one per supported media-type)
+
+    The Action can also define outputs:
+
+    - Headers
+    - Status Codes, and their associated Response body Definitions (one per supported media-type)
+
+    ### BigQuery SQL
+
+    BigQuery SQL Actions are defined as SQL queries. The query can contain parameters to customise the query at
+    runtime, for example in Switchboard a user may use literal values or Selectors to provide the parameters. This
+    functionality is provided via the [query](https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query) API
+    endpoint.
+
+    When creating a BigQuery SQL Action, the associated Definition is automatically created based on the query.
+
+    ## Triggers
+
+    Triggers define how the Versori Platform will be notified of events from your external system. Each Protocol
+    determines how Triggers are defined since how they are implemented may vary.
+
+    ### HTTP Triggers
+
+    These are essentially webhooks, which an external service may invoke to notify the Versori Platform of an event.
+    They are modelled similarly to HTTP Actions, but Versori expects a certain request and allows the user to
+    configure the response.
+
+    In the future, you will also be able to define HTTP Trigger Lifecycles, which define how a webhook is
+    created/deleted on the external system when a Switchboard integration is published/unpublished. However, this is
+    out of scope for the initial release.
+
+    ### BigQuery Triggers
+
+    BigQuery Triggers are not supported directly, but will be handled in the future by the PubSub Protocol. This is an
+    additional Protocol on the roadmap, which will allow users to build integrations with Google Cloud PubSub. Users
+    will be able to build integrations that respond to PubSub events, and configure their own BigQuery Jobs to
+    publish to these PubSub topics within their own infrastructure (we also plan to support similar functionality within
+    Caspian as "Caspian Triggers", but again this is out of scope for initial release).
+
+    ## Definitions
+
+    Definitions provide the Versori Platform the information required to validate and provide auto-complete behaviour
+    when dealing with input/output data between connections.
+
+    Each definition has a media-type and an associated schema. Which schema implementation is used depends on the
+    media-type, we initially support the following:
+
+    - `application/json`, defined by JSON Schemas.
+    - `text/xml`, defined by XML Schema Definitions (XSDs).
+    - `text/csv`, how this is defined isn't known yet, however there are discussions in JIRA about this.
+
+    ## Versioning
+
+    Except for the top-level Connection data and their Environments, other aspects of a Connection such as Actions,
+    Triggers and Definitions are versioned resources. A connection can have multiple versions and each version can
+    either be in "draft" or "published" state. A version is published if its `publishedAt` field is not null.
+
+    Versions are defined as an arbitrary string, but users are encouraged to follow a consistent versioning scheme such
+    as SemVer, CalVer, or an incrementing number.
+
+    Connections may only be used by Versori products if they are published, and once published they are immutable. If
+    an edit is attempted against a published version then an error will be returned. Unpublished Connections are
+    considered to be in "draft" and can be edited as many times as required.
+
+    Connections may be unpublished, but only when they are not referenced by any other system (see
+    [Subscribers](#Subscribers) below).
+
+    ### Special Versions
+
+    There are two reserved words to reference a published version, "latest" and "default". "latest" will always return
+    the latest published version according to it's `publishedAt` field, whereas "default" will return the version which
+    has been set as such by the user. If the user never specifies a default version, the "latest" published version will
+    be used.
+
+    ### Publishing Versions
+
+    When a new version is published, the user should be prompted to choose how Versori products should handle the
+    update. For example, for Switchboard the user should be able to choose whether to update existing integrations to
+    use the new version, or to leave them as they are. To facilitate this UX the Connections API has the concept of
+    subscriptions (is there a better name?) where other APIs can register their interest in a Connection.
+
+    ## Subscribers
+
+    A Connection has the concept subscribers, where other products can notify the Connections API of their interest in
+    that connection. This allows the Connections API to check whether a Connection is being used by other products and
+    prevent deletion if so.
+
+    ### Switchboard
+
+    When a board is published, the Switchboard orchestrator will subscribe to the Connection. When that board is then
+    unpublished, the orchestrator will unsubscribe from the Connection.
+
+    ## Completions
+
+    Completions is an advanced feature of the Connections API which enables Connection authors to define how a
+    particular field within a Definition may be auto-completed. This is useful for fields which are almost always a
+    fixed value but whose valid values are determined by how the external system is configured. i.e. the `channel`
+    field in a Slack `postMessage` call must be a valid channel name for the Slack Workspace in which the Connection
+    is connecting to.
+
+    There are different mechanisms for defining Completions which are described below.
+
+    ### Static Completions
+
+    Static Completions are defined by the Connection author and are a fixed list of values. For JSON Definitions, this
+    is automatically generated by properties with the `enum` keyword. Other media-types will have their own mechanisms
+    which may or may not be directly supported by their schema implementation.
+
+    ### Remote Completions
+
+    Remote Completions make a connection to an external API to retrieve the valid values for a field. Initially a
+    Completion can be defined by choosing another Connection Action, and a transformation on how to extract the
+    values to present to the user.
+tags:
+  - name: actions
+    description: |
+      Actions define how the Versori Platform will interact with your external system. Each Protocol determines how
+      Actions are defined since how they are implemented may vary.
+  - name: auth-schemes
+    description: |
+      Auth Schemes are the mechanism by which the Connections API authenticates with external systems. They define how
+      Actions and Triggers are authenticated. Not all Auth Schemes are supported by all Protocols, you can use the
+      /o/{organisation_id}/protocols/{protocol_name}/auth-schemes endpoint to determine which Auth Schemes are supported
+      for each Protocol.
+  - name: connections
+    description: |
+      Connections are the core resource of the Connections API. They represent a connection to an external system, 
+      and contain all the information required to interact with that system. This includes Actions, Triggers and
+      Definitions.
+  - name: credentials
+    description: |
+      Credentials are the mechanism by which the Connections API authenticates with external systems. They define how
+      Actions and Triggers are authenticated. Which Credentials are supported depends on the Auth Scheme chosen, which
+      again is determined by the Protocol.
+  - name: definitions
+    description: |
+      Definitions provide the Versori Platform the information required to validate and provide auto-complete behaviour
+      when dealing with input/output data between connections. Each definition has a media-type and an associated schema
+      which is compatible with that media-type, for example JSON Schema is used for `application/json` media-types.
+  - name: protocols
+    description: |
+      Protocols are the mechanism by which the Connections API communicates with external systems. They define how
+      Actions, Triggers and Definitions are implemented.
+  - name: protocol-http
+    description: |
+      The HTTP Protocol allows the Connections API to communicate with external systems via HTTP requests.
+  - name: protocol-bigquery
+    description: |
+      The BigQuery Protocol allows the Connections API to communicate with BigQuery datasets via the BigQuery API.
+servers:
+  - description: Production
+    url: 'https://platform.versori.com/api/connect/v1alpha1'
+  - description: Staging
+    url: 'https://platform-staging.versori.com/api/connect/v1alpha1'
+  - description: Development
+    url: 'http://localhost:9001'
+paths:
+  /o/{organisation_id}/connections:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    get:
+      operationId: ListConnections
+      summary: List Connections
+      description: |
+        ListConnections returns a paginated list of Connections, ordered with most recently updated first.
+        Customising the sort behaviour is not currently supported but may be added in the future. Similarly
+        with filtering, this will be implemented in a future release.
+      tags:
+        - connections
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/sort'
+        - name: protocol
+          description: |
+            Protocol filters the returned Connections using a case-insensitive substring-match.
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+    get:
+      operationId: GetConnection
+      summary: Get Connection
+      description: |
+        GetConnection returns a single Connection for the specified ID. If one does not exist then a 404 will be returned.
+      tags:
+        - connections
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connection'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateConnection
+      summary: Update Connection
+      description: |
+        UpdateConnection updates a Connection with the specified request body. All mutable fields are updated as per the
+        request body, and the `updatedAt` field is set to the current time. Any missing fields will be unset unless this
+        causes a validation error, in which case the request will fail with a 400 Bad Request response.
+      tags:
+        - connections
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connection'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteConnection
+      summary: Delete Connection
+      description: |
+        DeleteConnection deletes a Connection with the specified ID. If the Connection is in use by another product then
+        a 409 Conflict response will be returned. If the Connection does not exist then a 404 Not Found response will be
+        returned.
+        
+        A connection can be forcefully deleted with the `force` query parameter. This will delete the connection even if
+        it is in use by another product. This should only be used in exceptional circumstances and may cause other
+        issues externally.
+      tags:
+        - connections
+      parameters:
+        - name: force
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Force informs the API to delete the connection even if it has active subscriptions.
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/environments:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+    get:
+      operationId: ListConnectionEnvironments
+      summary: List Connection Environments
+      description: |
+        ListConnectionEnvironments returns a paginated list of Environments, ordered with most recently updated
+        first. Customising the sort behaviour is not currently supported but may be added in the future. Similarly with
+        filtering, this will be implemented in a future release.
+      tags:
+        - connections
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionEnvironmentPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/environments/{environment_id}:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/environment_id'
+    get:
+      operationId: GetEnvironment
+      summary: Get Environment
+      description: |
+        GetEnvironment returns a specific Environment within a Connection.
+      tags:
+        - connections
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateEnvironment
+      summary: Update Environment
+      description: |
+        UpdateEnvironment updates an Environment. Credentials may be reordered and AuthSchemeConfigs updated, however
+        actual Credentials may only be updated via the `UpdateCredential` operation.
+      tags:
+        - connections
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteEnvironment
+      summary: Delete Environment
+      description: |
+        DeleteEnvironment deletes an Environment.
+      tags:
+        - connections
+      parameters:
+        - name: force
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: |
+            Force informs the API to delete the environment even if it has active subscriptions.
+      responses:
+        '204':
+          description: No Content
+        '412':
+          description: Precondition Failed - Environment is in use by another product.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+    post:
+      operationId: CreateConnectionVersion
+      summary: Create Connection Version
+      description: |
+        CreateConnectionVersion creates a new ConnectionVersion for the specified Connection. The ConnectionVersion will
+        be created as a draft (i.e. publishedAt will be `null`).
+      tags:
+        - connections
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionVersionCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionVersion'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: ListConnectionVersions
+      summary: List Connection Versions
+      description: |
+        ListConnectionVersions returns a page of ConnectionVersions ordered by most recently updated first. Customising
+        the sort behaviour is not currently supported but may be added in the future. Similarly with filtering, this
+        will be implemented in a future release.
+      tags:
+        - connections
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionVersionsPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+    get:
+      operationId: GetConnectionVersion
+      summary: Get Connection Version
+      description: |
+        GetConnectionVersion returns a single ConnectionVersion for the specified ID. If one does not exist then a 404
+        will be returned.
+      tags:
+        - connections
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionVersion'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateConnectionVersion
+      summary: Update Connection Version
+      description: |
+        UpdateConnectionVersion updates a ConnectionVersion with the specified request body. Changes to read-only fields
+        will result in a 400 Bad Request response.
+      tags:
+        - connections
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectionVersion'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionVersion'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteConnectionVersion
+      summary: Delete Connection Version
+      description: |
+        DeleteConnectionVersion deletes a ConnectionVersion with the specified version name.
+        
+        By default, a ConnectionVersion may only be deleted if it is not published, however this behaviour can be
+        overridden with the `force` query parameter. This should only be used in exceptional circumstances as it may
+        cause issues with any active subscriptions.
+      tags:
+        - connections
+      parameters:
+        - name: force
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: |
+            Force informs the API to delete the connection even if it is published or has active subscriptions.
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}/publish:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+    post:
+      operationId: PublishConnection
+      summary: Publish Connection
+      description: PublishConnection validates and publishes the specified connection version.
+      tags:
+        - connection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishConnectionResponse'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}/unpublish:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+    post:
+      operationId: UnpublishConnection
+      summary: Unpublish Connection
+      description: |
+        UnpublishConnection un-publishes a published Connection Version. A Connection must be unpublished before it can
+        be deleted, and can only be unpublished if there are no subscriptions to it (i.e. used in a live integration).
+      tags:
+        - connection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnpublishConnectionResponse'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}/actions:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+    get:
+      operationId: GetActions
+      summary: Get Actions
+      description: |
+        GetActions returns a paginated list of Actions for the specified ConnectionVersion.
+      tags:
+        - actions
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - name: name
+          description: |
+            Name filters Actions by name using a case-insensitive substring-match.
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: CreateAction
+      summary: Create Action
+      description: |
+        CreateAction creates a new Action for the specified ConnectionVersion. The Action type must be compatible with
+        the protocol of the Connection, otherwise a 400 Bad Request response will be returned.
+      tags:
+        - actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Action'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}/actions/{action_name}:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+      - $ref: '#/components/parameters/action_name'
+    get:
+      operationId: GetAction
+      summary: Get Action
+      description: |
+        GetAction returns the Action for the specified parameters.
+      tags:
+        - actions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Action'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateAction
+      summary: Update Action
+      description: |
+        UpdateAction updates the specified Action with the request body.
+      tags:
+        - actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Action'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Action'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteAction
+      summary: Delete Action
+      description: |
+        DeleteAction deletes the specified Action.
+      tags:
+        - actions
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}/definitions:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+    get:
+      operationId: GetDefinitions
+      summary: Get Definitions
+      description: |
+        GetDefinitions returns a paginated list of Definitions for the specified ConnectionVersion.
+      tags:
+        - definitions
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - name: name
+          description: |
+            Name filters the returned Definitions using a case-insensitive substring-match.
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefinitionPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: CreateDefinitions
+      summary: Create Definitions
+      description: |
+        CreateDefinitions creates one-many new Definitions for the specified ConnectionVersion. For simple cases, it's
+        recommended to create Definitions individually, however this endpoint can be used to create multiple Definitions
+        for cases where one Definition references another.
+        
+        Definitions with cyclic references can be created in one API call, see the documentation for the
+        `DefinitionCreate` schema for more info.
+      tags:
+        - definitions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefinitionsCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Definitions'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteDefinitions
+      summary: Delete Definitions
+      description: |
+        DeleteDefinitions deletes the specified Definitions as per the request body.
+      tags:
+        - definitions
+      parameters:
+        - name: force
+          description: |
+            Force deletes the specified Definitions, even if they are referenced by other Definitions. This will trigger
+            validation errors for any Definitions that reference the deleted Definitions.
+          in: query
+          required: false
+          schema:
+            x-go-type-skip-optional-pointer: true
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefinitionsDelete'
+      responses:
+        '204':
+          description: No Content
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefinitionDeletePreconditionFailed'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/connections/{connection_id}/versions/{version}/definitions/{definition_name}:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
+      - $ref: '#/components/parameters/version'
+      - $ref: '#/components/parameters/definition_name'
+    get:
+      operationId: GetDefinition
+      summary: Get Definition
+      description: |
+        GetDefinition returns the Definition for the specified parameters.
+      tags:
+        - definitions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Definition'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateDefinition
+      summary: Update Definition
+      description: |
+        UpdateDefinition updates the specified Definition with the request body.
+      tags:
+        - definitions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DefinitionUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Definition'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteDefinition
+      summary: Delete Definition
+      description: |
+        DeleteDefinition deletes the specified Definition.
+      tags:
+        - definitions
+      parameters:
+        - name: force
+          description: |
+            Force deletes the Definition, even if it is referenced by other Definitions. This will cause validation
+            errors on the referring Definitions which will need to be fixed before a Connection may be published.
+          in: query
+          required: false
+          schema:
+            x-go-type-skip-optional-pointer: true
+            type: boolean
+      responses:
+        '204':
+          description: No Content
+        '412':
+          description: Precondition Failed - Definition is referenced by other Definitions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefinitionDeletePreconditionFailed'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/credentials:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    post:
+      operationId: CreateCredential
+      summary: Create Credential
+      description: |
+        CreateCredential creates a new Credential for the specified Organisation. The Credential will be created with
+        the specified request body. The `createdAt` and `updatedAt` fields will be set to the current time.
+      tags:
+        - credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CredentialCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: ListCredentials
+      summary: List Credentials
+      description: |
+        ListCredentials returns a paginated list of Credentials, ordered with most recently updated first.
+        Customising the sort behaviour is not currently supported but may be added in the future. Similarly
+        with filtering, this will be implemented in a future release.
+      tags:
+        - credentials
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialsPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/credentials/{credential_id}:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/credential_id'
+    get:
+      operationId: GetCredential
+      summary: Get Credential
+      description: |
+        GetCredential returns the Credential with the specified ID. If the Credential does not exist then a 404 Not
+        Found response will be returned.
+      tags:
+        - credentials
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateCredential
+      summary: Update Credential
+      description: |
+        UpdateCredential updates the Credential with the specified ID. If the Credential does not exist then a 404 Not
+        Found response will be returned.
+      tags:
+        - credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credential'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credential'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteCredential
+      summary: Delete Credential
+      description: |
+        DeleteCredential deletes the Credential with the specified ID. If the Credential does not exist then a 404 Not
+        Found response will be returned.
+      tags:
+        - credentials
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/protocols:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    get:
+      operationId: ListProtocols
+      summary: List Protocols
+      description: |
+        ListProtocols returns all the supported Protocols for this organisation. If a desired Protocol is not listed
+        then please contact support@versori.io to request it be added.
+      tags:
+        - protocols
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtocolPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/protocols/{protocol_slug}/auth-schemes:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/protocol_slug'
+    get:
+      operationId: ListAuthSchemes
+      summary: List Auth Schemes
+      description: |
+        ListAuthSchemes returns all the supported Auth Schemes for the provided Protocol within this organisation. If a
+        desired Auth Scheme is not listed then please contact support@versori.io to request it be added.
+      tags:
+        - protocols
+        - auth-schemes
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSchemePage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/protocols/{protocol_slug}/upload-url:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/protocol_slug'
+    get:
+      operationId: GetProtocolUploadURL
+      summary: Get Protocol Upload URL
+      description: |
+        GetProtocolUploadURL returns a Signed URL to an object storage service which can be used to upload a file via
+        a PUT request. This is used as a precursor to importing a Connection from a file, which expects a URL. If the
+        user already has a publicly accessible URL to a file then this step can be skipped.
+        
+        The URL will be valid for 5 minutes and can only be used once.
+        
+        The content_type and content_length parameters are required to enforce any size and content type restrictions,
+        and these must be sent with the PUT request to the returned URL.
+      tags:
+        - protocols
+      parameters:
+        - name: filename
+          in: query
+          description: The name of the file to be uploaded.
+          required: true
+          schema:
+            type: string
+        - name: content_type
+          in: query
+          description: The content type of the file to be uploaded.
+          required: true
+          schema:
+            type: string
+        - name: content_length
+          in: query
+          description: The content length of the file to be uploaded.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignedURL'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/protocols/http/connections:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    post:
+      operationId: CreateHTTPConnection
+      summary: Create HTTP Connection
+      description: |
+        CreateHTTPConnection creates a new HTTP Connection. By default the Connection will be created in a draft state
+        and will need to be published before it can be used by other Versori products.
+      tags:
+        - connections
+        - protocol-http
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HTTPConnectionCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPConnection'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/protocols/http/import:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    post:
+      operationId: ImportHTTPConnection
+      summary: Import HTTP Connection
+      description: |
+        ImportHTTPConnection imports a Connection from another format such as OpenAPI or Postman
+        Collections. The Connection will be created in a draft state and will need to be published 
+        before it can be used in a live board.
+      tags:
+        - connections
+        - protocol-http
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to be imported.
+                metadata:
+                  $ref: '#/components/schemas/ImportHTTPConnectionMetadata'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportHTTPConnectionResult'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/protocols/bigquery/connections:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    post:
+      operationId: CreateBigQueryConnection
+      summary: Create BigQuery Connection
+      description: |
+        CreateBigQueryConnection creates a new BigQuery Connection. By default the Connection will be created in a
+        draft state and will need to be published before it can be used by other Versori products.
+      tags:
+        - connections
+        - protocol-bigquery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BigQueryConnectionCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BigQueryConnection'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /o/{organisation_id}/auth-schemes/oauth2/callback:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    get:
+      operationId: HandleOAuth2ConnectionCallback
+      summary: Handle OAuth2 Connection Callback
+      description: |
+        HandleOAuth2ConnectionCallback is the callback endpoint for OAuth2 Connections to exchange an authorization code
+        for an access token. Since this is an API and not a front-end application, OAuth2 Applications should not
+        redirect to this URL, but should be redirected to a front-end application which can then call this endpoint via
+        XHR to complete the flow.
+      tags:
+        - auth-schemes
+      parameters:
+        - name: code
+          in: query
+          description: The authorization code returned by the OAuth2 provider.
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: The state value returned by the OAuth2 provider.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+security:
+  - cookie: [ ]
+  - bearerToken: [ ]
+components:
+  schemas:
+    PageInfo:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        next:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        prev:
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - totalCount
+    MessageSeverity:
+      type: string
+      enum:
+        - info
+        - warning
+        - error
+    Message:
+      description: |
+        Message is a message to be displayed to the user to indicate some information about the
+        preceding request.
+      type: object
+      properties:
+        text:
+          description: Text contains the text of the message.
+          type: string
+        severity:
+          $ref: '#/components/schemas/MessageSeverity'
+        detail:
+          description: |
+            Details contains additional information about the message. This is intended to be used
+            to provide more information about the message, such as a list of validation errors.
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - text
+        - severity
+    ContentType:
+      type: string
+      description: >-
+        ContentType is a string type which is used to represent the content type of some data, whose syntax is defined 
+        by [RFC 2045 Section 5.1](https://datatracker.ietf.org/doc/html/rfc2045#section-5.1). It is down to the 
+        individual API operation to determine whether a particular content-type is allowable.
+        
+        For the purposes of being explicit, the content-type may include parameters (such as charset) for example,
+        "application/json; charset=utf-8". Consumers or producers of this API who care about the underlying media 
+        type (i.e. "application/json") must parse this value accordingly.
+    InferredReference:
+      description: |
+        InferredReference is an object with just a single `id` property which is used to reference another object. The
+        context surrounding the InferredReference will determine the type of the object.
+      type: object
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+      required:
+        - id
+    CredentialType:
+      description: |
+        CredentialType denotes the type of the credential which determines what the Credential's `data` property will
+        contain.
+        
+        - none: No credential is required to authenticate with the Connection.
+        - string: The credential is a string value, such as an API key or password.
+        - binary: The credential is a binary value, such as a private key, certificate or other file.
+        - basic-auth: The credential is a username and password to be used for basic authentication.
+        - oauth2-client: The credential is an OAuth2 client ID and secret to be used for OAuth2 authentication.
+        - oauth2-token: The credential is an OAuth2 access_token to be used for OAuth2 authentication.
+      type: string
+      enum:
+        - none
+        - string
+        - binary
+        - basic-auth
+        - oauth2-client
+        - oauth2-token
+    CredentialDataNone:
+      description: |
+        CredentialDataNone contains no data as no credential is required to authenticate with the Connection. It is used
+        purely as a placeholder to implement a consistent interface across all CredentialType/AuthSchemeTypes.
+      type: object
+      additionalProperties: false
+    CredentialDataString:
+      description: |
+        CredentialDataString contains a string value and nothing else and is commonly used for API keys. This value 
+        will be redacted when returned in a response.
+      type: object
+      properties:
+        value:
+          type: string
+          description: |
+            Value is a UTF-8 string containing the credential data. When read from the API this field will be redacted.
+      required:
+        - value
+    CredentialDataBinary:
+      description: |
+        CredentialDataBinary is commonly used to store non-string data such as binary files or encryption keys. This 
+        value will be redacted when returned in a response.
+      type: object
+      properties:
+        valueBase64:
+          type: string
+          description: |
+            Value is a base64 encoded string containing the credential data. This could decode to a valid utf-8 string,
+            or it could decode to a binary file such as a private key etc. When read from the API this field will be 
+            redacted.
+      required:
+        - valueBase64
+    CredentialDataBasicAuth:
+      description: |
+        CredentialDataBasicAuth contains the username and password required to authenticate with the Connection. The
+        `password` property will be redacted when returned in a response.
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username is the username used to authenticate with the Connection.
+        password:
+          type: string
+          description: |
+            Password is the password used to authenticate with the Connection. Will be redacted when returned in a
+            response.
+      required:
+        - username
+        - password
+    CredentialDataOAuth2Client:
+      description: |
+        CredentialDataOAuth2Client contains the OAuth2 client credentials required to either issue an access token from
+        a refresh_token, or via the `client_credentials` grant type. The `clientSecret` property will be redacted when
+        returned in a response.
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: |
+            ClientID is the OAuth2 client ID used to authenticate with the Connection.
+          x-go-name: ClientID
+        clientSecret:
+          type: string
+          description: |
+            ClientSecret is the OAuth2 client secret used to authenticate with the Connection. Will be redacted when
+            returned in a response.
+        authorizeUrl:
+          type: string
+          format: uri
+          description: AuthorizeURL is the URL which the user will be redirected to in order to authorize the application.
+          x-go-name: AuthorizeURL
+        tokenUrl:
+          type: string
+          format: uri
+          description: TokenURL is the URL which the application will use to issue an access token.
+          x-go-name: TokenURL
+        scopes:
+          type: array
+          items:
+            type: string
+          description: |
+            Scopes is a list of scopes which should be requested when issuing an access token. This is only required if
+            this credential is being used on a `client_credentials` grant type, for `authorization_code` grant types the
+            requested scopes come from the `CredentialDataOAuth2Token` credential.
+          x-go-type-skip-optional-pointer: true
+        additionalParams:
+          type: object
+          x-go-type-skip-optional-pointer: true
+          additionalProperties:
+            type: string
+      required:
+        - clientId
+        - clientSecret
+        - authorizeUrl
+        - tokenUrl
+    CredentialDataOAuth2Token:
+      description: |
+        CredentialDataOAuth2Token is primarily used to store the refresh_token for an user who has authorized an OAuth2
+        Application to access their data. However, this information is not exposed publicly and the only data visible
+        via the API are the `scopes` which the user has granted consent for. This can be used to determine whether
+        the user should be prompted to re-authorize the application with additional scopes in the event they choose to
+        use a new endpoint which requires additional scopes to what they've already consented to.
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: |
+            ClientID is the OAuth2 client ID used to authenticate with the Connection.
+          x-go-name: ClientID
+        clientSecret:
+          type: string
+          description: |
+            ClientSecret is the OAuth2 client secret used to authenticate with the Connection. This will be redacted
+            when read from the API.
+        authorizeUrl:
+          type: string
+          format: uri
+          description: AuthorizeURL is the URL which the user will be redirected to in order to authorize the application.
+          x-go-name: AuthorizeURL
+        tokenUrl:
+          type: string
+          format: uri
+          description: TokenURL is the URL which the application will use to issue an access token.
+          x-go-name: TokenURL
+        scopes:
+          type: array
+          items:
+            type: string
+          description: Scopes is a list of scopes which the user has granted consent for.
+        accessToken:
+          type: string
+          description: |
+            AccessToken is the OAuth2 access token which can be used to authenticate with the Connection. This 
+            information is redacted when read from the API.
+        refreshToken:
+          type: string
+          description: |
+            RefreshToken is the OAuth2 refresh token which can be used to issue new access tokens. This information is
+            redacted when read from the API.
+        additionalParams:
+          type: object
+          additionalProperties:
+            type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - clientId
+        - clientSecret
+        - authorizeUrl
+        - tokenUrl
+        - scopes
+    Credential:
+      description: |
+        CredentialBase is the base type for all credentials. It contains the common properties which are shared across
+        all credential types.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier of the Credential.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        name:
+          type: string
+          description: Name is the name of the Credential.
+        usages:
+          $ref: '#/components/schemas/CredentialUsages'
+        errors:
+          description: |
+            Errors is a list of errors which occurred when attempting to validate the credential. This field may be
+            undefined, which implies that validation has not occurred and the consumer cannot assume whether this
+            Credential is valid or not. An empty array indicates that the Credential is valid.
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/CredentialDataNone'
+            - $ref: '#/components/schemas/CredentialDataString'
+            - $ref: '#/components/schemas/CredentialDataBinary'
+            - $ref: '#/components/schemas/CredentialDataBasicAuth'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Client'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Token'
+        createdAt:
+          description: CreatedAt is the time at which the Credential was created.
+          type: string
+          format: date-time
+        updatedAt:
+          description: UpdatedAt is the time at which the Credential was last updated.
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - name
+        - data
+        - createdAt
+        - updatedAt
+    CredentialUsageEnvironment:
+      description: |
+        CredentialUsageEnvironment contains the information about an Environment which is using a Credential. This also
+        includes a summary of the Connection it belongs to.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Environment. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connection's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the name of the Environment.
+        slug:
+          type: string
+          description: Slug is the kebab-case name of the Environment.
+        connection:
+          $ref: '#/components/schemas/ConnectionSummaryBase'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the Environment was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the Environment was last updated.
+      required:
+        - id
+        - name
+        - slug
+        - connection
+        - createdAt
+        - updatedAt
+    CredentialUsage:
+      description: |
+        CredentialUsage contains the information about a Connection which is using a Credential. This object currently
+        only supports tracking usage by other environments, but in the future new fields may be added to track usage
+        by other entities such as, but not limited to, Boards, Hubs and Users.
+      type: object
+      properties:
+        environment:
+          $ref: '#/components/schemas/CredentialUsageEnvironment'
+      required:
+        - environment
+    CredentialUsages:
+      description: |
+        CredentialUsages is a list of references to the Connections which are using this Credential. To aid performance,
+        this field will only be defined for specific endpoints. An undefined property means that the usages have not
+        been loaded, whereas an empty array indicates that the credential is not used by any connections.
+      type: array
+      items:
+        $ref: '#/components/schemas/CredentialUsage'
+      x-go-type-skip-optional-pointer: true
+    CredentialSummary:
+      description: |
+        CredentialsSummary contains a summary of a Credential. It does not contain the credential data but includes an
+        array of Connections which are using it. The full Credential can be retrieved by using the `id` field with the
+        `GetCredential` operation.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier of the Credential.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        name:
+          description: Name is the name of the Credential.
+          type: string
+        authSchemeType:
+          $ref: '#/components/schemas/AuthSchemeType'
+        usages:
+          $ref: '#/components/schemas/CredentialUsages'
+        errors:
+          description: |
+            Errors is a list of errors which occurred when attempting to validate the credential. This will only be
+            defined if the credential is invalid.
+          type: array
+          item:
+            type: string
+      required:
+        - id
+        - type
+        - name
+        - authSchemeType
+    CredentialsPage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            credentials:
+              type: array
+              items:
+                $ref: '#/components/schemas/CredentialSummary'
+          required:
+            - credentials
+    CredentialCreate:
+      description: CredentialCreateBase contains the common fields to create a new credential.
+      type: object
+      properties:
+        name:
+          description: Name is the name of the Credential.
+          type: string
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/CredentialDataNone'
+            - $ref: '#/components/schemas/CredentialDataString'
+            - $ref: '#/components/schemas/CredentialDataBinary'
+            - $ref: '#/components/schemas/CredentialDataBasicAuth'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Client'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Token'
+      required:
+        - name
+        - type
+        - data
+    CredentialCreateOrReference:
+      description: |
+        CredentialCreateOrReference is a union type which can be used to create a new Credential or reference an
+        existing Credential.
+      oneOf:
+        - $ref: '#/components/schemas/CredentialCreate'
+        - $ref: '#/components/schemas/InferredReference'
+    EnvironmentVariable:
+      description: EnvironmentVariable denotes an arbitrary key/value pair which can be used to configure a connection.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the name of the environment variable.
+        value:
+          type: string
+          description: Value is the value of the environment variable.
+      required:
+        - name
+        - value
+    EnvironmentCredential:
+      description: >-
+        EnvironmentCredential contains the a Credential and the AuthSchemeConfig to define how the Credential should be
+        used against the Environment's Connection.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+        credential:
+          $ref: '#/components/schemas/Credential'
+      required:
+        - id
+        - authSchemeConfig
+        - credential
+    EnvironmentCredentialCreate:
+      description: >-
+        EnvironmentCredentialCreate contains an AuthSchemeConfig and either a Credential to create, or a reference to 
+        an existing Credential to define how the environment should authenticate to a Connection.
+      properties:
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+        credential:
+          $ref: '#/components/schemas/CredentialCreateOrReference'
+      required:
+        - authSchemeConfig
+        - credential
+    EnvironmentCredentialUpdate:
+      description: >-
+        EnvironmentCredentialUpdate allows users to update an AuthSchemeConfig for a given EnvironmentCredential. This
+        cannot be used to update the Credential itself, in order to do that the `UpdateCredential` operation should be
+        used.
+        
+        The `authSchemeConfig.schemeType` field cannot be mutated, in order to achieve this a new EnvironmentCredential 
+        must be added and the old one deleted.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+      required:
+        - id
+        - authSchemeConfig
+    EnvironmentCredentials:
+      description: |
+        EnvironmentCredentials defines the Action and Trigger credentials for the owning Connection. If multiple
+        credentials are defined for each type, they are applied to the request in the order they are defined. This is to
+        enable Connections which require both a user session token and an API key to be provided in the request.
+      type: object
+      properties:
+        action:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCredential'
+          x-go-type-skip-optional-pointer: true
+        trigger:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCredential'
+          x-go-type-skip-optional-pointer: true
+      minProperties: 1
+    EnvironmentCredentialsCreate:
+      description: |
+        EnvironmentCredentialsCreate defines the Action and Trigger credentials for the owning Connection.
+        
+        This supports defining multiple credentials for each type, which are applied to the request in the order they
+        are defined. This is to enable Connections which require both a user session token and an API key to be provided
+        in the request.
+        
+        This object can either define a reference to an existing Credential via the InferredReference object, or it can
+        define a new Credential via the CredentialCreate object.
+      type: object
+      properties:
+        action:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCredentialCreate'
+          x-go-type-skip-optional-pointer: true
+        trigger:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCredentialCreate'
+          x-go-type-skip-optional-pointer: true
+    EnvironmentCredentialsUpdate:
+      description: |
+        EnvironmentCredentialsUpdate defines the Action and Trigger credentials for the owning Connection.
+        
+        Only the order and the AuthSchemeConfig of each EnvironmentCredential can be updated. To update the underlying
+        Credential, the `UpdateCredential` operation should be used.
+      type: object
+      properties:
+        action:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCredentialUpdate'
+          x-go-type-skip-optional-pointer: true
+        trigger:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCredentialUpdate'
+          x-go-type-skip-optional-pointer: true
+    Environment:
+      description: |
+        Environment defines the Action and Trigger credentials for the owning Connection, and additional variables
+        which can be used to customize the Connection in a particular environment.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Environment. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connection's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the name of the Environment. This must be unique within the owning Connection.
+        credentials:
+          $ref: '#/components/schemas/EnvironmentCredentials'
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentVariable'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the Environment was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the Environment was last updated.
+      required:
+        - id
+        - name
+        - credentials
+        - variables
+        - createdAt
+        - updatedAt
+    EnvironmentSummary:
+      description: EnvironmentSummary defines a summary of an Environment.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Environment. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connection's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the name of the Environment.
+        slug:
+          type: string
+          description: Slug is the kebab-case name of the Environment.
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the Environment was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the Environment was last updated.
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+    EnvironmentCreate:
+      description: EnvironmentCreate defines the environment to create against a Connection.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the name of the Environment.
+        credentials:
+          $ref: '#/components/schemas/EnvironmentCredentialsCreate'
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentVariable'
+      required:
+        - name
+        - credentials
+        - variables
+    EnvironmentUpdate:
+      description: |
+        EnvironmentUpdate defines the updates to apply to an existing Environment.
+        
+        This supports renaming the Environment, editing variables, and updating the order and AuthSchemeConfig of each
+        EnvironmentCredential.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Environment. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connection's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the new name of the Environment.
+        credentials:
+          $ref: '#/components/schemas/EnvironmentCredentialsUpdate'
+        variables:
+          description: |
+            Variables, if set, will replace the existing variables in the Environment. Setting to an empty array will
+            delete all variables. Omitting this field will leave the existing variables unchanged.
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentVariable'
+          x-go-type-skip-optional-pointer: true
+      required:
+        - id
+        - name
+    EnvironmentUpdateOrCreate:
+      description: |
+        EnvironmentUpdateOrCreate is used within the `UpdateConnection` operation to perform one of the following
+        actions:
+        
+        - Reorder the Environments - Use the EnvironmentUpdate payload without any changes
+        - Update an existing Environment - Use the EnvironmentUpdate payload with changes as required
+        - Create a new Environment - Use the EnvironmentCreate payload
+      oneOf:
+        - $ref: '#/components/schemas/EnvironmentUpdate'
+        - $ref: '#/components/schemas/EnvironmentCreate'
+    ConnectionEnvironmentPage:
+      description: ConnectionEnvironmentPage defines a page of Environment summaries.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/EnvironmentSummary'
+              x-go-type-skip-optional-pointer: true
+    ConnectionBase:
+      description: ConnectionBase holds common fields which exist across all Connection protocols.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: ID is the unique identifier of the Connection.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        organisationId:
+          type: string
+          format: ulid
+          description: OrganisationID is the unique identifier of the Organisation that owns the Connection.
+          x-go-name: OrganisationID
+        name:
+          type: string
+          description: Name is the user-provided name of the Connection
+        protocol:
+          $ref: '#/components/schemas/ProtocolType'
+        authSchemeConfigs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthSchemeConfig'
+        environmentVariables:
+          type: array
+          description: Environment Variables is a list of default variables initialised in every connection environment.
+          items:
+            $ref: '#/components/schemas/EnvironmentVariable'
+          x-go-type-skip-optional-pointer: true
+        environments:
+          type: array
+          description: Environments is a list of all the environments this Connection has.
+          items:
+            $ref: '#/components/schemas/Environment'
+        versions:
+          type: array
+          description: Versions is a list of all the versions this Connection has.
+          items:
+            $ref: '#/components/schemas/ConnectionVersion'
+          x-go-type-skip-optional-pointer: true
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time at which the ConnectionVersion was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: |
+            UpdatedAt is the time at which the ConnectionVersion was last updated, including any changes to child
+            resources.
+      required:
+        - id
+        - organisationId
+        - name
+        - protocol
+        - environments
+        - version
+        - createdAt
+        - updatedAt
+    ConnectionSummaryBase:
+      description: ConnectionSummaryBase exposes a summary of a Connection irrespective of protocol.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: ID is the unique identifier of the Connection.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        organisationId:
+          type: string
+          format: ulid
+          description: OrganisationID is the unique identifier of the Organisation that owns the Connection.
+          x-go-name: OrganisationID
+        name:
+          type: string
+          description: Name is the user-provided name of the Connection
+        protocol:
+          $ref: '#/components/schemas/ProtocolType'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time at which the ConnectionVersion was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: |
+            UpdatedAt is the time at which the ConnectionVersion was last updated, including any changes to child
+            resources.
+      required:
+        - id
+        - organisationId
+        - name
+        - protocol
+        - createdAt
+        - updatedAt
+    ConnectionUpdateBase:
+      description: |
+        ConnectionUpdateBase provides the common fields to update any Connection type. Attempts to mutate a field marked
+        
+        Versions cannot be updated via this endpoint.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: ID is the unique identifier of the Connection.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        organisationId:
+          type: string
+          format: ulid
+          description: OrganisationID is the unique identifier of the Organisation that owns the Connection.
+          x-go-name: OrganisationID
+        name:
+          type: string
+          description: Name is the user-provided name of the Connection
+        protocol:
+          $ref: '#/components/schemas/ProtocolType'
+        authSchemeConfigs:
+          description: |
+            AuthSchemeConfigs, if set, will overwrite the existing list of auth scheme configs with the provided array.
+            This will not affect any existing Environments since they store a copy of the Auth Scheme on creation. In
+            order to update an Environment with an updated Auth Scheme, the user should update the Credential directly.
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthSchemeConfig'
+          x-go-type-skip-optional-pointer: true
+        environments:
+          type: array
+          description: |
+            Environments, if set, will overwrite the existing list of environments with the provided array. This array
+            can only specify existing environments (without edits) or new environments. This is useful for replacing an
+            existing Environment with a new one, or reordering. It's recommended to use the `UpdateEnvironment` 
+            operation to update a single environment.
+          items:
+            $ref: '#/components/schemas/EnvironmentUpdateOrCreate'
+          x-go-type-skip-optional-pointer: true
+      required:
+        - id
+        - organisationId
+        - name
+        - protocol
+    HTTPConnection:
+      description: HTTPConnection represents a connection to an external system over HTTP.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConnectionBase'
+        - properties:
+            protocol:
+              type: string
+              const: http
+            baseUrl:
+              type: string
+              description: BaseURL is the base URL of all HTTP Actions within the Connection.
+              x-go-name: BaseURL
+          required:
+            - protocol
+            - baseUrl
+    HTTPConnectionCreate:
+      description: HTTPConnectionCreate is the input to the CreateHTTPConnection endpoint.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is a user-friendly identifier for a Connection
+        baseUrl:
+          type: string
+          description: BaseURL is the base URL of all HTTP Actions within the Connection.
+          x-go-name: BaseURL
+        environmentVariables:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentVariable'
+          x-go-type-skip-optional-pointer: true
+        authSchemeConfigs:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthSchemeConfig'
+        environments:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCreate'
+      required:
+        - name
+        - baseUrl
+        - authSchemeConfigs
+        - environments
+    HTTPConnectionUpdate:
+      description: |
+        HTTPConnectionUpdate is the input to the UpdateHTTPConnection endpoint. Environments cannot be updated via the
+        UpdateHTTPConnection endpoint. To update an Environment, use the `UpdateEnvironment` endpoint.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConnectionUpdateBase'
+        - properties:
+            protocol:
+              type: string
+              const: http
+            baseUrl:
+              type: string
+              description: BaseURL is the base URL of all HTTP Actions within the Connection.
+              x-go-name: BaseURL
+            environmentVariables:
+              type: array
+              description: |
+                EnvironmentVariables, if set, will overwrite the existing list of environment variables or create new ones with the
+                provided array. This action will be performed on all the connection environments as well.
+              items:
+                $ref: '#/components/schemas/EnvironmentVariable'
+              x-go-type-skip-optional-pointer: true
+          required:
+            - protocol
+            - baseUrl
+    BigQueryConnection:
+      description: BigQueryConnection represents a connection to a Google BigQuery dataset.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConnectionBase'
+        - properties:
+            protocol:
+              type: string
+              const: bigquery
+            datasetId:
+              type: string
+              description: DatasetID is the ID of the BigQuery dataset, in the format "<project_id>.<dataset_name>"
+              x-go-name: DatasetID
+          required:
+            - protocol
+            - datasetId
+    BigQueryConnectionCreate:
+      description: BigQueryConnectionCreate is the input to the CreateBigQueryConnection endpoint.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the user-provided name of the Connection
+        datasetId:
+          type: string
+          description: DatasetID is the ID of the BigQuery dataset, in the format "<project_id>.<dataset_name>"
+          x-go-name: DatasetID
+        environments:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentCreate'
+      required:
+        - name
+        - environments
+    BigQueryConnectionUpdate:
+      description: |
+        BigQueryConnectionUpdate is the input to the UpdateBigQueryConnection endpoint. Environments cannot be updated
+        via the UpdateBigQueryConnection endpoint. To update an Environment, use the `UpdateEnvironment` endpoint.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConnectionUpdateBase'
+        - properties:
+            protocol:
+              type: string
+              enum:
+                - bigquery
+            datasetId:
+              type: string
+              description: DatasetID is the ID of the BigQuery dataset, in the format "<project_id>.<dataset_name>"
+              x-go-name: DatasetID
+          required:
+            - protocol
+            - datasetId
+    ProtocolType:
+      description: ProtocolType denotes the set of all valid connection types.
+      type: string
+      enum:
+        - http
+        - bigquery
+    Connection:
+      description: Connection represents a connection to an external system.
+      discriminator:
+        propertyName: protocol
+        mapping:
+          http: '#/components/schemas/HTTPConnection'
+          bigquery: '#/components/schemas/BigQueryConnection'
+      oneOf:
+        - $ref: '#/components/schemas/HTTPConnection'
+        - $ref: '#/components/schemas/BigQueryConnection'
+    ConnectionUpdate:
+      description: ConnectionUpdate is the input to the UpdateConnection endpoint.
+      discriminator:
+        propertyName: protocol
+        mapping:
+          http: '#/components/schemas/HTTPConnectionUpdate'
+          bigquery: '#/components/schemas/BigQueryConnectionUpdate'
+      oneOf:
+        - $ref: '#/components/schemas/HTTPConnectionUpdate'
+        - $ref: '#/components/schemas/BigQueryConnectionUpdate'
+    ConnectionPage:
+      description: ConnectionPage is a page of Connections.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            connections:
+              type: array
+              items:
+                $ref: '#/components/schemas/Connection'
+          required:
+            - connections
+    ConnectionVersion:
+      description: ConnectionVersion represents a version of a Connection.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the ConnectionVersion, this is typically only used internally and the version
+            `name` is used externally in combination with the Connection `id`.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: |
+            Name denotes the actual version value for the Connection. This can be any value but a consistent naming
+            strategy is recommended, such as SemVer, CalVer or an incrementing number. The names "default" and "latest" 
+            are reserved words and cannot be used.
+        description:
+          type: string
+          description: |
+            Description allows specifying additional information about the ConnectionVersion, such as what changed
+            since the last version etc.
+          x-go-type-skip-optional-pointer: true
+        isLatest:
+          type: boolean
+          description: IsLatest denotes whether this is the latest version of the Connection.
+        isDefault:
+          type: boolean
+          description: IsDefault denotes whether this is the default version of the Connection.
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time at which the ConnectionVersion was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: |
+            UpdatedAt is the time at which the ConnectionVersion was last updated, including any changes to child
+            resources.
+        publishedAt:
+          format: date-time
+          description: |
+            PublishedAt is the time at which the ConnectionVersion was published.
+          # ogen does not support the `type` keyword as an array
+          type: string
+          nullable: true
+      required:
+        - id
+        - name
+        - isLatest
+        - isDefault
+        - createdAt
+        - updatedAt
+        - publishedAt
+    ConnectionVersionCreate:
+      description: ConnectionVersionCreate is the request body for creating a new ConnectionVersion.
+      type: object
+      properties:
+        name:
+          type: string
+          description: |
+            Name denotes the actual version value for the Connection. This can be any value but a consistent naming
+            strategy is recommended, such as SemVer, CalVer or an incrementing number. The names "default" and "latest" 
+            are reserved words and cannot be used.
+        fromVersion:
+          type: string
+          description: |
+            FromVersion is the `name` of another ConnectionVersion from which this ConnectionVersion should be created.
+            If this is not provided then the ConnectionVersion will be created from scratch with no child resources
+            (i.e. Actions, Definitions etc.).
+      required:
+        - name
+    ConnectionVersionsPage:
+      description: ConnectionVersionsPage is a page of ConnectionVersions.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConnectionVersion'
+          required:
+            - items
+    PublishConnectionResponse:
+      description: |
+        PublishConnectionResponse contains the published version with updated values after the published occurred. For
+        example, the publishedAt, isLatest and isDraft will be updated to reflect their latest state.
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/ConnectionVersion'
+      required:
+        - version
+    UnpublishConnectionResponse:
+      description: |
+        UnpublishConnectionResponse contains the unpublished version with updated values after the unpublished
+        occurred. For example, the publishedAt, isLatest and isDraft will be updated to reflect their latest state.
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/ConnectionVersion'
+      required:
+        - version
+    Protocol:
+      description: |
+        Protocol describes a protocol which is supported by Versori and can be used to communicate with an external
+        system.
+      type: object
+      properties:
+        id:
+          description: |
+            ID is the unique identifier of the Protocol, this is typically only used internally and the protocol `slug`
+            is used externally.
+          type: string
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        slug:
+          description: Slug is human-readable unique identifier of the Protocol in kebab-case format.
+          type: string
+        name:
+          description: Name is a human-friendly name to display for the user.
+          type: string
+        description:
+          type: string
+          description: |
+            Description describes the protocol in human-friendly terminology. This text may be displayed to users via a
+            help tooltip or similar.
+        iconURL:
+          type: string
+          format: uri
+          description: IconURL provides a URL to access an icon/image which represents the protocol.
+      required:
+        - id
+        - slug
+        - name
+        - description
+        - iconURL
+    ProtocolPage:
+      description: ProtocolPage is a page of Protocols.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - properties:
+            protocols:
+              type: array
+              items:
+                $ref: '#/components/schemas/Protocol'
+          required:
+            - protocols
+    SignedURL:
+      description: SignedURL contains URLs to upload and download files from a storage provider.
+      type: object
+      properties:
+        uploadUrl:
+          description: |
+            UploadURL is a URL which can be used to upload a file to a storage provider. This is most-commonly a
+            signed-url from an S3-compatible storage provider however the implementation may vary. Users can use this
+            URL in a PUT request to upload a file.
+          type: string
+          format: uri
+          x-go-name: UploadURL
+        url:
+          description: |
+            URL can be used to download the file from a storage provider after it has been uploaded via `uploadUrl`.
+            This URL may be a gs:// or s3:// URL which is not accessible to the public, but it may be provided back to
+            Versori for us to access.
+          type: string
+          format: uri
+      required:
+        - uploadUrl
+        - url
+    AuthSchemeType:
+      description: |
+        Type is a unique identifier of the AuthScheme, this is a kebab-case formatted string, see enum values for
+        possible options.
+      type: string
+      enum:
+        - none
+        - api-key
+        - basic-auth
+        - oauth2
+        - google-service-account
+        - hmac
+    OAuth2Scope:
+      description: |
+        OAuth2Scope represents a single scope which can be requested by an OAuth2 application.
+      type: object
+      properties:
+        name:
+          type: string
+          description: |
+            Name is the name of the scope as determined by the application to which this Connection is connecting to.
+        description:
+          type: string
+          description: |
+            Description describes the scope in human-friendly terminology. This text may be displayed to users via a
+            help tooltip or similar.
+          x-go-type-skip-optional-pointer: true
+      required:
+        - name
+    AuthSchemeConfigOAuth2ClientCredentials:
+      description: |
+        AuthSchemeConfigOAuth2ClientCredentials is a placeholder object to be used when the OAuth2 flow is set to
+        `client_credentials`. There is no other configuration required since the client ID/client secret is provided
+        as part of the Environment's Credential.
+      type: object
+      additionalProperties: false
+    AuthSchemeConfigOAuth2AuthorizationCode:
+      description: |
+        AuthSchemeConfigOAuth2AuthorizationCode defines the credential containing a client ID/client secret which should
+        be used in conjunction with the Environment's Credential to issue new access_tokens from a refresh_token.
+      type: object
+      properties:
+        # TODO: we're reusing this type across create, update and get requests, but for create/update we only need the
+        #  id, and get needs the whole object. We should probably split this into two types but it's a bigger piece of
+        #  work because of all the interim types involved.
+        applicationCredential:
+          $ref: '#/components/schemas/Credential'
+      required:
+        - applicationCredential
+    AuthSchemeConfigOAuth2Flows:
+      description: |
+        AuthSchemeConfigOAuth2Flows defines the OAuth2 flows which the external system supports. At least one flow must
+        be defined, when multiple flows are defined the user will be prompted to select which to use when configuring
+        the Environment.
+      type: object
+      minProperties: 1
+      properties:
+        clientCredentials:
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2ClientCredentials'
+        authorizationCode:
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2AuthorizationCode'
+    AuthSchemeConfigNone:
+      description: |
+        AuthSchemeConfigNone is a placeholder object with the schemeType set to `none`. There is no other configuration
+        required.
+      type: object
+      properties:
+        schemeType:
+          type: string
+          const: none
+      required:
+        - schemeType
+    AuthSchemeConfigAPIKey:
+      description: |
+        AuthSchemeConfigAPIKey defines how a Connection uses an API key credential to authenticate with the system.
+      type: object
+      properties:
+        schemeType:
+          type: string
+          const: api-key
+        name:
+          type: string
+          description: Name is the query parameter/header/cookie name which will be used to send the API key.
+        in:
+          type: string
+          enum:
+            - query
+            - header
+            - cookie
+      required:
+        - schemeType
+        - name
+        - in
+    AuthSchemeConfigBasicAuth:
+      description: |
+        AuthSchemeConfigBasicAuth is a placeholder object with the schemeType set to `basic-auth`. There is no other
+        configuration required.
+      type: object
+      properties:
+        schemeType:
+          type: string
+          const: basic-auth
+      required:
+        - schemeType
+    AuthSchemeConfigOAuth2:
+      description: |
+        AuthSchemeConfigOAuth2 defines how a Connection uses an OAuth2 credential to authenticate with the system.
+      type: object
+      properties:
+        schemeType:
+          type: string
+          const: oauth2
+        authorizeUrl:
+          type: string
+          format: uri
+          description: AuthorizeURL is the URL which the user will be redirected to in order to authorize the application.
+          x-go-name: AuthorizeURL
+        tokenUrl:
+          type: string
+          format: uri
+          description: TokenURL is the URL which the application will use to issue an access token.
+          x-go-name: TokenURL
+        scopes:
+          description: |
+            Scopes is the list of OAuth2 scopes which the application supports. The user will be allowed to choose
+            which scopes to request when configuring the Environment.
+          type: array
+          items:
+            $ref: '#/components/schemas/OAuth2Scope'
+        flows:
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2Flows'
+      required:
+        - schemeType
+        - authorizeUrl
+        - tokenUrl
+        - scopes
+        - flows
+    AuthSchemeConfigGoogleServiceAccount:
+      description: |
+        AuthSchemeConfigGoogleServiceAccount is a placeholder object with the schemeType set to
+        `google-service-account`. No further configuration is necessary since the actual credential is defined on the
+        Environment.
+      type: object
+      properties:
+        schemeType:
+          type: string
+          const: google-service-account
+      required:
+        - schemeType
+    AuthSchemeConfigHMAC:
+      description: |
+        AuthSchemeConfigHMAC defines how a Connection uses an HMAC credential to authenticate with the system.
+        
+        This may be used on outbound requests to sign the request body, however it is more commonly used on inbound
+        requests (i.e. from Webhook Triggers) to verify the sender of the request is allowed to invoke the Trigger.
+      type: object
+      properties:
+        schemeType:
+          type: string
+          const: hmac
+        name:
+          type: string
+          description: Name is the query parameter/header/cookie name which will be used to send the API key.
+        in:
+          type: string
+          enum:
+            - query
+            - header
+            - cookie
+        algorithm:
+          description: Algorithm defines the hashing algorithm to use when generating the HMAC signature.
+          type: string
+          enum:
+            - sha1
+            - sha256
+            - sha512
+        digestInputs:
+          description: |
+            DigestInputs defines what parts of a HTTP request are consumed to generate the HMAC signature. Some systems
+            only generate the signature from the request body, others may include the URL. The order of this array
+            defines the order in which the input is fed into the hashing function.
+          type: array
+          items:
+            type: string
+            enum:
+              - body
+              - url
+      required:
+        - schemeType
+        - name
+        - in
+        - algorithm
+        - digestInputs
+    AuthSchemeConfig:
+      description: |
+        AuthSchemeConfig defines how a Connection implements the AuthScheme in order to fulfil its authentication
+        requirements. This is purely the configuration and not the actual credential which is used to authenticate. The
+        credential uses this configuration to determine how to authenticate.
+      discriminator:
+        propertyName: schemeType
+        mapping:
+          none: '#/components/schemas/AuthSchemeConfigNone'
+          api-key: '#/components/schemas/AuthSchemeConfigAPIKey'
+          basic-auth: '#/components/schemas/AuthSchemeConfigBasicAuth'
+          oauth2: '#/components/schemas/AuthSchemeConfigOAuth2'
+          google-service-account: '#/components/schemas/AuthSchemeConfigGoogleServiceAccount'
+          hmac: '#/components/schemas/AuthSchemeConfigHMAC'
+      oneOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigNone'
+        - $ref: '#/components/schemas/AuthSchemeConfigAPIKey'
+        - $ref: '#/components/schemas/AuthSchemeConfigBasicAuth'
+        - $ref: '#/components/schemas/AuthSchemeConfigOAuth2'
+        - $ref: '#/components/schemas/AuthSchemeConfigGoogleServiceAccount'
+        - $ref: '#/components/schemas/AuthSchemeConfigHMAC'
+    AuthScheme:
+      description: |
+        AuthScheme describes an authentication scheme which is supported by Versori and can be used to authenticate
+        with an external system.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the AuthScheme, this is typically only used internally and the `slug` is used
+            to reference the AuthScheme externally.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        type:
+          $ref: '#/components/schemas/AuthSchemeType'
+        name:
+          type: string
+          description: Name is a user-friendly identifier for the AuthScheme
+        description:
+          type: string
+          description: |
+            Description describes the authentication scheme in human-friendly terminology. This text may be displayed to
+            users via a help tooltip or similar.
+      required:
+        - id
+        - type
+        - name
+        - description
+    AuthSchemePage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - properties:
+            authSchemes:
+              type: array
+              items:
+                $ref: '#/components/schemas/AuthScheme'
+          required:
+            - authSchemes
+    DefinitionReference:
+      description: |
+        DefinitionReference defines where another resource references this Definition.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - definition
+            - action
+            - trigger
+        id:
+          type: string
+          format: ulid
+          description: ID is the unique identifier of the Definition/Action/Trigger.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: |
+            Name is unique identifier for the Definition/Action/Trigger within the scope of the Connection. It is
+            expected to both human and machine-readable, i.e. "ProductFeature" or "stock_item".
+          regex: '^[a-zA-Z0-9\-_]+$'
+      required:
+        - type
+        - id
+        - name
+    InlineSchema:
+      description: |
+        InlineSchema is a Schema which is defined inline within the Definition. This is typically used when creating or
+        updating a Definition and the actual schema payload is sent with the request. For retrieval operations, the
+        Definition will contain a URL which resolves to the Schema.
+      type: object
+      properties:
+        contentType:
+          description: |
+            ContentType is the MIME type of the Schema, i.e. application/schema+json or 
+            application/schema+yaml etc. This should not be confused with the media type of the data which 
+            conforms to the Schema.
+            
+            The ContentType may also include parameters as would be appropriate for the content, consumers and producers
+            should be prepared to handle this, i.e. "application/schema+json; charset=utf-8".
+          type: string
+          examples:
+            - application/schema+json
+            - application/schema+yaml
+            - text/xml
+        content:
+          type: string
+          description: |
+            Schema is the actual schema definition. This is typically a JSON Schema, however other formats are supported
+            such as XML Schema.
+      required:
+        - contentType
+        - content
+    DefinitionCommon:
+      description: |
+        DefinitionCommon is the common properties which are shared between Definitions for all of creation, retrieval
+        and updates.
+      properties:
+        name:
+          description: |
+            Name is a unique identifier for the Definition within the scope of the Connection. It is expected to both
+            human and machine-readable, i.e. "Product" or "product_variant".
+          type: string
+          regex: '^[a-zA-Z0-9_\-]+$'
+        accept:
+          description: |
+            Accept indicates which content types, expressed as MIME types, that this definition can accept. This value 
+            is analogous to the Accept HTTP header, as defined in RFC 7231, section 5.3.2, except each type is defined
+            in a separate array element, rather than as a comma-separated list.
+            
+            This does not represent the content type of the schema body itself, but the data which conforms to this 
+            definition. For example, an API may respond in JSON or YAML, but the schema may be a YAML-formatted JSON 
+            Schema. In this case, the Definition's `accept` field could be `["application/json", "text/yaml"]` and 
+            `schema.contentType` will be `application/schema+yaml`.
+          type: array
+          items:
+            type: string
+        description:
+          description: |
+            Description is a human-friendly description of the Definition. This is typically used to describe the
+            purpose of the Definition and how it should be used.
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - name
+        - accept
+    DefinitionsCreateDefinition:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/DefinitionCommon'
+        - type: object
+          properties:
+            schema:
+              $ref: '#/components/schemas/InlineSchema'
+          required:
+            - schema
+    DefinitionsCreate:
+      description: |
+        DefinitionsCreate is the payload used to create new Definitions. Each definition can reference another
+        definition in the same request using the following syntax:
+        
+        ```
+        {
+          "$ref": "#/$defs/{definition_name}"
+        }
+        ```
+        
+        New definitions may also reference existing definitions, however they use the proper URL syntax:
+        
+        ```
+        {
+          "$ref": "https://platform.versori.com/api/schemas/v1/o/{organisation_id}/{connection_id}/{connection_version}/{definition_id}.{media_type_ext}"
+        }
+        ```
+        
+        > Note, the $refs stored in GCS are the `gs://` URLs. The API must transform the URLs to the correct public URL.
+        > Ideally, the Definition's `name` would be in the URL, but this would cause issues if a user wanted to rename a
+        > Definition, which is something I think we should support. For now using `id` is fine, but if we changed to 
+        > in the future, we'd need a way to iterate over all Definitions referencing the one being renamed and update 
+        > the $ref URLs.
+        
+        For referencing existing definitions, the definition name must already exist within the scope of the current
+        Connection and Version.
+        
+        Each definition must have matching `dataMediaTypes` and `schema.mediaType` values.
+      type: object
+      properties:
+        definitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefinitionsCreateDefinition'
+      required:
+        - definitions
+    DefinitionUpdate:
+      description: DefinitionUpdate is the payload used to update an existing Definition.
+      allOf:
+        - type: object
+          properties:
+            id:
+              description: ID is the unique identifier of the Definition. This must be set for updates.
+              type: string
+              format: ulid
+              x-go-name: ID
+              x-go-type: ulid.ULID
+              x-go-type-import:
+                path: versori.dev/vergo/ulid
+          required:
+            - id
+        - $ref: '#/components/schemas/DefinitionCommon'
+        - type: object
+          properties:
+            schema:
+              $ref: '#/components/schemas/InlineSchema'
+    DefinitionsDelete:
+      description: |
+        DefinitionsDelete is the payload used to delete existing Definitions.
+        
+        The `ids` and `names` fields are joined and all Definitions which match either the ID or name will be deleted.
+        However, these properties are mutually exclusive, i.e. you cannot delete the same Definition by both ID and
+        name.
+        
+        In order to delete all Definitions, the `all` field must be set to true and the `ids` and `names` fields must
+        be omitted.
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+            format: ulid
+            x-go-type: ulid.ULID
+            x-go-type-import:
+              path: versori.dev/vergo/ulid
+          x-go-name: IDs
+          x-go-type-skip-optional-pointer: true
+        names:
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+        all:
+          type: boolean
+          description: |
+            All is a flag which indicates that all Definitions should be deleted. This is mutually exclusive with the
+            `ids` and `names` fields.
+          x-go-type-skip-optional-pointer: true
+      minProperties: 1
+    Definition:
+      # TODO: add schema content type in here!!!
+      description: |
+        Definition describes a single definition of a type which is used by the Connection. The schema language used is
+        dependent on the media-type of the Definition, for example JSON Schema is used for media-types application/json.
+      type: object
+      allOf:
+        - type: object
+          properties:
+            id:
+              description: ID is the unique identifier of the Definition.
+              type: string
+              format: ulid
+              x-go-name: ID
+              x-go-type: ulid.ULID
+              x-go-type-import:
+                path: versori.dev/vergo/ulid
+          required:
+            - id
+        - $ref: '#/components/schemas/DefinitionCommon'
+        - type: object
+          properties:
+            url:
+              description: |
+                URL is the location of the actual Schema definition for this Definition entity.
+
+                The structure of this URL will be consistent across all media types for each environment, for example:
+
+                - `https://platform.versori.com/api/schemas/v1/o/{organisation_id}/{connection_id}/{connection_version}/{definition_slug}.{media_type_ext}`
+              type: string
+              format: uri
+            referencedBy:
+              description: |
+                ReferencedBy is a list of DefinitionReference objects which defines what other entities are
+                referencing the this Definition.
+              type: array
+              items:
+                $ref: '#/components/schemas/DefinitionReference'
+              x-go-type-skip-optional-pointer: true
+          required:
+            - url
+    Definitions:
+      description: |
+        Definitions is a list of Definition objects. This is a non-paginated list and contains all definitions related
+        to the originating request (i.e. all created Definitions in a CreateDefinitions request).
+      type: object
+      properties:
+        definitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Definition'
+      required:
+        - definitions
+    DefinitionPage:
+      description: DefinitionPage is a paginated list of Definitions.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - properties:
+            definitions:
+              type: array
+              items:
+                $ref: '#/components/schemas/Definition'
+          required:
+            - definitions
+    DefinitionsDeletePreconditionFailedDefinition:
+      description: |
+        DefinitionsDeletePreconditionFailedDefinition is returned when a Definitions cannot be deleted due to a
+        precondition failure. This is most commonly due to one or more Definitions being referenced by another entity.
+      type: object
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+        referencedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefinitionReference'
+      required:
+        - id
+        - name
+        - referencedBy
+    DefinitionsDeletePreconditionFailed:
+      description: |
+        DefinitionsDeletePreconditionFailed is returned when a Definitions cannot be deleted due to a precondition
+        failure. This is most commonly due to one or more Definitions being referenced by another entity.
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            definitions:
+              type: array
+              items:
+                $ref: '#/components/schemas/DefinitionsDeletePreconditionFailedDefinition'
+    DefinitionDeletePreconditionFailed:
+      description: |
+        DefinitionPreconditionFailed is returned when a Definition cannot be deleted due to a precondition failure. This
+        is most commonly due to the Definition being referenced by another entity.
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - properties:
+            definition:
+              $ref: '#/components/schemas/DefinitionsDeletePreconditionFailedDefinition'
+    ActionTypeEnum:
+      type: string
+      enum:
+        - http
+    ActionError:
+      description: ActionError is the payload returned when an Action fails validation
+      type: object
+      properties:
+        field:
+          description: |
+            Field is the field which failed validation. This is typically a JSON Pointer, i.e.
+            "/parameters/0/properties/id", however this is open for discussion (we should be consistent with the
+            ErrorField type).
+          type: string
+        message:
+          type: string
+          description: |
+            Message is a human-readable description of the error. This is typically a human-readable string, i.e.
+            "The parameter 'id' is invalid".
+        severity:
+          description: |
+            Severity is the severity of the error. This is used to determine how the error should be displayed to the
+            user, i.e. a warning may be displayed in a modal dialog, whereas an error may be displayed inline.
+          type: string
+          enum:
+            - error
+            - warning
+      required:
+        - field
+        - message
+        - severity
+    ActionCommon:
+      description: ActionCommon defines all the common fields for an Action.
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ActionTypeEnum'
+        name:
+          description: |
+            Name is a unique identifier for the Action within the scope of the Connection. It is expected to both
+            human and machine-readable, i.e. "GetProduct" or "get_products", see the validation regex for more details.
+          type: string
+          regex: '^[a-zA-Z0-9_\-$]+$'
+          x-go-type-skip-optional-pointer: true
+        summary:
+          type: string
+          description: |
+            Summary is a human-readable version of the `id` field, i.e. "Get Product" or "Get Products". This is used
+            when displaying the Action to users, however if omitted the `actionId` can be used to display to users
+            instead.
+          x-go-type-skip-optional-pointer: true
+        description:
+          description: |
+            Description is a human-readable description of the Action. It can provide extra information to users about how
+            the Action operates and anything the user may need to be aware of when using it.
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - type
+        - name
+    ActionBase:
+      description: |
+        ActionBase defines all the common fields for an Action.
+      type: object
+      allOf:
+        - properties:
+            id:
+              description: ID is the unique identifier of the Action.
+              type: string
+              x-go-name: ID
+              x-go-type: ulid.ULID
+              x-go-type-import:
+                path: versori.dev/vergo/ulid
+            errors:
+              description: |
+                Errors is a list of ErrorField objects which defines the errors which may be returned by the Action. An
+                empty array denotes that the Action has been validated and no errors were found. If this field is
+                undefined then this means validation has not occurred.
+              type: array
+              items:
+                $ref: '#/components/schemas/ActionError'
+          required:
+            - id
+        - $ref: '#/components/schemas/ActionCommon'
+    ActionCompletion:
+      description: |
+        ActionCompletion defines how an Action may be completed by Switchboard to aid the user in selecting a valid
+        value. Schema TBD.
+      type: object
+      additionalProperties: false
+    HTTPMethod:
+      description: |
+        HTTPMethod defines the HTTP method which will be used when invoking the Action. This is typically one of the
+        standard HTTP methods such as GET, POST, PUT, PATCH or DELETE, but may be any valid HTTP method.
+      type: string
+      enum:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+        - OPTIONS
+        - CONNECT
+        - TRACE
+    ActionPath:
+      description: |
+        ActionPath is appended to the Connection's base URL to build the full URL to send requests to. It may
+        also contain placeholders to inject dynamic values from the following sources:
+
+        - `{{ param.<name> }}` - Injects the value of the parameter with the given name.
+        - `{{ env.<name> }}` - Injects the value of the environment variable with the given name.
+      type: string
+    ActionHTTPParameter:
+      description: |
+        ActionHTTPParameter defines a parameter which is sent to the HTTP endpoint when invoking the Action. This may
+        be a query parameter, header or cookie depending on the `in` field.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the name of the parameter which will be sent to the HTTP endpoint.
+        in:
+          type: string
+          enum:
+            - cookie
+            - header
+            - path
+            - query
+        required:
+          description: Required denotes whether this parameter is required.
+          type: boolean
+        type:
+          description: |
+            Type is the type of the parameter. Currently only scalar types are supported, if you 
+            require complex types then get in touch with support to discuss options.
+          type: string
+          enum:
+            - string
+            - number
+            - integer
+            - boolean
+            # - array
+            # - object
+        default:
+          description: |
+            Default is the default value to use for the parameter if no value is provided by the 
+            user. If this is not defined then the parameter will not be sent to the HTTP endpoint
+            if no value is explicitly provided by the user.
+            
+            If this value is a string, it may be templated using a Go-formatted template 
+            string, i.e. `{{ .env.foo }}` where `foo` is an environment variable defined in the 
+            Connection's Environment.
+          x-go-type-skip-optional-pointer: true
+        completion:
+          $ref: '#/components/schemas/ActionCompletion'
+      required:
+        - name
+        - in
+        - required
+        - type
+    DefinitionRefId:
+      description: DefinitionRefId is a reference to a Definition using its ID.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier of the Definition.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+      required:
+        - id
+    DefinitionRefName:
+      description: DefinitionRefName is a reference to a Definition using its name.
+      type: object
+      properties:
+        name:
+          description: Name is the name of the Definition.
+          type: string
+      required:
+        - name
+    DefinitionRef:
+      description:
+        DefinitionRef is a reference to a Definition. It is used to link a Definition to an ActionDefinition.
+      oneOf:
+        - $ref: '#/components/schemas/DefinitionRefId'
+        - $ref: '#/components/schemas/DefinitionRefName'
+    ActionDefinition:
+      description: ActionDefinition links a Definition to an Action.
+      type: object
+      properties:
+        id:
+          description: |
+            ID is a unique identifier for the request body within the scope of the Action.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        definition:
+          $ref: '#/components/schemas/Definition'
+      required:
+        - id
+        - definition
+    ActionDefinitionCreate:
+      description: |
+        ActionDefinitionCreate is used to create a new ActionDefinition using a reference to an existing Definition.
+      type: object
+      properties:
+        definition:
+          $ref: '#/components/schemas/DefinitionRef'
+      required:
+        - definition
+    ActionHTTPRequestBody:
+      description: |
+        ActionHTTPRequestBody defines whether a request body is required for a particular HTTP Action, and if so which
+        Definitions are considered valid. If this value is undefined then no request body will be sent.
+      type: object
+      properties:
+        required:
+          type: boolean
+          description: Required denotes whether a request body is required for this Action.
+        definitions:
+          description: |
+            An Action may support one Definition per media-type, i.e. application/json or application/xml etc.
+            Attempts to link multiple Definitions with the same media-type will result in an error.
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionDefinition'
+      required:
+        - required
+        - definitions
+    ActionHTTPRequestBodyCreate:
+      description: |
+        ActionHTTPRequestBody defines whether a request body is required for a particular HTTP Action, and if so which
+        Definitions are considered valid. If this value is undefined then no request body will be sent.
+      type: object
+      properties:
+        required:
+          type: boolean
+          description: Required denotes whether a request body is required for this Action.
+        definitions:
+          description: |
+            An Action may support one Definition per media-type, i.e. application/json or application/xml etc.
+            Attempts to link multiple Definitions with the same media-type will result in an error.
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionDefinitionCreate'
+      required:
+        - required
+        - definitions
+    ActionHTTPResponseCommon:
+      description: |
+        ActionHTTPResponseCommon defines the common fields for an ActionHTTPResponse.
+      type: object
+      properties:
+        status:
+          description: |
+            Status is the HTTP status code which is expected from the HTTP endpoint. If this is not defined then this
+            response is treated as the default response, i.e. if no other response matches then this response will be
+            used. An action may only have one default response and each response must have a unique status code.
+          type: integer
+          format: int32
+    ActionHTTPResponse:
+      description: |
+        ActionHTTPResponse defines what responses may be returned by the HTTP server when invoking the Action.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ActionHTTPResponseCommon'
+        - properties:
+            id:
+              type: string
+              format: ulid
+              x-go-name: ID
+              x-go-type: ulid.ULID
+              x-go-type-import:
+                path: versori.dev/vergo/ulid
+            definitions:
+              description: |
+                An Action may support one Definition per media-type, i.e. application/json or application/xml etc.
+                Attempts to link multiple Definitions with the same media-type will result in an error.
+              type: array
+              items:
+                $ref: '#/components/schemas/ActionDefinition'
+          required:
+            - id
+            - definitions
+    ActionHTTPResponseCreate:
+      description: |
+        ActionHTTPResponseCreate is the payload to create a new response for an Action.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ActionHTTPResponseCommon'
+        - properties:
+            definitions:
+              description: |
+                An Action may support one Definition per media-type, i.e. application/json or application/xml etc.
+                Attempts to link multiple Definitions with the same media-type will result in an error.
+              type: array
+              items:
+                $ref: '#/components/schemas/ActionDefinitionCreate'
+          required:
+            - id
+            - definitions
+    ActionHTTPCommon:
+      description: ActionHTTPCommon defines the common fields for all HTTP Actions.
+      properties:
+        type:
+          type: string
+          const: http
+        method:
+          $ref: '#/components/schemas/HTTPMethod'
+        path:
+          $ref: '#/components/schemas/ActionPath'
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionHTTPParameter'
+        requestBody:
+          $ref: '#/components/schemas/ActionHTTPRequestBody'
+        responses:
+          description: |
+            Responses defines the expected responses from the HTTP endpoint. This is used to determine whether the
+            Action was successful or not.
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionHTTPResponse'
+      required:
+        - type
+        - method
+        - url
+        - parameters
+        - responses
+    ActionHTTPCommonCreate:
+      description: ActionHTTPCommon defines the common fields for creating a HTTP Action.
+      properties:
+        type:
+          type: string
+          const: http
+        method:
+          $ref: '#/components/schemas/HTTPMethod'
+        path:
+          $ref: '#/components/schemas/ActionPath'
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionHTTPParameter'
+        requestBody:
+          $ref: '#/components/schemas/ActionHTTPRequestBodyCreate'
+        responses:
+          description: |
+            Responses defines the expected responses from the HTTP endpoint. This is used to determine whether the
+            Action was successful or not. At least one response must be defined in order for the Action to be valid.
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionHTTPResponseCreate'
+      required:
+        - type
+        - method
+        - path
+        - parameters
+        - responses
+    ActionHTTP:
+      description: ActionHTTP defines an HTTP Action.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ActionBase'
+        - $ref: '#/components/schemas/ActionHTTPCommon'
+    ActionHTTPCreate:
+      description: ActionHTTPCreate defines a new HTTP Action to be created.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ActionCommon'
+        - $ref: '#/components/schemas/ActionHTTPCommonCreate'
+    Action:
+      discriminator:
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ActionHTTP'
+    ActionPage:
+      description: ActionPage defines a paginated list of Actions.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - properties:
+            actions:
+              type: array
+              items:
+                $ref: '#/components/schemas/Action'
+    ActionCreate:
+      description: ActionCreate defines a new Action to be created.
+      discriminator:
+        propertyName: type
+        mapping:
+          http: '#/components/schemas/ActionHTTPCreate'
+      oneOf:
+        - $ref: '#/components/schemas/ActionHTTPCreate'
+    ImportHTTPConnectionMetadata:
+      description: |
+        ImportHTTPConnectionMetadata defines the metadata part of the multipart/form-data request
+        when importing a Connection from another format.
+      type: object
+      properties:
+        format:
+          type: string
+          description: |
+            The format of the file to be imported.
+            
+            - `openapi` - OpenAPI 3.x specification, we may include support for 2.x in the future.
+          enum:
+            - openapi
+      required:
+        - format
+    ImportHTTPConnectionResult:
+      description: |
+        ImportHTTPConnectionResult defines the result of importing a Connection from an external
+        format, such as OpenAPI.
+      type: object
+      properties:
+        connection:
+          $ref: '#/components/schemas/HTTPConnection'
+        definitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Definition'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+      required:
+        - connection
+        - definitions
+        - actions
+        - messages
+    ErrorField:
+      description: ErrorField denotes a field which has an error.
+      type: object
+      properties:
+        field:
+          type: string
+          description: |
+            Field is the name of the field which has an error, this may be a path to a nested field, including array
+            elements. The format of this field is of the form: "field1.field2[0].field3"
+        message:
+          type: string
+          description: Message is the error message for this specific field.
+      required:
+        - field
+        - message
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code is a machine-readable error code.
+        message:
+          type: string
+          description: Message is a human-readable error message.
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorField'
+          x-go-type-skip-optional-pointer: true
+        cause:
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - code
+        - message
+  parameters:
+    organisation_id:
+      name: organisation_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: ulid
+        x-go-type: ulid.ULID
+        x-go-type-import:
+          path: versori.dev/vergo/ulid
+    connection_id:
+      name: connection_id
+      in: path
+      required: true
+      description: ID is the unique identifier of the Connection.
+      schema:
+        type: string
+        format: ulid
+        x-go-type: ulid.ULID
+        x-go-type-import:
+          path: versori.dev/vergo/ulid
+    credential_id:
+      name: credential_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: ulid
+        x-go-type: ulid.ULID
+        x-go-type-import:
+          path: versori.dev/vergo/ulid
+    environment_id:
+      name: environment_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: ulid
+        x-go-type: ulid.ULID
+        x-go-type-import:
+          path: versori.dev/vergo/ulid
+    version:
+      name: version
+      description: |
+        Version is the version name of the Connection to retrieve. The reserved names "latest" and "default" may be used
+        to retrieve the latest version or the default version respectively.
+      in: path
+      required: true
+      schema:
+        type: string
+    first:
+      name: first
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 20
+    before:
+      name: before
+      in: query
+      required: false
+      schema:
+        type: string
+    after:
+      name: after
+      in: query
+      required: false
+      schema:
+        type: string
+    sort:
+      name: sort
+      in: query
+      required: false
+      examples:
+        single column ascending:
+          summary: Single column search in ascending order
+          value: id:asc
+        single column descending:
+          summary: Single column search in descending order
+          value: name:desc
+        multiple columns:
+          summary: Multiple column search
+          value: name:asc,id:desc
+      schema:
+        type: string
+        pattern: "^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$"
+    protocol_slug:
+      name: protocol_slug
+      in: path
+      required: true
+      schema:
+        type: string
+    action_name:
+      name: action_name
+      in: path
+      required: true
+      schema:
+        type: string
+    definition_name:
+      name: definition_name
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    cookie:
+      description: Cookie authentication used by the Versori Platform.
+      type: apiKey
+      in: cookie
+      name: cookie
+    bearerToken:
+      description: |
+        Bearer token authentication used by the Versori Platform. External consumers must provide an API key, however
+        internal consumers must provide a JWT id_token issued by our IdP.
+      type: http
+      scheme: bearer
