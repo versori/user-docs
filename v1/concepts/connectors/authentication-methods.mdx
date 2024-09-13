@@ -1,0 +1,80 @@
+---
+title: Authentication Methods
+---
+
+import AuthenticationMethodsOverview from '/snippets/connectors/authentication-methods-overview.mdx';
+
+<AuthenticationMethodsOverview />
+
+The rest of this page covers our standard methods.
+
+## OAuth 2.0
+
+OAuth 2.0 isn’t just a single method, but encapsulates many different methods, referred to as “grant types”, all
+designed under the same standard. Versori offers native support for most of these grant types, if there is one not in
+this list which you require then reach out to support to make a feature request. Most requests like this can be
+addressed within a few days.
+
+### Authorization Code
+
+The `authorization_code` grant is the most commonly used grant type used for consumer-based applications, where users
+are presented a popup to the system’s own login screen to enter their credentials (i.e. email and password). The system
+obtains consent from the user for Versori to access their account on their behalf, and then provides Versori with
+credentials (typically an `access_token` and `refresh_token`) which the platform uses to communicate with the external
+system.
+
+### Client Credentials
+
+The `client_credentials` grant is the preferred option when there isn’t a user to act on behalf of, or in other words,
+Versori is to be seen as a dedicated user when interacting with an external system.
+
+### Password/Resource Owner
+
+The `password` grant is generally not recommended over the `authorization_code` or `client_credentials` grant types, but
+sometimes is the only option when interacting with a system which is outside of your control. This is implemented
+similarly to the `client_credentials` grant, but instead of authenticating as a standalone client to the application,
+you authenticate using a real user’s username and password.
+
+## OIDC
+
+OpenID Connect is built upon OAuth 2.0 but provides a set of standards in how identity information is shared between the
+authorization server (i.e. your external service) and the client (i.e. Versori).
+
+Versori supports the same grant types as OAuth 2.0.
+
+## HTTP
+
+There are two supported HTTP authentication schemes which are supported natively by Versori.
+
+### Bearer Token
+
+Users provide a token to use when authenticating to the system, and Versori attaches this token to all HTTP requests on
+the “Authorization” header with the `Bearer` prefix.
+
+### Basic Authentication
+
+Basic authentication is configured by the user providing their username and password. This is then concatenated in the
+form `{username}:{password}` and base64 encoded. This result is then attached to all HTTP requests on the
+“Authorization” header with the `Basic` prefix.
+
+## API Key
+
+The API key Authentication Method allows specifying a token to send on requests where the token may be set in one of
+three places:
+
+-   Header - and the header name can be manually set
+-   Query string - and the query parameter name can be manually set
+-   Cookie - and the cookie name can be manually set
+
+Versori does not do any other processing of the token such as added a static prefix to the token, so it’s important that
+users connecting via API Key provide the token in its full form.
+
+## HMAC Signatures
+
+HMAC signatures are commonly used in applications supporting webhooks, however we’ve seldom witnessed their use in the
+wild by client applications invoking requests to an upstream service.
+
+Versori allows users to define how the payload to sign is constructed, i.e. some implementations just generate a
+signature of the request body, or URL (with or without query params), or a combination of the two.
+
+The algorithm used to generate the signature is also defined by the user, we support all major algorithms.

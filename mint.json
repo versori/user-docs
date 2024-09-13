@@ -2,65 +2,290 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Versori User Documentation",
   "logo": {
-    "dark": "logo/dark.svg",
-    "light": "logo/light.svg"
+    "dark": "/logo/versori-logo-wordmark-white.svg",
+    "light": "/logo/versori-logo-wordmark.svg"
   },
-  "favicon": "favicon.svg",
+  "favicon": "/logo/versori-logo.svg",
   "colors": {
-    "primary": "#00ADBA",
-    "light": "#00ADBA",
-    "dark": "#00ADBA",
+    "primary": "#00838c",
+    "light": "#00838c",
+    "dark": "#00838c",
     "background": {
-      "dark": "#090014"
-    },
-    "anchors": {
-      "from": "#FF7F57",
-      "to": "#00ADBA"
+      "light": "#ffffff",
+      "dark": "#151919"
     }
   },
-  "primaryTab": {
-    "name": "User Docs"
+  "theme": "prism",
+  "layout": "topnav",
+  "background": {
+    "style": "gradient"
   },
+  "sidebar": {
+    "items": "border"
+  },
+  "topbar": {
+    "style": "gradient"
+  },
+  "search": {
+    "location": "top",
+    "prompt": "Search the docs..."
+  },
+  "rounded": "default",
   "tabs": [
     {
+      "name": "Home",
+      "url": "v1alpha1"
+    },
+    {
       "name": "API Reference",
-      "url": "api-reference"
+      "url": "v1alpha1/api-reference"
+    },
+    {
+      "name": "Home",
+      "url": "v1"
+    },
+    {
+      "name": "API Reference",
+      "url": "v1/api-reference"
     }
   ],
-  "openapi": [
-    "/openapi/switchboard-api.yaml",
-    "/openapi/connect-api-v1alpha1.yaml"
+  "anchors": [
+    {
+      "name": "API Reference",
+      "url": "v1/api-reference/overview"
+    },
+    {
+      "name": "API Reference",
+      "url": "v1alpha1/api-reference/switchboard-api"
+    }
   ],
+  "primaryTab": {
+    "name": "Home"
+  },
+  "openapi": [
+    "/openapi/connect-api-v1.yaml",
+    "/openapi/organisations-api-v1.yaml",
+    "/openapi/switchboard-api-v1alpha1.yaml"
+  ],
+  "versions": [
+    "v1",
+    "v1alpha1"
+  ],
+  "api": {
+    "baseUrl": [
+      "https://platform.versori.com/api"
+    ],
+    "auth": {
+      "inputPrefix": "Bearer",
+      "method": "bearer",
+      "name": "Authorization"
+    },
+    "playground": {
+      "mode": "show",
+      "disableProxy": true
+    },
+    "paramFields": {
+      "expanded": "topLevel"
+    }
+  },
   "navigation": [
     {
+      "group": "Home",
+      "version": "v1",
+      "pages": [
+        "v1/welcome"
+      ]
+    },
+    {
       "group": "Concepts",
-      "pages": ["user-docs/introduction", "user-docs/core-concepts"]
+      "version": "v1",
+      "pages": [
+        "v1/concepts",
+        {
+          "group": "Connectors",
+          "version": "v1",
+          "pages": [
+            "v1/concepts/connectors",
+            "v1/concepts/connectors/protocols",
+            "v1/concepts/connectors/authentication-methods",
+            "v1/concepts/connectors/actions",
+            "v1/concepts/connectors/triggers"
+          ]
+        },
+        "v1/concepts/boards"
+      ]
+    },
+    {
+      "group": "Embedded",
+      "version": "v1",
+      "pages": [
+        "v1/embedded"
+      ]
+    },
+    {
+      "group": "Integrate",
+      "version": "v1",
+      "pages": [
+        "v1/integrate"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "version": "v1",
+      "pages": [
+        "v1/api-reference/overview",
+        "v1/api-reference/authentication",
+        {
+          "group": "Connect API",
+          "version": "v1",
+          "pages": [
+            "v1/api-reference/connect-api",
+            {
+              "group": "Endpoints",
+              "version": "v1",
+              "pages": [
+                {
+                  "group": "Protocol (HTTP)",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/protocol-http/import-http-connector",
+                    "v1/api-reference/connect-api/protocol-http/create-a-new-new-connector-version"
+                  ]
+                },
+                {
+                  "group": "Connectors",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/connectors/list-public-connectors",
+                    "v1/api-reference/connect-api/connectors/create-http-connector",
+                    "v1/api-reference/connect-api/connectors/list-connectors",
+                    "v1/api-reference/connect-api/connectors/get-connector",
+                    "v1/api-reference/connect-api/connectors/update-connector",
+                    "v1/api-reference/connect-api/connectors/update-connector-tags",
+                    "v1/api-reference/connect-api/connectors/update-connector-categories",
+                    "v1/api-reference/connect-api/connectors/upsert-auth-scheme-config-to-connector",
+                    "v1/api-reference/connect-api/connectors/delete-auth-scheme-config",
+                    "v1/api-reference/connect-api/connectors/delete-connector"
+                  ]
+                },
+                {
+                  "group": "Connections",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/connections/create-a-new-connection",
+                    "v1/api-reference/connect-api/connections/list-connector-connections",
+                    "v1/api-reference/connect-api/connections/get-connection",
+                    "v1/api-reference/connect-api/connections/update-connection",
+                    "v1/api-reference/connect-api/connections/delete-connection",
+                    "v1/api-reference/connect-api/connections/initialise-oauth-20-connection"
+                  ]
+                },
+                {
+                  "group": "Connector Versions",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/connector-version/create-connector-version",
+                    "v1/api-reference/connect-api/connector-version/list-connector-versions",
+                    "v1/api-reference/connect-api/connector-version/get-connector-version",
+                    "v1/api-reference/connect-api/connector-version/update-connector-version",
+                    "v1/api-reference/connect-api/connector-version/delete-connector-version",
+                    "v1/api-reference/connect-api/connector-version/import-public-connector-version",
+                    "v1/api-reference/connect-api/connector-version/publish-connector",
+                    "v1/api-reference/connect-api/connector-version/unpublish-connector"
+                  ]
+                },
+                {
+                  "group": "Actions",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/actions/create-action",
+                    "v1/api-reference/connect-api/actions/get-actions",
+                    "v1/api-reference/connect-api/actions/get-action",
+                    "v1/api-reference/connect-api/actions/update-action",
+                    "v1/api-reference/connect-api/actions/delete-action"
+                  ]
+                },
+                {
+                  "group": "Triggers",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/triggers/create-trigger",
+                    "v1/api-reference/connect-api/triggers/get-triggers",
+                    "v1/api-reference/connect-api/triggers/get-trigger",
+                    "v1/api-reference/connect-api/triggers/update-trigger",
+                    "v1/api-reference/connect-api/triggers/delete-trigger"
+                  ]
+                },
+                {
+                  "group": "Definitions",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/definitions/create-definitions",
+                    "v1/api-reference/connect-api/definitions/get-definitions",
+                    "v1/api-reference/connect-api/definitions/get-definition",
+                    "v1/api-reference/connect-api/definitions/update-definition",
+                    "v1/api-reference/connect-api/definitions/delete-definitions",
+                    "v1/api-reference/connect-api/definitions/delete-definition",
+                    "v1/api-reference/connect-api/definitions/get-a-raw-schema"
+                  ]
+                },
+                {
+                  "group": "Protocol",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/protocols/list-protocols",
+                    "v1/api-reference/connect-api/protocols/get-protocol-upload-url",
+                    "v1/api-reference/connect-api/protocols/list-auth-schemes"
+                  ]
+                },
+                {
+                  "group": "Miscellaneous",
+                  "version": "v1",
+                  "pages": [
+                    "v1/api-reference/connect-api/misc/list-all-available-categories"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Concepts",
+      "version": "v1alpha1",
+      "pages": [
+        "v1alpha1/introduction",
+        "v1alpha1/core-concepts"
+      ]
     },
     {
       "group": "Features",
+      "version": "v1alpha1",
       "pages": [
-        "user-docs/features/apps",
-        "user-docs/features/boards",
-        "user-docs/features/board-editor",
-        "user-docs/features/hubs-sdk",
+        "v1alpha1/features/apps",
+        "v1alpha1/features/boards",
+        "v1alpha1/features/board-editor",
+        "v1alpha1/features/hubs-sdk",
         {
           "group": "Actions",
           "pages": [
-            "user-docs/features/actions/overview",
-            "user-docs/features/actions/transformer",
-            "user-docs/features/actions/databuilder",
-            "user-docs/features/actions/filter",
-            "user-docs/features/actions/datamapper",
-            "user-docs/features/actions/batch",
-            "user-docs/features/actions/delay",
-            "user-docs/features/actions/splitter",
-            "user-docs/features/actions/trigger"
+            "v1alpha1/features/actions/overview",
+            "v1alpha1/features/actions/transformer",
+            "v1alpha1/features/actions/databuilder",
+            "v1alpha1/features/actions/filter",
+            "v1alpha1/features/actions/datamapper",
+            "v1alpha1/features/actions/batch",
+            "v1alpha1/features/actions/delay",
+            "v1alpha1/features/actions/splitter",
+            "v1alpha1/features/actions/trigger"
           ]
         }
       ]
     },
     {
       "group": "How-to Guides",
+      "version": "v1alpha1",
       "pages": [
         {
           "group": "Apps",
@@ -68,229 +293,158 @@
             {
               "group": "Onboarding Apps",
               "pages": [
-                "user-docs/how-to-guides/apps/onboarding-apps/rest-api",
-                "user-docs/how-to-guides/apps/onboarding-apps/graphql-api",
-                "user-docs/how-to-guides/apps/onboarding-apps/sql-app"
+                "v1alpha1/how-to-guides/apps/onboarding-apps/rest-api",
+                "v1alpha1/how-to-guides/apps/onboarding-apps/graphql-api",
+                "v1alpha1/how-to-guides/apps/onboarding-apps/sql-app"
               ]
             }
           ]
         },
-        "user-docs/how-to-guides/create-a-board",
-        "user-docs/how-to-guides/connect-to-an-app",
-        "user-docs/how-to-guides/adding-a-webhook",
-        "user-docs/how-to-guides/using-selectors",
-        "user-docs/how-to-guides/using-the-hubs-sdk"
+        "v1alpha1/how-to-guides/create-a-board",
+        "v1alpha1/how-to-guides/connect-to-an-app",
+        "v1alpha1/how-to-guides/adding-a-webhook",
+        "v1alpha1/how-to-guides/using-selectors",
+        "v1alpha1/how-to-guides/using-the-hubs-sdk"
       ]
     },
     {
       "group": "API Reference",
+      "version": "v1alpha1",
       "pages": [
         {
           "group": "Switchboard API",
           "pages": [
-            "api-reference/switchboard-api/preview-the-output-of-a-transformer",
+            "v1alpha1/api-reference/switchboard-api/preview-the-output-of-a-transformer",
             {
               "group": "boards",
               "pages": [
-                "api-reference/switchboard-api/boards/get-organisations-boards",
-                "api-reference/switchboard-api/boards/post-organisations-boards",
-                "api-reference/switchboard-api/boards/post-organisations-myfirstboard",
-                "api-reference/switchboard-api/boards/put-organisations-boards",
-                "api-reference/switchboard-api/boards/delete-organisations-boards",
-                "api-reference/switchboard-api/boards/preview-the-output-of-a-code-action",
-                "api-reference/switchboard-api/boards/post-organisations-boards-actors-test",
-                "api-reference/switchboard-api/boards/post-organisations-boards-publish",
-                "api-reference/switchboard-api/boards/post-organisations-boards-unpublish",
-                "api-reference/switchboard-api/boards/get-organisations-boards-out-of-date-board-nodes",
-                "api-reference/switchboard-api/boards/get-organisations-boards-variables",
-                "api-reference/switchboard-api/boards/put-organisations-boards-variables",
-                "api-reference/switchboard-api/boards/put-organisations-boards-variablesglobal",
-                "api-reference/switchboard-api/boards/put-organisations-boards-variablesdynamic",
-                "api-reference/switchboard-api/boards/get-organisations-out-of-date-board-nodes",
-                "api-reference/switchboard-api/boards/get-organisations-boards-actors-codelogs",
-                "api-reference/switchboard-api/boards/get-organisations-boards-execution-logs",
-                "api-reference/switchboard-api/boards/post-organisations-board-instances-incoming-webhooks",
-                "api-reference/switchboard-api/boards/post-organisations-board-instances-trigger-execution"
+                "v1alpha1/api-reference/switchboard-api/boards/get-organisations-boards",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-boards",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-myfirstboard",
+                "v1alpha1/api-reference/switchboard-api/boards/put-organisations-boards",
+                "v1alpha1/api-reference/switchboard-api/boards/delete-organisations-boards",
+                "v1alpha1/api-reference/switchboard-api/boards/preview-the-output-of-a-code-action",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-boards-actors-test",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-boards-publish",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-boards-unpublish",
+                "v1alpha1/api-reference/switchboard-api/boards/get-organisations-boards-out-of-date-board-nodes",
+                "v1alpha1/api-reference/switchboard-api/boards/get-organisations-boards-variables",
+                "v1alpha1/api-reference/switchboard-api/boards/put-organisations-boards-variables",
+                "v1alpha1/api-reference/switchboard-api/boards/put-organisations-boards-variablesglobal",
+                "v1alpha1/api-reference/switchboard-api/boards/put-organisations-boards-variablesdynamic",
+                "v1alpha1/api-reference/switchboard-api/boards/get-organisations-out-of-date-board-nodes",
+                "v1alpha1/api-reference/switchboard-api/boards/get-organisations-boards-actors-codelogs",
+                "v1alpha1/api-reference/switchboard-api/boards/get-organisations-boards-execution-logs",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-board-instances-incoming-webhooks",
+                "v1alpha1/api-reference/switchboard-api/boards/post-organisations-board-instances-trigger-execution"
               ]
             },
             {
               "group": "hubs",
               "pages": [
-                "api-reference/switchboard-api/hubs/get-organisations-hubs",
-                "api-reference/switchboard-api/hubs/post-organisations-hubs",
-                "api-reference/switchboard-api/hubs/put-organisations-hubs",
-                "api-reference/switchboard-api/hubs/delete-organisations-hubs",
-                "api-reference/switchboard-api/hubs/get-organisations-hubs-boards",
-                "api-reference/switchboard-api/hubs/post-organisations-hubs-boards",
-                "api-reference/switchboard-api/hubs/get-organisations-hubs-boards-integration-info",
-                "api-reference/switchboard-api/hubs/get-organisations-hubs-users",
-                "api-reference/switchboard-api/hubs/get-organisations-hubs-boards-users",
-                "api-reference/switchboard-api/hubs/post-organisations-hubs-boards-users",
-                "api-reference/switchboard-api/hubs/delete-organisations-hubs-boards-users"
+                "v1alpha1/api-reference/switchboard-api/hubs/get-organisations-hubs",
+                "v1alpha1/api-reference/switchboard-api/hubs/post-organisations-hubs",
+                "v1alpha1/api-reference/switchboard-api/hubs/put-organisations-hubs",
+                "v1alpha1/api-reference/switchboard-api/hubs/delete-organisations-hubs",
+                "v1alpha1/api-reference/switchboard-api/hubs/get-organisations-hubs-boards",
+                "v1alpha1/api-reference/switchboard-api/hubs/post-organisations-hubs-boards",
+                "v1alpha1/api-reference/switchboard-api/hubs/get-organisations-hubs-boards-integration-info",
+                "v1alpha1/api-reference/switchboard-api/hubs/get-organisations-hubs-users",
+                "v1alpha1/api-reference/switchboard-api/hubs/get-organisations-hubs-boards-users",
+                "v1alpha1/api-reference/switchboard-api/hubs/post-organisations-hubs-boards-users",
+                "v1alpha1/api-reference/switchboard-api/hubs/delete-organisations-hubs-boards-users"
               ]
             },
             {
               "group": "data-mappings",
               "pages": [
-                "api-reference/switchboard-api/data-mappings/get-organisations-data-mappings",
-                "api-reference/switchboard-api/data-mappings/post-organisations-data-mappings",
-                "api-reference/switchboard-api/data-mappings/put-organisations-data-mappings",
-                "api-reference/switchboard-api/data-mappings/delete-organisations-data-mappings",
-                "api-reference/switchboard-api/data-mappings/get-organisations-data-mappings-entries",
-                "api-reference/switchboard-api/data-mappings/post-organisations-data-mappings-entries",
-                "api-reference/switchboard-api/data-mappings/put-organisations-data-mappings-entries",
-                "api-reference/switchboard-api/data-mappings/delete-organisations-data-mappings-entries"
+                "v1alpha1/api-reference/switchboard-api/data-mappings/get-organisations-data-mappings",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/post-organisations-data-mappings",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/put-organisations-data-mappings",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/delete-organisations-data-mappings",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/get-organisations-data-mappings-entries",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/post-organisations-data-mappings-entries",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/put-organisations-data-mappings-entries",
+                "v1alpha1/api-reference/switchboard-api/data-mappings/delete-organisations-data-mappings-entries"
               ]
             },
             {
               "group": "apps",
               "pages": [
-                "api-reference/switchboard-api/apps/get-apps",
-                "api-reference/switchboard-api/apps/get-organisations-apps",
-                "api-reference/switchboard-api/apps/post-organisations-apps",
-                "api-reference/switchboard-api/apps/put-organisations-apps",
-                "api-reference/switchboard-api/apps/delete-organisations-apps",
-                "api-reference/switchboard-api/apps/post-organisations-apps-operation-builder",
-                "api-reference/switchboard-api/apps/get-connectionsoauth2callback"
+                "v1alpha1/api-reference/switchboard-api/apps/get-apps",
+                "v1alpha1/api-reference/switchboard-api/apps/get-organisations-apps",
+                "v1alpha1/api-reference/switchboard-api/apps/post-organisations-apps",
+                "v1alpha1/api-reference/switchboard-api/apps/put-organisations-apps",
+                "v1alpha1/api-reference/switchboard-api/apps/delete-organisations-apps",
+                "v1alpha1/api-reference/switchboard-api/apps/post-organisations-apps-operation-builder",
+                "v1alpha1/api-reference/switchboard-api/apps/get-connectionsoauth2callback"
               ]
             },
             {
               "group": "operations",
               "pages": [
-                "api-reference/switchboard-api/operations/get-organisations-apps-operations",
-                "api-reference/switchboard-api/operations/post-organisations-apps-operations",
-                "api-reference/switchboard-api/operations/delete-organisations-apps-operations",
-                "api-reference/switchboard-api/operations/get-organisations-apps-operations-schema"
+                "v1alpha1/api-reference/switchboard-api/operations/get-organisations-apps-operations",
+                "v1alpha1/api-reference/switchboard-api/operations/post-organisations-apps-operations",
+                "v1alpha1/api-reference/switchboard-api/operations/delete-organisations-apps-operations",
+                "v1alpha1/api-reference/switchboard-api/operations/get-organisations-apps-operations-schema"
               ]
             },
             {
               "group": "schemas",
               "pages": [
-                "api-reference/switchboard-api/schemas/get-organisations-schemas",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas",
-                "api-reference/switchboard-api/schemas/get-organisations-schemas-info",
-                "api-reference/switchboard-api/schemas/delete-organisations-schemas",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas-clone",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas-publish",
-                "api-reference/switchboard-api/schemas/get-organisations-schemas-operations",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas-operations",
-                "api-reference/switchboard-api/schemas/put-organisations-schemas-operations",
-                "api-reference/switchboard-api/schemas/delete-organisations-schemas-operations",
-                "api-reference/switchboard-api/schemas/get-organisations-schemas-components",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas-components",
-                "api-reference/switchboard-api/schemas/put-organisations-schemas-components",
-                "api-reference/switchboard-api/schemas/delete-organisations-schemas-components",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas-delete-components",
-                "api-reference/switchboard-api/schemas/post-organisations-schemas-operation-builder",
-                "api-reference/switchboard-api/schemas/put-organisations-schemas-import",
-                "api-reference/switchboard-api/schemas/post-organisations-schema-utils-import"
+                "v1alpha1/api-reference/switchboard-api/schemas/get-organisations-schemas",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas",
+                "v1alpha1/api-reference/switchboard-api/schemas/get-organisations-schemas-info",
+                "v1alpha1/api-reference/switchboard-api/schemas/delete-organisations-schemas",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas-clone",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas-publish",
+                "v1alpha1/api-reference/switchboard-api/schemas/get-organisations-schemas-operations",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas-operations",
+                "v1alpha1/api-reference/switchboard-api/schemas/put-organisations-schemas-operations",
+                "v1alpha1/api-reference/switchboard-api/schemas/delete-organisations-schemas-operations",
+                "v1alpha1/api-reference/switchboard-api/schemas/get-organisations-schemas-components",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas-components",
+                "v1alpha1/api-reference/switchboard-api/schemas/put-organisations-schemas-components",
+                "v1alpha1/api-reference/switchboard-api/schemas/delete-organisations-schemas-components",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas-delete-components",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schemas-operation-builder",
+                "v1alpha1/api-reference/switchboard-api/schemas/put-organisations-schemas-import",
+                "v1alpha1/api-reference/switchboard-api/schemas/post-organisations-schema-utils-import"
               ]
             },
-            "api-reference/switchboard-api/get-organisations-schema-utils-signed-url",
-            "api-reference/switchboard-api/post-organisations-schema-utils-source-url",
-            "api-reference/switchboard-api/post-organisations-schema-utils-info",
+            "v1alpha1/api-reference/switchboard-api/get-organisations-schema-utils-signed-url",
+            "v1alpha1/api-reference/switchboard-api/post-organisations-schema-utils-source-url",
+            "v1alpha1/api-reference/switchboard-api/post-organisations-schema-utils-info",
             {
               "group": "connections",
               "pages": [
-                "api-reference/switchboard-api/connections/get-organisations-connected-apps",
-                "api-reference/switchboard-api/connections/get-organisations-connections",
-                "api-reference/switchboard-api/connections/post-organisations-connections",
-                "api-reference/switchboard-api/connections/put-organisations-connections",
-                "api-reference/switchboard-api/connections/delete-organisations-connections",
-                "api-reference/switchboard-api/connections/post-organisations-connection-init"
+                "v1alpha1/api-reference/switchboard-api/connections/get-organisations-connected-apps",
+                "v1alpha1/api-reference/switchboard-api/connections/get-organisations-connections",
+                "v1alpha1/api-reference/switchboard-api/connections/post-organisations-connections",
+                "v1alpha1/api-reference/switchboard-api/connections/put-organisations-connections",
+                "v1alpha1/api-reference/switchboard-api/connections/delete-organisations-connections",
+                "v1alpha1/api-reference/switchboard-api/connections/post-organisations-connection-init"
               ]
             },
             {
               "group": "credentials",
               "pages": [
-                "api-reference/switchboard-api/credentials/get-organisations-credentials",
-                "api-reference/switchboard-api/credentials/post-organisations-credentials",
-                "api-reference/switchboard-api/credentials/put-organisations-credentials",
-                "api-reference/switchboard-api/credentials/delete-organisations-credentials"
+                "v1alpha1/api-reference/switchboard-api/credentials/get-organisations-credentials",
+                "v1alpha1/api-reference/switchboard-api/credentials/post-organisations-credentials",
+                "v1alpha1/api-reference/switchboard-api/credentials/put-organisations-credentials",
+                "v1alpha1/api-reference/switchboard-api/credentials/delete-organisations-credentials"
               ]
             },
-            "api-reference/switchboard-api/get-organisations-signed-url"
-          ]
-        },
-        {
-          "group": "Connect API",
-          "pages": [
-            {
-              "group": "connections",
-              "pages": [
-                "api-reference/connect-api/connections/list-connections",
-                "api-reference/connect-api/connections/get-connection",
-                "api-reference/connect-api/connections/update-connection",
-                "api-reference/connect-api/connections/delete-connection",
-                "api-reference/connect-api/connections/list-connection-environments",
-                "api-reference/connect-api/connections/get-environment",
-                "api-reference/connect-api/connections/update-environment",
-                "api-reference/connect-api/connections/delete-environment",
-                "api-reference/connect-api/connections/list-connection-versions",
-                "api-reference/connect-api/connections/create-connection-version",
-                "api-reference/connect-api/connections/get-connection-version",
-                "api-reference/connect-api/connections/update-connection-version",
-                "api-reference/connect-api/connections/delete-connection-version",
-                "api-reference/connect-api/connections/create-http-connection",
-                "api-reference/connect-api/connections/import-http-connection",
-                "api-reference/connect-api/connections/create-bigquery-connection"
-              ]
-            },
-            {
-              "group": "connection",
-              "pages": [
-                "api-reference/connect-api/connection/publish-connection",
-                "api-reference/connect-api/connection/unpublish-connection"
-              ]
-            },
-            {
-              "group": "actions",
-              "pages": [
-                "api-reference/connect-api/actions/get-actions",
-                "api-reference/connect-api/actions/create-action",
-                "api-reference/connect-api/actions/get-action",
-                "api-reference/connect-api/actions/update-action",
-                "api-reference/connect-api/actions/delete-action"
-              ]
-            },
-            {
-              "group": "definitions",
-              "pages": [
-                "api-reference/connect-api/definitions/get-definitions",
-                "api-reference/connect-api/definitions/create-definitions",
-                "api-reference/connect-api/definitions/delete-definitions",
-                "api-reference/connect-api/definitions/get-definition",
-                "api-reference/connect-api/definitions/update-definition",
-                "api-reference/connect-api/definitions/delete-definition"
-              ]
-            },
-            {
-              "group": "credentials",
-              "pages": [
-                "api-reference/connect-api/credentials/list-credentials",
-                "api-reference/connect-api/credentials/create-credential",
-                "api-reference/connect-api/credentials/get-credential",
-                "api-reference/connect-api/credentials/update-credential",
-                "api-reference/connect-api/credentials/delete-credential"
-              ]
-            },
-            {
-              "group": "protocols",
-              "pages": [
-                "api-reference/connect-api/protocols/list-protocols",
-                "api-reference/connect-api/protocols/list-auth-schemes",
-                "api-reference/connect-api/protocols/get-protocol-upload-url"
-              ]
-            },
-            {
-              "group": "auth-schemes",
-              "pages": [
-                "api-reference/connect-api/auth-schemes/handle-oauth2-connection-callback"
-              ]
-            }
+            "v1alpha1/api-reference/switchboard-api/get-organisations-signed-url"
           ]
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/user-docs/:slug*",
+      "destination": "/user-docs/:slug*"
     }
   ]
 }

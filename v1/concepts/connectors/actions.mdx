@@ -1,0 +1,38 @@
+---
+title: Actions
+---
+
+An Action is an abstraction around how Versori executes some operation on a target system. There are multiple action
+types, which are determined by the protocol of the connection it belongs to.
+
+## HTTP Action
+
+An HTTP Action defines an HTTP request which can be made to an external system. This is loosely modelled around OpenAPI,
+specifically the [Operation Object](https://spec.openapis.org/oas/v3.1.0.html#operation-object).
+
+Definitions are used to define the request and response bodies, similar to OpenAPI, Versori supports multiple content
+types and multiple response statuses.
+
+## GraphQL Action
+
+A GraphQL action is similar to a HTTP action, but defines the query/mutation(s) as part of the action. Definitions are
+used to define the possible response bodies, but instead of a definition being used to model the whole request body,
+instead it just defines the variables (if any) used to execute the request.
+
+Upon creating or updating a GraphQL Action, the provided query is validated against the GraphQL Schema and the platform
+will generate appropriate JSON Schemas for the variables and response body.
+
+## SOAP Action
+
+Again, SOAP is similar to HTTP Actions where it models a HTTP request to send to a SOAP web service.
+
+Adding native XML support into Boards is part of the roadmap, but at the moment Boards only functions with JSON data
+driven by JSON Schema definitions. As such, the main difference between SOAP and HTTP Actions is that there’s an
+automated conversion between XML and JSON, and the platform stores both XSD and JSON Schema Definitions for the request
+and response bodies. Upon execution of a SOAP Action, we use an automated mapping to convert the JSON to XML, perform
+the request, and use another automated mapping to convert the response XML to JSON for the Board to continue execution.
+
+## Action Roadmap
+
+The action types on the roadmap are pretty much a one-to-one mapping to the Connector Protocols on our roadmap. See that
+[section](./protocols) for more info.

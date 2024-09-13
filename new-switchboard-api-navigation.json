@@ -1,0 +1,155 @@
+{
+  "group": "Switchboard API",
+  "pages": [
+    "v1/api-reference/switchboard-api",
+    {
+      "group": "Endpoints",
+      "pages": [
+        {
+          "group": "boards",
+          "pages": [
+            "v1/api-reference/switchboard-api/boards/get-organisations-boards",
+            "v1/api-reference/switchboard-api/boards/post-organisations-boards",
+            "v1/api-reference/switchboard-api/boards/post-organisations-myfirstboard",
+            "v1/api-reference/switchboard-api/boards/post-organisations-boards-duplicate",
+            "v1/api-reference/switchboard-api/boards/put-organisations-boards-thumbnail",
+            "v1/api-reference/switchboard-api/boards/put-organisations-boards-tags",
+            "v1/api-reference/switchboard-api/boards/get-organisations-boards-1",
+            "v1/api-reference/switchboard-api/boards/put-organisations-boards",
+            "v1/api-reference/switchboard-api/boards/delete-organisations-boards",
+            "v1/api-reference/switchboard-api/boards/preview-the-output-of-a-code-action",
+            "v1/api-reference/switchboard-api/boards/post-organisations-boards-actors-test",
+            "v1/api-reference/switchboard-api/boards/post-organisations-boards-publish",
+            "v1/api-reference/switchboard-api/boards/post-organisations-boards-unpublish",
+            "v1/api-reference/switchboard-api/boards/get-organisations-boards-out-of-date-board-nodes",
+            "v1/api-reference/switchboard-api/boards/get-organisations-boards-variables",
+            "v1/api-reference/switchboard-api/boards/put-organisations-boards-variables",
+            "v1/api-reference/switchboard-api/boards/put-organisations-boards-variablesglobal",
+            "v1/api-reference/switchboard-api/boards/put-organisations-boards-variablesdynamic",
+            "v1/api-reference/switchboard-api/boards/get-organisations-out-of-date-board-nodes",
+            "v1/api-reference/switchboard-api/boards/get-organisations-boards-actors-codelogs",
+            "v1/api-reference/switchboard-api/boards/get-organisations-boards-execution-logs",
+            "v1/api-reference/switchboard-api/boards/post-organisations-board-instances-incoming-webhooks",
+            "v1/api-reference/switchboard-api/boards/post-organisations-board-instances-trigger-execution"
+          ]
+        },
+        {
+          "group": "hubs",
+          "pages": [
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs",
+            "v1/api-reference/switchboard-api/hubs/post-organisations-hubs",
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs-1",
+            "v1/api-reference/switchboard-api/hubs/put-organisations-hubs",
+            "v1/api-reference/switchboard-api/hubs/delete-organisations-hubs",
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs-boards",
+            "v1/api-reference/switchboard-api/hubs/post-organisations-hubs-boards",
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs-boards-integration-info",
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs-users",
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs-boards-users",
+            "v1/api-reference/switchboard-api/hubs/post-organisations-hubs-boards-users",
+            "v1/api-reference/switchboard-api/hubs/delete-organisations-hubs-boards-users",
+            "v1/api-reference/switchboard-api/hubs/get-organisations-hubs-hub-builder",
+            "v1/api-reference/switchboard-api/hubs/put-organisations-hubs-hub-builder"
+          ]
+        },
+        {
+          "group": "data-mappings",
+          "pages": [
+            "v1/api-reference/switchboard-api/data-mappings/get-organisations-data-mappings",
+            "v1/api-reference/switchboard-api/data-mappings/post-organisations-data-mappings",
+            "v1/api-reference/switchboard-api/data-mappings/get-organisations-data-mappings-1",
+            "v1/api-reference/switchboard-api/data-mappings/put-organisations-data-mappings",
+            "v1/api-reference/switchboard-api/data-mappings/delete-organisations-data-mappings",
+            "v1/api-reference/switchboard-api/data-mappings/get-organisations-data-mappings-entries",
+            "v1/api-reference/switchboard-api/data-mappings/post-organisations-data-mappings-entries",
+            "v1/api-reference/switchboard-api/data-mappings/get-organisations-data-mappings-entries-1",
+            "v1/api-reference/switchboard-api/data-mappings/put-organisations-data-mappings-entries",
+            "v1/api-reference/switchboard-api/data-mappings/delete-organisations-data-mappings-entries"
+          ]
+        },
+        {
+          "group": "apps",
+          "pages": [
+            "v1/api-reference/switchboard-api/apps/get-apps",
+            "v1/api-reference/switchboard-api/apps/get-apps-1",
+            "v1/api-reference/switchboard-api/apps/get-organisations-apps",
+            "v1/api-reference/switchboard-api/apps/post-organisations-apps",
+            "v1/api-reference/switchboard-api/apps/get-organisations-apps-1",
+            "v1/api-reference/switchboard-api/apps/put-organisations-apps",
+            "v1/api-reference/switchboard-api/apps/delete-organisations-apps",
+            "v1/api-reference/switchboard-api/apps/post-organisations-apps-operation-builder",
+            "v1/api-reference/switchboard-api/apps/get-connectionsoauth2callback"
+          ]
+        },
+        {
+          "group": "operations",
+          "pages": [
+            "v1/api-reference/switchboard-api/operations/get-organisations-apps-operations",
+            "v1/api-reference/switchboard-api/operations/post-organisations-apps-operations",
+            "v1/api-reference/switchboard-api/operations/delete-organisations-apps-operations",
+            "v1/api-reference/switchboard-api/operations/get-organisations-apps-operations-schema"
+          ]
+        },
+        {
+          "group": "schemas",
+          "pages": [
+            "v1/api-reference/switchboard-api/schemas/get-organisations-schemas",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas",
+            "v1/api-reference/switchboard-api/schemas/get-organisations-schemas-info",
+            "v1/api-reference/switchboard-api/schemas/delete-organisations-schemas",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas-clone",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas-publish",
+            "v1/api-reference/switchboard-api/schemas/get-organisations-schemas-operations",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas-operations",
+            "v1/api-reference/switchboard-api/schemas/get-organisations-schemas-operations-1",
+            "v1/api-reference/switchboard-api/schemas/put-organisations-schemas-operations",
+            "v1/api-reference/switchboard-api/schemas/delete-organisations-schemas-operations",
+            "v1/api-reference/switchboard-api/schemas/get-organisations-schemas-components",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas-components",
+            "v1/api-reference/switchboard-api/schemas/get-organisations-schemas-components-1",
+            "v1/api-reference/switchboard-api/schemas/put-organisations-schemas-components",
+            "v1/api-reference/switchboard-api/schemas/delete-organisations-schemas-components",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas-delete-components",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schemas-operation-builder",
+            "v1/api-reference/switchboard-api/schemas/put-organisations-schemas-import",
+            "v1/api-reference/switchboard-api/schemas/post-organisations-schema-utils-import"
+          ]
+        },
+        {
+          "group": "connections",
+          "pages": [
+            "v1/api-reference/switchboard-api/connections/get-organisations-connected-apps",
+            "v1/api-reference/switchboard-api/connections/get-organisations-connections",
+            "v1/api-reference/switchboard-api/connections/post-organisations-connections",
+            "v1/api-reference/switchboard-api/connections/get-organisations-connections-1",
+            "v1/api-reference/switchboard-api/connections/put-organisations-connections",
+            "v1/api-reference/switchboard-api/connections/delete-organisations-connections",
+            "v1/api-reference/switchboard-api/connections/post-organisations-connection-init"
+          ]
+        },
+        {
+          "group": "Credentials",
+          "pages": [
+            "v1/api-reference/switchboard-api/credentials/get-organisations-credentials",
+            "v1/api-reference/switchboard-api/credentials/post-organisations-credentials",
+            "v1/api-reference/switchboard-api/credentials/get-organisations-credentials-1",
+            "v1/api-reference/switchboard-api/credentials/put-organisations-credentials",
+            "v1/api-reference/switchboard-api/credentials/delete-organisations-credentials"
+          ]
+        },
+        {
+          "group": "Miscellaneous",
+          "pages": [
+            "v1/api-reference/switchboard-api/preview-the-output-of-a-transformer",
+            "v1/api-reference/switchboard-api/get-organisations-boards-thumbnail-signed-url",
+            "v1/api-reference/switchboard-api/get-organisations-schema-utils-signed-url",
+            "v1/api-reference/switchboard-api/post-organisations-schema-utils-source-url",
+            "v1/api-reference/switchboard-api/post-organisations-schema-utils-info",
+            "v1/api-reference/switchboard-api/get-organisations-signed-url",
+            "v1/api-reference/switchboard-api/get-organisations-hubs-signed-url"
+          ]
+        }
+      ]
+    }
+  ]
+}
