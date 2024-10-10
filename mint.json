@@ -139,38 +139,45 @@
           "group": "Connect API",
           "version": "v1",
           "pages": [
-            "v1/api-reference/connect-api",
+            "v1/api-reference/connect",
             {
               "group": "Endpoints",
               "version": "v1",
               "pages": [
                 {
                   "group": "Protocol (HTTP)",
-                  "version": "v1",
                   "pages": [
-                    "v1/api-reference/connect-api/protocol-http/import-http-connector",
-                    "v1/api-reference/connect-api/protocol-http/create-a-new-new-connector-version"
+                    "v1/api-reference/connect-api/protocol-http/create-a-new-new-connector-version",
+                    "v1/api-reference/connect-api/protocol-http/import-http-connector"
                   ]
                 },
                 {
                   "group": "Connectors",
-                  "version": "v1",
                   "pages": [
-                    "v1/api-reference/connect-api/connectors/list-public-connectors",
                     "v1/api-reference/connect-api/connectors/create-http-connector",
                     "v1/api-reference/connect-api/connectors/list-connectors",
+                    "v1/api-reference/connect-api/connectors/list-public-connectors",
                     "v1/api-reference/connect-api/connectors/get-connector",
                     "v1/api-reference/connect-api/connectors/update-connector",
                     "v1/api-reference/connect-api/connectors/update-connector-tags",
                     "v1/api-reference/connect-api/connectors/update-connector-categories",
                     "v1/api-reference/connect-api/connectors/upsert-auth-scheme-config-to-connector",
-                    "v1/api-reference/connect-api/connectors/delete-auth-scheme-config",
                     "v1/api-reference/connect-api/connectors/delete-connector"
                   ]
                 },
                 {
+                  "group": "Connector Versions",
+                  "pages": [
+                    "v1/api-reference/connect-api/connector-version/create-connector-version",
+                    "v1/api-reference/connect-api/connector-version/import-public-connector-version",
+                    "v1/api-reference/connect-api/connector-version/list-connector-versions",
+                    "v1/api-reference/connect-api/connector-version/get-connector-version",
+                    "v1/api-reference/connect-api/connector-version/update-connector-version",
+                    "v1/api-reference/connect-api/connector-version/delete-connector-version"
+                  ]
+                },
+                {
                   "group": "Connections",
-                  "version": "v1",
                   "pages": [
                     "v1/api-reference/connect-api/connections/create-a-new-connection",
                     "v1/api-reference/connect-api/connections/list-connector-connections",
@@ -181,68 +188,125 @@
                   ]
                 },
                 {
-                  "group": "Connector Versions",
-                  "version": "v1",
-                  "pages": [
-                    "v1/api-reference/connect-api/connector-version/create-connector-version",
-                    "v1/api-reference/connect-api/connector-version/list-connector-versions",
-                    "v1/api-reference/connect-api/connector-version/get-connector-version",
-                    "v1/api-reference/connect-api/connector-version/update-connector-version",
-                    "v1/api-reference/connect-api/connector-version/delete-connector-version",
-                    "v1/api-reference/connect-api/connector-version/import-public-connector-version",
-                    "v1/api-reference/connect-api/connector-version/publish-connector",
-                    "v1/api-reference/connect-api/connector-version/unpublish-connector"
-                  ]
-                },
-                {
                   "group": "Actions",
-                  "version": "v1",
                   "pages": [
                     "v1/api-reference/connect-api/actions/create-action",
                     "v1/api-reference/connect-api/actions/get-actions",
-                    "v1/api-reference/connect-api/actions/get-action",
-                    "v1/api-reference/connect-api/actions/update-action",
-                    "v1/api-reference/connect-api/actions/delete-action"
+                    "v1/api-reference/connect-api/actions/get-action"
                   ]
                 },
                 {
                   "group": "Triggers",
-                  "version": "v1",
                   "pages": [
                     "v1/api-reference/connect-api/triggers/create-trigger",
                     "v1/api-reference/connect-api/triggers/get-triggers",
-                    "v1/api-reference/connect-api/triggers/get-trigger",
-                    "v1/api-reference/connect-api/triggers/update-trigger",
-                    "v1/api-reference/connect-api/triggers/delete-trigger"
+                    "v1/api-reference/connect-api/triggers/get-trigger"
                   ]
                 },
                 {
                   "group": "Definitions",
-                  "version": "v1",
                   "pages": [
                     "v1/api-reference/connect-api/definitions/create-definitions",
                     "v1/api-reference/connect-api/definitions/get-definitions",
                     "v1/api-reference/connect-api/definitions/get-definition",
+                    "v1/api-reference/connect-api/definitions/get-a-raw-schema",
                     "v1/api-reference/connect-api/definitions/update-definition",
                     "v1/api-reference/connect-api/definitions/delete-definitions",
-                    "v1/api-reference/connect-api/definitions/delete-definition",
-                    "v1/api-reference/connect-api/definitions/get-a-raw-schema"
+                    "v1/api-reference/connect-api/definitions/delete-definition"
                   ]
                 },
                 {
-                  "group": "Protocol",
-                  "version": "v1",
+                  "group": "Protocols",
                   "pages": [
                     "v1/api-reference/connect-api/protocols/list-protocols",
-                    "v1/api-reference/connect-api/protocols/get-protocol-upload-url",
-                    "v1/api-reference/connect-api/protocols/list-auth-schemes"
+                    "v1/api-reference/connect-api/protocols/list-auth-schemes",
+                    "v1/api-reference/connect-api/protocols/get-protocol-upload-url"
                   ]
                 },
                 {
                   "group": "Miscellaneous",
-                  "version": "v1",
                   "pages": [
                     "v1/api-reference/connect-api/misc/list-all-available-categories"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "group": "Embedded API",
+          "version": "v1",
+          "pages": [
+            "v1/api-reference/embedded",
+            {
+              "group": "Endpoints",
+              "pages": [
+                {
+                  "group": "Hubs",
+                  "pages": [
+                    "v1/api-reference/embedded-api/hubs/list-hubs",
+                    "v1/api-reference/embedded-api/hubs/create-a-new-hub",
+                    "v1/api-reference/embedded-api/hubs/retrieve-a-hub",
+                    "v1/api-reference/embedded-api/hubs/create-integration",
+                    "v1/api-reference/embedded-api/hubs/update-integration-information"
+                  ]
+                },
+                {
+                  "group": "End Users",
+                  "pages": [
+                    "v1/api-reference/embedded-api/end-users/list-end-users",
+                    "v1/api-reference/embedded-api/end-users/create-an-end-user",
+                    "v1/api-reference/embedded-api/end-users/retrieve-an-end-user"
+                  ]
+                },
+                {
+                  "group": "Connections",
+                  "pages": [
+                    "v1/api-reference/embedded-api/connections/list-end-user-connections",
+                    "v1/api-reference/embedded-api/connections/create-end-user-connection"
+                  ]
+                },
+                {
+                  "group": "Integrations",
+                  "pages": [
+                    "v1/api-reference/embedded-api/integrations/list-integrations",
+                    "v1/api-reference/embedded-api/integrations/delete-an-integration"
+                  ]
+                },
+                {
+                  "group": "Connectors",
+                  "pages": [
+                    "v1/api-reference/embedded-api/connectors/list-hub-connectors",
+                    "v1/api-reference/embedded-api/connectors/create-a-hub-connector"
+                  ]
+                },
+                {
+                  "group": "Embedded",
+                  "pages": [
+                    "v1/api-reference/embedded-api/embedded/retrieve-an-end-user-connection-used-in-sb-actions-to-get-credentials-for-an-end-user",
+                    "v1/api-reference/embedded-api/embedded/list-end-user-integrations",
+                    "v1/api-reference/embedded-api/embedded/retrieve-an-embedded-integration",
+                    "v1/api-reference/embedded-api/embedded/list-end-user-activations"
+                  ]
+                },
+                {
+                  "group": "connections",
+                  "pages": [
+                    "v1/api-reference/embedded-api/connections/initialise-oauth-20-connection"
+                  ]
+                },
+                {
+                  "group": "Activations",
+                  "pages": [
+                    "v1/api-reference/embedded-api/activations/activate-integration",
+                    "v1/api-reference/embedded-api/activations/retrieve-an-activation",
+                    "v1/api-reference/embedded-api/activations/delete-an-activation"
+                  ]
+                },
+                {
+                  "group": "Miscellaneous",
+                  "pages": [
+                    "v1/api-reference/embedded-api/miscellaneous/health-check"
                   ]
                 }
               ]
