@@ -1,0 +1,187 @@
+---
+title: Introduction
+description: Our next-generation API for connecting to your external systems.
+---
+
+import { Badge } from '/snippets/Badge.mdx';
+
+Connect API allows you to connect to your external systems to the Versori Platform.
+
+The main component of the Connect API are Connectors. Connectors are split into the following components:
+
+-   Protocol
+-   Authentication Scheme
+-   Connections
+-   Global Parameters
+-   Actions
+-   Triggers
+-   Definitions
+
+## Protocol
+
+The protocol defines the transport mechanism used to communicate with your external system.
+
+<Note>
+    Currently, only HTTP/REST APIs are supported within Connect API, however our legacy "Apps" functionality is
+    available on [Switchboard API](/v1/api-reference/switchboard-api) which supports GraphQL APIs and SOAP web services.
+</Note>
+
+## Authentication Scheme
+
+The authentication scheme defines how the Versori Platform will authenticate with your external system. Different
+schemes are applicable to different protocols.
+
+### HTTP
+
+The following authentication schemes are supported for HTTP:
+
+-   OAuth 2.0
+-   OIDC
+-   API Key (in header, query or cookie)
+-   Basic
+-   Bearer
+
+## Connections
+
+Each Connector has at least one connection and additional connections can be added. Connections are used to connect to
+different instances of your external system. For example, you may have a development, staging and production connection,
+each with different credentials and addresses. Each Connection must provide a Credential which satisfies one
+authentication scheme for the Connector. Connections can define variables, which can be used to customise certain
+aspects of the Connector such as default values for certain fields/parameters.
+
+Finally, some protocols may require specific configuration for each connection. For example, the HTTP Protocol requires
+a base URL for each connection.
+
+## Global Parameters
+
+Global Parameters allows a user to configure a set of parameters which can be used across multiple Actions. Within the
+UI, whenever a user starts to create a new Action the UI will pre-populate the Action with the Global Parameters. If the
+Action in question does not require any of these parameters the user may delete them before saving.
+
+When a user creates, updates or deletes a global parameter, the user will be prompted to choose which Actions should
+reflect the change, with the ability to choose all, some or none.
+
+### HTTP Parameters
+
+For HTTP Connectors, the following parameter types may be set as Global Parameters:
+
+-   Path parameters
+-   Query parameters
+-   Headers
+
+## Actions
+
+Actions define the actions that can be performed on your external system. An action may be defined and implemented
+differently depending on the protocol. For example, an HTTP Action contains a method like GET, PUT, POST etc., whereas a
+BigQuery Actions will contain a SQL query.
+
+### HTTP
+
+For HTTP Connectors, each Action defines a single HTTP request.
+
+The Action can contain inputs to customise the request, some inputs may also allow default values which can be
+overridden when used within other Versori products. Default values can be defined using connection variables.
+
+The supported HTTP inputs are:
+
+-   Path parameters
+-   Query parameters
+-   Headers
+-   Request body Definitions (one per supported media-type)
+
+The Action can also define outputs:
+
+-   Headers
+-   Status Codes, and their associated Response body Definitions (one per supported media-type)
+
+## Triggers
+
+Triggers define how the Versori Platform will be notified of events from your external system. Each Protocol determines
+how Triggers are defined since how they are implemented may vary.
+
+### HTTP Triggers
+
+These are essentially webhooks, which an external service may invoke to notify the Versori Platform of an event. They
+are modelled similarly to HTTP Actions, but Versori expects a certain request and allows the user to configure the
+response.
+
+In the future, you will also be able to define HTTP Trigger Lifecycles, which define how a webhook is created/deleted on
+the external system when a Switchboard integration is published/unpublished. However, this is out of scope for the
+initial release.
+
+## Definitions
+
+Definitions provide the Versori Platform the information required to validate and provide auto-complete behaviour when
+dealing with input/output data between connectors.
+
+Each definition has a media-type and an associated schema. Which schema implementation is used depends on the
+media-type, we initially support the following:
+
+-   `application/json`, defined by JSON Schemas.
+-   `text/xml`, defined by XML Schema Definitions (XSDs).
+-   `text/csv`, how this is defined isn't known yet, however there are discussions in JIRA about this.
+
+## Versioning
+
+Except for the top-level Connector data and their Connections, other aspects of a Connector such as Actions, Triggers
+and Definitions are versioned resources. A connector can have multiple versions and each version can either be in
+"draft" or "published" state. A version is published if its `publishedAt` field is not null.
+
+Versions are defined as an arbitrary string, but users are encouraged to follow a consistent versioning scheme such as
+SemVer, CalVer, or an incrementing number.
+
+Connectors may only be used by Versori products if they are published, and once published they are immutable. If an edit
+is attempted against a published version then an error will be returned. Unpublished Connectors are considered to be in
+"draft" and can be edited as many times as required.
+
+Connectors may be unpublished, but only when they are not referenced by any other system (see
+[Subscribers](#Subscribers) below).
+
+### Special Versions
+
+There are two reserved words to reference a published version, "latest" and "default". "latest" will always return the
+latest published version according to it's `publishedAt` field, whereas "default" will return the version which has been
+set as such by the user. If the user never specifies a default version, the "latest" published version will be used.
+
+### Publishing Versions
+
+When a new version is published, the user should be prompted to choose how Versori products should handle the update.
+For example, for Switchboard the user should be able to choose whether to update existing integrations to use the new
+version, or to leave them as they are. To facilitate this UX the Connect API has the concept of subscriptions (is there
+a better name?) where other APIs can register their interest in a Connector.
+
+## Subscribers
+
+A Connector has the concept subscribers, where other products can notify the Connect API of their interest in that
+connector. This allows the Connect API to check whether a Connector is being used by other products and prevent deletion
+if so.
+
+### Switchboard
+
+When a board is published, the Switchboard orchestrator will subscribe to the Connector. When that board is then
+unpublished, the orchestrator will unsubscribe from the Connector.
+
+## Completions
+
+<Badge color="red" size="sm">
+    Coming Soon
+</Badge>
+
+Completions is an advanced feature of the Connect API which enables Connector authors to define how a particular field
+within a Definition may be auto-completed. This is useful for fields which are almost always a fixed value but whose
+valid values are determined by how the external system is configured. i.e. the `channel` field in a Slack `postMessage`
+call must be a valid channel name for the Slack Workspace in which the Connector is connecting to.
+
+There are different mechanisms for defining Completions which are described below.
+
+### Static Completions
+
+Static Completions are defined by the Connector author and are a fixed list of values. For JSON Definitions, this is
+automatically generated by properties with the `enum` keyword. Other media-types will have their own mechanisms which
+may or may not be directly supported by their schema implementation.
+
+### Remote Completions
+
+Remote Completions make a connector to an external API to retrieve the valid values for a field. Initially a Completion
+can be defined by choosing another Connector Action, and a transformation on how to extract the values to present to the
+user.

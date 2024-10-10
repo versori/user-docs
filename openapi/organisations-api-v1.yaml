@@ -1,0 +1,1403 @@
+openapi: 3.1.0
+info:
+  title: Organisations API
+  description: The Organisations API provides users the ability to manage their organisations.
+  version: v1
+servers:
+  - url: "https://platform.versori.com/api/organisations/v1"
+    description: Production server
+  - url: "http://localhost:8081/v1"
+    description: Localhost
+tags:
+  - name: organisations
+    description: |
+      Organisations is the root-level entity for the Versori platform. All resources are scoped under an Organisation,
+      each Organisation has an owner and can have multiple members.
+paths:
+  /active-organisation:
+    get:
+      operationId: GetActiveOrganisation
+      summary: Get Active Organisation
+      description: >-
+        GetActiveOrganisation returns the active Organisation for the current user.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organisation"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations:
+    get:
+      operationId: GetOrganisations
+      summary: Get Organisations
+      description: >-
+        GetOrganisations returns a paginated list of Organisations which the current user is a member of. If there is no
+        filter provided, the result will always contain the active Organisation as the first item of the first page. 
+        Otherwise, the filter is applied to the name and slug using a case-insensitive substring match.
+      parameters:
+        - $ref: "#/components/parameters/filter"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganisationsPage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      operationId: CreateOrganisation
+      summary: Create Organisation
+      description: >-
+        CreateOrganisation creates a new Organisation with the current user as the owner. A user can create as many 
+        Organisations as they like, but each has their own billing profile and must be on a paid plan to use certain 
+        features.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganisationCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organisation"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    get:
+      operationId: GetOrganisation
+      summary: Get Organisation
+      description: Get an Organisation by its ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organisation"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/members:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    get:
+      operationId: GetMembers
+      summary: Get Members
+      description: >-
+        GetMembers returns a paginated list of members for the given Organisation.
+      parameters:
+        - name: identity_type
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MembersPage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/members/{member_id}:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/member_id"
+    get:
+      operationId: GetMember
+      summary: Get Member
+      description: >-
+        GetMember returns a member for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: DeleteMember
+      summary: Delete Member
+      description: >-
+        DeleteMember removes a member from the given Organisation.
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/service-accounts:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    post:
+      operationId: CreateServiceAccount
+      summary: Create Service Account
+      description: >-
+        CreateServiceAccount creates a new ServiceAccount for the given Organisation. The ServiceAccount will be created
+        with a random client ID and secret, which will be returned in the response.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceAccountCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceAccount"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      operationId: GetServiceAccounts
+      summary: Get Service Accounts
+      description: >-
+        GetServiceAccounts returns a paginated list of ServiceAccounts for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ServiceAccountsPage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/service-accounts/{service_account_id}:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/service_account_id"
+    get:
+      operationId: GetServiceAccount
+      summary: Get Service Account
+      description: >-
+        GetServiceAccount returns a ServiceAccount for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceAccount"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: DeleteServiceAccount
+      summary: Delete Service Account
+      description: >-
+        DeleteServiceAccount deletes a ServiceAccount for the given Organisation.
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/groups:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    post:
+      operationId: CreateGroup
+      summary: Create Group
+      description: >-
+        CreateGroup creates a new Group for the given Organisation.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      operationId: GetGroups
+      summary: Get Groups
+      description: >-
+        GetGroups returns a paginated list of Groups for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GroupsPage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/groups/{group_id}:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/group_id"
+    get:
+      operationId: GetGroup
+      summary: Get Group
+      description: >-
+        GetGroup returns a Group for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      operationId: DeleteGroup
+      summary: Delete Group
+      description: >-
+        DeleteGroup deletes a Group for the given Organisation.
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/invitations:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    post:
+      operationId: InviteMember
+      summary: Invite Member
+      description: >-
+        InviteMember invites a new User to the given Organisation. The user will receive an email with a link to
+        accept the invitation. The invitation is valid for 7 days, after which the invitation will need to be resent or
+        deleted. Expired invitations may be deleted manually, or will be automatically deleted after 60 days.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvitationCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invitation"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      operationId: GetInvitations
+      summary: Get Invitations
+      description: >-
+        GetInvitations returns a paginated list of invitations for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvitationsPage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/invitations/{invitation_id}:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/invitation_id"
+    delete:
+      operationId: DeleteInvitation
+      summary: Delete Invitation
+      description: >-
+        DeleteInvitation deletes an invitation for the given Organisation. This is typically used to invalidate an
+        invitation which is no longer required.
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/invitations/{invitation_id}/accept:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/invitation_id"
+    put:
+      operationId: AcceptInvitation
+      summary: Accept Invitation
+      description: >-
+        AcceptInvitation accepts an invitation for the given Organisation. The authenticated user email must match the
+        email address of the invitation.
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/invitations/{invitation_id}/resend:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/invitation_id"
+    put:
+      operationId: ResendInvitation
+      summary: Resend Invitation
+      description: >-
+        ResendInvitation resends an invitation for the given Organisation. This is typically used to resend an
+        invitation which has expired or was not received. Everytime an invitation is resent, the expiresAt time is 
+        updated to 7 days from the current time.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InvitationResend"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invitation"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/active:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    put:
+      operationId: SetActiveOrganisation
+      summary: Set Active Organisation
+      description: >-
+        SetActiveOrganisation sets the active Organisation for the current user and returns said Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organisation"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/billing:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    get:
+      operationId: GetBilling
+      summary: Get Billing
+      description: >-
+        GetBilling returns the billing information for the given Organisation.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Billing"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      operationId: UpdateBillingDetails
+      summary: Update Billing Details such as billing email
+      description: >-
+        UpdateBillingDetails updates the billing details for the given Organisation. This endpoint can be used to update
+        the billing email address for the Organisation as well as the customerID, subscriptionID and platformID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                billingEmail:
+                  type: string
+                customerID:
+                  type: string
+                subscriptionID:
+                  type: string
+                platformID:
+                  type: string
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/billing/invoices:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - $ref: "#/components/parameters/from"
+      - $ref: "#/components/parameters/to"
+    get:
+      operationId: GetInvoices
+      summary: Get Invoices
+      description: >-
+        GetInvoices returns a paginated list of invoices for the given Organisation. The query parameters `from` and `to` can be
+        used to filter the invoices returned. If no query parameters are provided, this endpoint will return the upcoming
+        invoice. If to is not provided, it will default to the current date. If from is not provided, it will default to
+        a calendar month before the current date.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/billing/update-subscription:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    put:
+      operationId: UpdateSubscription
+      summary: Update Subscription
+      description: >-
+        UpdateSubscription updates the subscription for the given Organisation. This endpoint can be used to increase the
+        board quota of an organisation. It will update the billing information to reflect the amount of boards that are
+        allowed to be published.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSubscriptionRequest"
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/billing/checkout-session:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    post:
+      operationId: CreateCheckoutSession
+      summary: Create Checkout Session
+      description: >-
+        CreateCheckoutSession creates a new checkout session for the given Organisation. This will redirect the user to
+        the Stripe checkout page to complete the payment.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                successURL:
+                  type: string
+                  format: uri
+                cancelURL:
+                  type: string
+                  format: uri
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /slug/{slug}/availability:
+    get:
+      operationId: GetSlugAvailability
+      summary: Get Slug Availability
+      description: |
+        GetSlugAvailability validates and returns whether the slug provided in the URL is available for use. Requests 
+        to this endpoint are purposefully slow to mitigate automated enumeration of slugs.
+      parameters:
+        - name: slug
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SlugAvailability"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /billing-webhooks:
+    post:
+      operationId: BillingWebhooks
+      description: |
+        BillingWebhooks is the endpoint for receiving webhooks from the billing platform. This endpoint is used to
+        update the billing information for an Organisation. Right now, only Stripe webhooks are supported.
+      tags:
+        - webhooks
+        - public
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    PageInfo:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        next:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        prev:
+          type: string
+          x-go-type-skip-optional-pointer: true
+    Permission:
+      description: >-
+        Permission grants granular access to a resource. Permissions are predefined by Versori and cannot be customised.
+      type: object
+      properties:
+        id:
+          description: ID is a human-readable identifier for the permission, i.e. switchboard.publish
+          type: string
+          enum:
+            - organisation.read
+            - organisation.edit
+            - organisation.delete
+            - organisation.members.read
+            - organisation.members.invite
+            - organisation.members.edit
+            - organisation.members.delete
+            - organisation.manage_billing
+            - organisation.manage_subscription
+            - switchboard.create
+            - switchboard.read
+            - switchboard.edit
+            - switchboard.publish
+            - switchboard.delete
+            - connection.create
+            - connection.read
+            - connection.edit
+            - connection.delete
+            - hub.create
+            - hub.read
+            - hub.edit
+            - hub.delete
+            - hub.integration.create
+            - hub.integration.read
+            - hub.integration.edit
+            - hub.integration.publish
+            - hub.integration.delete
+            - hub.user.create
+            - hub.user.read
+            - hub.user.edit
+            - hub.user.delete
+        description:
+          description: Description is a human-readable description of what the permission grants
+          type: string
+    Role:
+      description: >-
+        Role encompasses a set of permissions which can be granted to a Member or Group. Roles are currently predefined
+        but may support custom roles in the future.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          description: >-
+            Name is the user-defined name for the role. It must be unique within the scope of an Organisation.
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission"
+        scopes:
+          description: >-
+            Scope defines which resources the role can be bound to, i.e. "organisation", "switchboard" etc. Resources 
+            are hierarchical, meaning that if a role is bound to an Organisation, it will be inherited by all resources 
+            owned by that organisation, whereas if it is bound to an individual child resource such as a Switchboard 
+            board, it will only apply to that board.
+          type: array
+          items:
+            type: string
+            enum:
+              - organisation
+              - switchboard
+              - connection
+              - hub
+    ResourceReference:
+      description: >-
+        ResourceReference is an abstract overview of a resource in the Versori platform.
+      type: object
+      properties:
+        resourceType:
+          type: string
+          enum:
+            - organisation
+            - switchboard
+            - connection
+            - hub
+        resourceId:
+          type: string
+        name:
+          type: string
+    RoleBinding:
+      description: >-
+        RoleBinding contains a role and the resource it is bound to.
+      type: object
+      properties:
+        role:
+          $ref: "#/components/schemas/Role"
+        resource:
+          $ref: "#/components/schemas/ResourceReference"
+    Group:
+      description: >-
+        Group is a collection of members of an Organisation. Groups can be used to manage access to resources within an
+        Organisation for a set of members.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+        numMembers:
+          type: integer
+        numServiceAccounts:
+          type: integer
+        roleBindings:
+          description: RoleBindings are the list of roles bindings granted to this Group.
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleBinding"
+    GroupsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            groups:
+              type: array
+              items:
+                $ref: "#/components/schemas/Group"
+    GroupCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        members:
+          description: Members are the list of member IDs to be added to this Group.
+          type: array
+          items:
+            type: string
+        roles:
+          description: >-
+            Roles are the list of role names to be granted to this Group at the organisation scope.
+          type: array
+          items:
+            type: string
+    ServiceAccount:
+      description: >-
+        ServiceAccount is a non-user account which can be used to issue access tokens to use against Versori APIs.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          description: >-
+            Name is an immutable, lower-cased, human-readable identifier for this service account. It may only contain
+            alphanumeric characters and hyphens, and must start with a letter. 
+
+            It must be unique within the scope of an Organisation.
+          type: string
+          pattern: ^[a-z][a-z0-9-_.]*$
+        email:
+          description: >-
+            Email is the email address of the ServiceAccount. This is used to easily identify the ServiceAccount when 
+            viewing in the UI or observing logs. The email address is generated from the name, suffixed with 
+            `@sa.ORG_SLUG.versori.com`.
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        roleBindings:
+          description: RoleBindings are the list of roles bindings granted to this ServiceAccount.
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleBinding"
+    ServiceAccountsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            serviceAccounts:
+              type: array
+              items:
+                $ref: "#/components/schemas/ServiceAccount"
+    ServiceAccountCreate:
+      type: object
+      properties:
+        name:
+          description: >-
+            Name is an immutable, lower-cased, human-readable identifier for this service account. It may only contain
+            alphanumeric characters and hyphens, and must start with a letter. 
+
+            It must be unique within the scope of an Organisation.
+          type: string
+          pattern: ^[a-z][a-z0-9-_.]*$
+        roles:
+          description: >-
+            Roles are the list of role names to be granted to this ServiceAccount at the organisation scope.
+          type: array
+          items:
+            type: string
+        groupIDs:
+          description: >-
+            GroupIDs are the list of group IDs to be added to this ServiceAccount.
+          type: array
+          items:
+            type: string
+    Invitation:
+      description: >-
+        Invitation represents an invitation to join an Organisation. The invitation may be deleted if it is no longer
+        wanted, or a new invitation email can be sent. Accepted invitations are automatically deleted.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        picture:
+          type: string
+          format: url
+        accepted:
+          type: boolean
+        inviteType:
+          type: string
+          enum:
+            - transfer_ownership
+            - join_organisation
+        expiresAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        roles:
+          description: >-
+            Roles are the list of role names to be granted to this Member at the organisation scope.
+          type: array
+          items:
+            type: string
+        groupIDs:
+          description: >-
+            GroupIDs are the list of group IDs to be added to this Member.
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - inviteType
+        - name
+        - picture
+        - email
+        - accepted
+    InvitationsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            invitations:
+              type: array
+              items:
+                $ref: "#/components/schemas/Invitation"
+    InvitationCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        url:
+          type: string
+          format: uri
+        authUrl:
+          type: string
+          format: uri
+        inviteType:
+          type: string
+          enum:
+            - transfer_ownership
+            - join_organisation
+        roles:
+          type: array
+          items:
+            type: string
+      required:
+        - email
+        - url
+        - authUrl
+        - inviteType
+    InvitationResend:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        url:
+          type: string
+          format: uri
+        authUrl:
+          type: string
+          format: uri
+        inviteType:
+          type: string
+          enum:
+            - transfer_ownership
+            - join_organisation
+      required:
+        - email
+        - url
+        - authUrl
+        - inviteType
+    Member:
+      description: Member is an identity who is a member of an Organisation.
+      type: object
+      properties:
+        id:
+          description: >-
+            ID is the unique identifier for the Member, if a user is a member of multiple Organisations they will have
+            multiple Member objects.
+          type: string
+          format: uuid
+          x-go-name: ID
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            path: github.com/google/uuid
+        identityType:
+          type: string
+          enum:
+            - user
+            - service_account
+        identityId:
+          description: IdentityID references the Versori User.
+          type: string
+          x-go-name: IdentityID
+        name:
+          description: >-
+            Name is either the User's name or ServiceAccount's name. If name is not populated this will default to the
+            email address.
+          type: string
+        email:
+          description: >-
+            Email is the email address of the Member. For service accounts this is the service account name with the
+            suffix `@sa.ORG_SLUG.versori.com`.
+          type: string
+        picture:
+          type: string
+          format: url
+        roleBindings:
+          description: RoleBindings are the list of roles bindings granted to this Member.
+          type: array
+          items:
+            $ref: "#/components/schemas/RoleBinding"
+      required:
+        - id
+        - identityType
+        - identityId
+        - name
+        - email
+        - picture
+        - roleBindings
+    MembersPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            members:
+              type: array
+              items:
+                $ref: "#/components/schemas/Member"
+    Subscription:
+      description: >-
+        Subscription contains information of the actual subscription in Versori's internal billing platform.
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          description: >-
+            Status is the current status of the subscription, i.e. "active".
+          type: string
+          enum:
+            - active
+            - unpaid
+            - trialing
+            - cancelled
+        rawData:
+          description: >-
+            RawData is the underlying subscription object from the billing platform. This will typically be a Stripe
+            [Subscription](https://stripe.com/docs/api/subscriptions/object) but is implied from the 
+            `Billing#platformType` property.
+    Billing:
+      description: >-
+        Billing contains information about the billing status of an Organisation.
+      type: object
+      properties:
+        platformId:
+          description: >-
+            PlatformID is an internal identifier to link the Billing profile to Versori's underlying billing platform.
+          type: string
+        platformType:
+          type: string
+          description: >-
+            PlatformType denotes which billing platform is used for this billing profile. Currently only "stripe" is
+            supported, and can be used to infer data type of other objects which are not documented as part of this API.
+
+            See Subscription#raw for an example.
+        customerId:
+          description: CustomerID is the identifier for the customer in the billing platform.
+          type: string
+        subscriptionId:
+          description: >-
+            SubscriptionID is the identifier for the subscription in the billing platform. This is used to manage the
+            subscription, i.e. update the subscription, cancel the subscription, etc.
+          type: string
+        billingEmail:
+          description: >-
+            BillingEmail is the email address used for billing purposes, i.e. sending invoices. This does not take up a
+            seat in the Organisation plan.
+          type: string
+        recentSubscriptions:
+          description: >-
+            RecentSubscriptions is a list of subscriptions for the Organisation. This will only include the first 10
+            subscriptions, if there are more then the GetSubscriptions operation (to be implemented) should be used.
+          type: array
+          items:
+            $ref: "#/components/schemas/Subscription"
+        isSubscriptionActive:
+          description: >-
+            IsSubscriptionActive is true if the Organisation has an active subscription, otherwise false.
+            An active subscription is a valid subscription on a free trial or one that has up-to-date payment methods.
+            A value of 1 means the subscription is active.
+          type: integer
+          x-go-type: int8
+        hasMoreSubscriptions:
+          description: >-
+            HasMoreSubscriptions is true if there are more subscriptions than the ones returned in RecentSubscriptions.
+            These may only be retrieved using the GetSubscriptions operation (to be implemented).
+          type: boolean
+        freeTrialEndDate:
+          description: >-
+            FreeTrialEndDate is the date at which the Organisation's free trial will end. This is only populated if the
+            Organisation is currently on the free trial. This time should always be in UTC.
+          type: string
+          format: date
+        billingPeriodStart:
+          description: >-
+            BillingPeriodStart is the start date of the current billing period. This is the date at which the current
+            billing period started. This time should always be in UTC.
+          type: string
+          format: date
+        billingPeriodEnd:
+          description: >-
+              BillingPeriodEnd is the end date of the current billing period. This is the date at which the current
+              billing period ends. This time should always be in UTC.
+          type: string
+          format: date
+        isBespoke:
+          description: >-
+            IsBespoke is true if the Organisation is on a bespoke plan, i.e. not using Stripe for billing.
+          type: boolean
+        boardQuota:
+          description: >-
+            BoardQuota is the maximum number of Switchboard boards (NOT including hub boards) the Organisation is allowed to have. This is
+            determined by the quantity of boards that are on the Organisation's subscription. It is also used to determine
+            the amount of free executions and users that an organisation is allowed.
+          type: integer
+        hubBoardQuota:
+          description: >-
+            HubBoardQuota is the maximum number of Hub boards the Organisation is allowed to have. This is
+            determined by the quantity of hub boards that are on the Organisation's subscription. It is also used to determine
+            the amount of free executions and users that an organisation is allowed.
+          type: integer
+      required:
+        - platformId
+        - customerId
+        - billingEmail
+        - isSubscriptionActive
+        - billingPeriodEnd
+        - billingPeriodStart
+    Organisation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        slug:
+          type: string
+        displayName:
+          type: string
+        owner:
+          type: string
+        billing:
+          $ref: "#/components/schemas/Billing"
+        systemServiceAccountClientID:
+          description: >-
+            SystemServiceAccountClientID is the client ID of the system service account for this Organisation. This is
+            automatically created when the Organisation is created and is used by internal services which must 
+            authenticate on behalf of the Organisation. It cannot be deleted.
+          type: string
+        plan:
+          description: >-
+            Subscription plan the organisation is enrolled.
+          type: string
+      required:
+        - id
+        - slug
+        - displayName
+        - owner
+        - billing
+        - systemServiceAccountClientID
+    OrganisationsPage:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/PageInfo"
+        - type: object
+          properties:
+            organisations:
+              type: array
+              items:
+                $ref: "#/components/schemas/Organisation"
+    OrganisationCreate:
+      type: object
+      properties:
+        slug:
+          description: >-
+            Slug is a unique, lower-cased, human-readable identifier for this Organisation. It may only contain
+            alphanumeric characters and hyphens, and must start with a letter.
+          type: string
+          regex: ^[a-z][a-z0-9-]{2}$
+        displayName:
+          type: string
+      required:
+        - slug
+        - displayName
+    SlugAvailability:
+      type: object
+      properties:
+        ok:
+          description: OK is true if the slug is available for use, otherwise false and messages will be populated.
+          type: boolean
+        messages:
+          description: |
+            Messages is a list of user-friendly messages describing the problem(s) with this slug. This will always be
+            an empty array if the slug is available.
+          type: array
+          items:
+            type: string
+      required:
+        - ok
+        - messages
+    UpdateSubscriptionRequest:
+      type: object
+      properties:
+        boardQuota:
+          description: >-
+            BoardQuota is the maximum number of Switchboard boards the Organisation is allowed to publish.
+            It is also used to determine the amount of free executions and users that an organisation is allowed.
+          type: integer
+        boardType:
+          description: >-
+            BoardType is the type of board that the Organisation is allowed to publish - Hub or Regular.
+          type: string
+          enum:
+            - hub
+            - regular
+    Invoice:
+      type: object
+      properties:
+        invoiceStartDate:
+          type: string
+          format: date
+        invoiceEndDate:
+          type: string
+          format: date
+        totalAmount:
+          $ref: "#/components/schemas/MonetaryValue"
+        invoiceURL:
+          type: string
+          format: uri
+        productBreakdowns:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductBreakdown"
+        usageStatistics:
+          type: object
+          x-go-type: map[string]int
+          additionalProperties:
+            type: integer
+        metaData:
+          type: object
+          x-go-type: map[string]any
+          additionalProperties:
+            type: string
+      required:
+        - invoiceStartDate
+        - invoiceEndDate
+        - totalAmount
+        - currencyCode
+        - invoiceURL
+    ProductBreakdown:
+      type: object
+      properties:
+        productName:
+          type: string
+        quantity:
+          type: integer
+        total:
+          $ref: "#/components/schemas/MonetaryValue"
+      required:
+        - productName
+        - quantity
+        - total
+    MonetaryValue:
+      type: object
+      description: >-
+        MonetaryValue is a monetary value, i.e. £12.50. It is represented as a whole number integral and a fractional
+        part. The integral part is the whole number of pounds, dollars, ... and the fractional part is the number of
+        pence, cents, ..., in the value. The isNegative property denotes if the value is negative.
+      properties:
+        isNegative:
+          type: boolean
+        currencyCode:
+          type: string
+          enum:
+            - GBP
+            - USD
+            - EUR
+          description: >-
+            CurrencyCode is the ISO 4217 currency code for the currency used in the monetary value, i.e. "GBP".
+        integral:
+          description: >-
+            Integral is the whole number part of the monetary value, i.e. 12 for £12.50.
+          type: integer
+          x-go-type: int64
+        fractional:
+          description: >-
+            Fractional is the fractional part of the monetary value, i.e. 50 for £12.50.
+          type: integer
+          x-go-type: int64
+      required:
+        - integral
+        - fractional
+        - currencyCode
+        - isNegative
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code is a machine-readable error code.
+        message:
+          type: string
+          description: Message is a human-readable error message.
+        cause:
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - code
+        - message
+  parameters:
+    filter:
+      name: filter
+      in: query
+      schema:
+        type: string
+    organisation_id:
+      name: organisation_id
+      in: path
+      x-go-name: OrganisationID
+      required: true
+      schema:
+        type: string
+    invitation_id:
+      name: invitation_id
+      in: path
+      x-go-name: InvitationID
+      required: true
+      schema:
+        type: string
+    member_id:
+      name: member_id
+      in: path
+      x-go-name: MemberID
+      required: true
+      schema:
+        type: string
+    group_id:
+      name: group_id
+      in: path
+      x-go-name: GroupID
+      required: true
+      schema:
+        type: string
+    from:
+      name: from
+      in: query
+      x-go-name: From
+      schema:
+        type: string
+        format: date
+    to:
+      name: to
+      in: query
+      x-go-name: To
+      schema:
+        type: string
+        format: date
+    service_account_id:
+      name: service_account_id
+      in: path
+      x-go-name: ServiceAccountID
+      required: true
+      schema:
+        type: string

@@ -1,0 +1,89 @@
+---
+title: 'Onboard a REST API'
+description: 'REST apps are onboarded via uploading an OpenAPI specification file.'
+---
+
+<Tabs>
+  <Tab title="Documentation">
+    ### 1. Upload an OpenAPI specification file
+
+    First you need to upload an OpenAPI specification file. This file describes the REST API you want to onboard. These files can be either `.yaml` or `.json` files.
+
+    <Frame caption="Either upload a spec, or provide a hosted url and we can fetch it">
+      <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/rest-upload-specification.png" />
+    </Frame>
+
+    ### 2. Upload a logo
+
+    You can upload a logo for your app. This helps identify your systems at a glance.
+
+    <Frame caption="Upload a logo for your app">
+      <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-image-upload.png" />
+    </Frame>
+
+    ### 3. Configure your app
+
+    You can configure your app by providing a name. This is also used to help identify your app in the Versori UI.
+
+    <Frame caption="Configure your app">
+      <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-name.png" />
+    </Frame>
+
+    ### 4. Select a server
+
+    From the available servers in your specification, select the one you want to call your requests against.
+
+    <Frame caption="Select a server">
+      <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-server-select.png" />
+    </Frame>
+
+    ### 5. Auth Methods
+
+    All `securitySchemes` defined in your specification are available here to configure and enable/disable for your app.
+
+    <Frame caption="Configure Auth Methods">
+      <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-auth-methods.png" />
+    </Frame>
+
+    <AccordionGroup>
+        <Accordion title="OAuth2">
+            We current support the following OAuth2 flows:
+            - Authorization Code
+            - Client Credentials
+
+            Configure your config, such as the `client_id` and `client_secret` and enable the flow.
+
+            <Frame caption="Configure OAuth2 (Authorization Code)">
+                <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-oauth-auth-code.png" />
+            </Frame>
+        </Accordion>
+        <Accordion title="API Key">
+            Configure your API Key name which part of your requests it should be sent with.
+
+            <Frame caption="Configure API Key">
+                <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-api-key.png" />
+            </Frame>
+        </Accordion>
+        <Accordion title="HTTP Refresh">
+            This method allows custom implementations of auth where request are to be made in order to complete the auth flow.
+
+            <Frame caption="Configure HTTP Refresh">
+                <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/apps/rest-api/app-http-refresh.png" />
+            </Frame>
+        </Accordion>
+
+    </AccordionGroup>
+
+  </Tab>
+  <Tab title="Video Guide">
+    <iframe
+      width="100%"
+      height="407"
+      src="https://www.youtube.com/embed/geFRpJtcf-4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </Tab>
+</Tabs>

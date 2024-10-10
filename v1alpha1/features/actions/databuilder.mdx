@@ -1,0 +1,55 @@
+---
+title: 'Databuilder'
+description: 'The Databuilder allows for familiar form based templating and transformations'
+---
+
+The Databuilder can be considered an alternative approach to the Transformer - in the sense that it's used for data
+transformation.
+
+The Databuilder is a form based user interface, allowing you to use template values to provide more of a text editor
+experience.
+
+### Initial View
+
+The Databuilder will initially only present the fields that are required. It can handle top level properties, arrays and
+nested objects.
+
+<Frame caption="Only required fields will be visibile initially">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/databuilder/databuilder-initial.png" />
+</Frame>
+
+#### Adding from available fields
+
+The fields that you populate are from the target system. You can add fields that are optional by pressing the "cog"
+button in the top right corner of the databuilder, then selecting which fields you want to display:
+
+<Frame caption="Select available fields">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/databuilder/databuilder-available-fields.png" />
+</Frame>
+
+#### Adding a Selector Template value
+
+In the databuilder, values can be templated in a sentence format, so for example - you could combine `{firstName}` and
+`{lastName}` to create a full name to a field called `fullName`.
+
+<Frame caption="Templating from previous node data">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/databuilder/databuilder-template.png" />
+</Frame>
+
+#### Creating lists
+
+You can create lists by using the "Add" button on the right hand side of the field. This will add an item to a list,
+which you can then populate with the fields you require.
+
+<Frame caption="List building in databuilder">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/databuilder/databuilder-list.png" />
+</Frame>
+
+#### Existing list items
+
+You can also add existing list items from a previous node, to be spread into your databuilder list. This can be defined
+via a Selector.
+
+<Frame caption="Spread existing list items">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/databuilder/databuilder-existing-list.png" />
+</Frame>

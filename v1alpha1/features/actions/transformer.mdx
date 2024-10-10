@@ -1,0 +1,168 @@
+---
+title: 'Transformer'
+description: 'The transformer action is a drag and drop action that allows you to transform the data in your workflow.'
+---
+
+<Tabs>
+  <Tab title="Documentation">
+
+The transformer takes a source input and a target output, allowing you to expand objects, iterate over arrays, and use
+selectors from previous nodes in your boards.
+
+### Initial Configuration
+
+The initial configuration of transformer assumes the source and target are the nearest connected nodes. To initialise
+the transformer, click configure:
+
+{" "}
+
+<Frame caption="Initial transformer config">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-config.png" />
+</Frame>
+
+#### Override Input
+
+Additionally - you can configure the input to be from any previous node in your flow, this currently only supports
+selecting the $body property (the entire body of the selected node).
+
+{" "}
+
+<Frame caption="Override transformer input">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-override-input.png" />
+</Frame>
+
+### Initial View - Leaf (Source/Target) Nodes
+
+The initial view of the transformer is the leaf nodes, these are the source and target nodes. The source node is the
+data that is being transformed, and the target node is the output of the transformer.
+
+The source node is defined as per the above initial configuration or the overridden input. The target node is defined as
+the next connected node in the flow.
+
+{" "}
+
+<Frame caption="Initial transformer nodes">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-initial-view.png" />
+</Frame>
+
+### Getting Started
+
+The Transformer has multiple tools available to help navigate your data tree and to help deal with nested objects and
+arrays iterations.
+
+To get started with the Transformer - drag an edge(line) between two properties on each side of source and target. Now
+you should have available two plus buttons either side of the connected edge. These buttons will allow you to add tools
+to indiviual properties.
+
+We provide recommended tools based on the type of property that you're trying to connect to. For example, if you're
+trying to connect to an array as a source - it will recommend the `For Each` tool. If you're trying to connect to an
+object as a source - it will recommend the `Object Source` tool.
+
+{" "}
+
+<Frame caption="Available transformer tools">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-tools.png" />
+</Frame>
+
+### Expanding objects
+
+Object properties can be expanded in both source and target nodes. Expanding an object property will allow you to access
+the properties of the object as individual properties in the transformer:
+
+{" "}
+
+<Frame caption="Expanded objects">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-objects.png" />
+</Frame>
+
+### Handling arrays/lists
+
+The Transformer has 3 tools currently for working with arrays/lists: `For Each`, `List Builder` and `List Generator`.
+
+#### For Each
+
+The `For Each` tool allows you to iterate over an array and perform actions on each item in the array. This tool should
+be used as a source tool.
+
+{" "}
+
+<Frame caption="Using the for each tool on lists">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-foreach.png" />
+</Frame>
+
+#### List Builder
+
+The `List Builder` tool allows you to manually build a list of items - for example if you want to build a list of 1,
+using parent properties of the source. This tool should be used as a target tool.
+
+{" "}
+
+<Frame caption="Create a known list of items from any source">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-listbuilder.png" />
+</Frame>
+
+#### List Generator
+
+The `List Generator` allows you to generate a list of items, this tool should be used alongside the `For Each` tool - so
+that on every iteration of the `For Each` tool, it will generate a new item in the list. This tool should be used as a
+target tool.
+
+{" "}
+
+<Frame caption="Generate a dynamic list of items">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-listgenerator.png" />
+</Frame>
+
+### Other Tools
+
+Additionally - there is also a `Selector` tool, which allows you to step back out of the tranformer and select a value
+from a previous node in your board. This tool should be used as a target tool.
+
+{" "}
+
+<Frame caption="Select a value from a previous node">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-selector.png" />
+</Frame>
+
+And finally there's the `Constant` tool, which allows you to add a constant value to your transformer. The type is based
+on the type of the property you're connecting to. This tool should also be used as a target tool.
+
+{" "}
+
+<Frame caption="Input a hardcoded value">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-constant.png" />
+</Frame>
+
+### Validation
+
+The transformer will validate your configuration as you go, and will highlight any errors in red. Currently this just
+validates the property data type.
+
+<Frame caption="Validation errors">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-validation.png" />
+</Frame>
+
+### That's it!
+
+All of these tools will allow you to build up a complex transformation of your data, empowering you to build powerful
+workflows.
+
+{" "}
+
+<Frame caption="Final transformer config">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/transformer/transformer-fullboard.png" />
+</Frame>
+
+  </Tab>
+  <Tab title="Video Guide">
+    <iframe
+      width="100%"
+      height="407"
+      src="https://www.youtube.com/embed/SQx6kPLwKLg?si=UF_BUQQBlDZ6cbIM"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </Tab>
+</Tabs>

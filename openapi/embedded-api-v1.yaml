@@ -1,0 +1,2963 @@
+openapi: 3.1.0
+info:
+  title: Versori Embedded API
+  version: 0.0.1
+  license:
+    name: UNLICENSED
+    identifier: UNLICENSED
+  description: V1 API for managing embedded integrations
+servers:
+  - description: Production
+    url: https://platform.versori.com/api/embedded/v1
+  - description: Staging
+    url: https://platform-staging.versori.com/api/embedded/v1
+  - description: Development
+    url: http://localhost:8950/embedded/v1
+tags:
+  - name: Hubs
+  - name: End Users
+  - name: Connectors
+  - name: Integrations
+  - name: Connections
+  - name: Embedded
+  - name: Miscellaneous
+  - name: Internal
+paths:
+  /o/{organisation_id}/hubs:
+    parameters:
+      - $ref: '#/components/parameters/organisation_id'
+    get:
+      operationId: ListHubs
+      summary: List Hubs
+      description: |
+        ListHubs returns all the hubs for the given organisation, but is returned as a paginated list.
+      tags:
+        - Hubs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HubsPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /hubs:
+    post:
+      operationId: CreateHub
+      summary: Create a new Hub
+      description: Create a new Hub
+      tags:
+        - Hubs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HubCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hub'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /hubs/{hub_id}:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+    get:
+      operationId: GetHub
+      summary: Retrieve a Hub
+      description: |
+        GetHub returns the Hub for the given ID.
+      tags:
+        - Hubs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hub'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /hubs/{hub_id}/users:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+    post:
+      operationId: CreateEndUser
+      summary: Create an End User
+      description: |
+        CreateEndUser creates a new End User for the given Hub.
+
+        The end user requires a unique `externalId` which is recommended to be the same as the user's ID on the 
+        Primary Connector for the Hub. This is an immutable field so should not be set to something that may change
+        such as an email address.
+
+        Before an end user can activate an Integration, they must also have a Connection defined for the Primary
+        Connector. This may be created as part of this request, a separate request to CreateConnection, or as part of 
+        the request in the first Activate call.
+      tags:
+        - End Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndUserCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUser'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: ListEndUsers
+      summary: List End Users
+      description: |
+        ListEndUsers returns a paginated list of all the End Users for the given Hub.
+      tags:
+        - End Users
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - name: search
+          in: query
+          description: |
+            Search is a string that is used to filter the list of End Users. The search string is matched against the
+            id, externalId and displayName fields.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUserPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /hubs/{hub_id}/users/{user_id}:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+      - $ref: '#/components/parameters/user_id'
+      - $ref: '#/components/parameters/identifier_type'
+    get:
+      operationId: GetEndUser
+      summary: Retrieve an End User
+      description: |
+        GetEndUser returns the End User for the given ID.
+      tags:
+        - End Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUser'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /hubs/{hub_id}/users/{user_id}/connections:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+      - $ref: '#/components/parameters/user_id'
+      - $ref: '#/components/parameters/identifier_type'
+    post:
+      operationId: CreateEndUserConnection
+      summary: Create End User Connection
+      description: |
+        CreateEndUserConnection creates a new Connection for the given User. The Connection is used to authenticate the 
+        user to a Hub Connector.
+
+        This endpoint is typically only used for more bespoke implementations where an End User needs to authenticate
+        to a Connector outside of the normal activation flow, for example where credentials are provided by another API
+        and not through End User actions in the embedded UI.
+      tags:
+        - Connections
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                connectorId:
+                  type: string
+                  format: ulid
+                  x-go-type: ulid.ULID
+                  x-go-type-skip-optional-pointer: true
+                  x-go-type-import:
+                    path: versori.dev/vergo/ulid
+                connection:
+                  $ref: '#/components/schemas/ConnectionCreate'
+              required:
+                - connectorId
+                - connection
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connection'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: ListEndUserConnections
+      summary: List End User Connections
+      description: |
+        ListEndUserConnections returns all the Connections for the given End User.
+
+        The result may be filtered by `hub_connector_id` to only return connections for a specific Hub Connector.
+      tags:
+        - Connections
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - name: hub_connector_id
+          in: query
+          description: |
+            Search is a string that is used to filter the list of Connections. The search string is matched against the
+            name.
+          schema:
+            type: array
+            items:
+              type: string
+          explode: false
+          x-go-type-skip-optional-pointer: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUserConnectionsPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /hubs/{hub_id}/integrations:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+    post:
+      operationId: CreateIntegration
+      summary: Create Integration
+      description: Create Integration
+      tags:
+        - Hubs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: ListIntegrations
+      summary: List Integrations
+      description: |
+        ListIntegrations returns all the integrations for the given Hub.
+
+        This API should not be exposed to End Users via the embedded UI since it includes integrations which have not
+        been published.
+      tags:
+        - Integrations
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - name: search
+          in: query
+          description: |
+            Search is a string that is used to filter the list of Integrations. The search string is matched against the
+            name.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListIntegrations'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /integrations/{integration_id}:
+    parameters:
+      - $ref: '#/components/parameters/integration_id'
+    delete:
+      operationId: DeleteIntegration
+      summary: Delete an integration.
+      description: |
+        DeleteIntegration deletes the integration. 
+
+        If the integration is deployed it will return an error.
+      tags:
+        - Integrations
+      responses:
+        '204':
+          description: OK, integration deleted
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      operationId: UpdateIntegration
+      summary: Update integration information
+      description: Updates an integration information
+      tags:
+        - Hubs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIntegration'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /integrations/{integration_id}/connection-templates:
+    parameters:
+      - $ref: '#/components/parameters/integration_id'
+    post:
+      operationId: CreateHubConnectionTemplate
+      summary: Create a Hub Connector
+      description: |
+        CreateHubConnectionTemplate creates a new Hub Connector for the given Integration.
+
+        A Hub Connector is a lightweight wrapper around a Connector from Connect API, but includes additional
+        information to make embedding the integration simpler:
+
+        - A name/reference for the Hub Connector, which represents the purpose of the Connector in the context of the 
+          Hub's Integration. For example, where an Integration is synchronising data between two accounts of the same
+          system, each Hub Connector may be referenced, "Source" and "Target", even though they are both referencing the
+          same underlying Connector.
+        - Which `AuthSchemeConfig` to use, so that when the end user activates the integration, they
+          are prompted to authenticate in the correct way.
+      tags:
+        - Connectors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HubConnectionTemplateCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HubConnectionTemplate'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      operationId: ListIntegrationConnectionTemplates
+      summary: List Hub Connectors
+      description: |
+        ListIntegrationConnectors returns all the Hub Connectors for the given Integration.
+
+        This API should not be exposed to End Users via the embedded UI since it includes connectors which have not
+        been published.
+      tags:
+        - Connectors
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HubConnectionTemplatePage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /integrations/{integration_id}/metadata:
+    parameters:
+      - $ref: '#/components/parameters/integration_id'
+    put:
+      operationId: UpdateIntegrationMetadata
+      summary: Internal endpoint used to update metadata for an integration.
+      description: |
+        UpdateIntegrationMetadata is used to update which hub connectors are in use by the integration. 
+        This will only be called from switchboard-api.
+      tags:
+        - Internal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntegrationMetadata'
+      responses:
+        '204':
+          description: OK
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /integrations/{integration_id}/users/{user_id}/variables:
+    parameters:
+      - $ref: '#/components/parameters/integration_id'
+      - $ref: '#/components/parameters/user_id'
+      - $ref: '#/components/parameters/identifier_type'
+    get:
+      operationId: GetDynamicVariables
+      summary: Retrieves the dynamic variables for the given user and integration.
+      description: |
+        GetDynamicVariables returns the dynamic variables for the given user and integration.
+      tags:
+        - Internal
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicVariables'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: UpdateDynamicVariables
+      summary: Updates the dynamic variables for the given user and integration.
+      description: |
+        UpdateDynamicVariables updates the dynamic variables for the given user and integration.
+      tags:
+        - Internal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicVariables'
+      responses:
+        '204':
+          description: OK
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /connection-templates/{connection_template_id}/users/{user_id}:
+    parameters:
+      - $ref: '#/components/parameters/connection_template_id'
+      - $ref: '#/components/parameters/user_id'
+    get:
+      operationId: GetEndUserConnection
+      summary: Retrieve an End User Connection, used in sb-actions to get credentials for an end user.
+      description: |
+        GetEndUserConnection returns the Connection for the given ID.
+      tags:
+        - Embedded
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Connection'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /embed/{hub_id}/users/{user_id}/integrations:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+      - $ref: '#/components/parameters/user_id'
+      - $ref: '#/components/parameters/identifier_type'
+    get:
+      operationId: ListEndUserIntegrations
+      summary: List End User Integrations
+      description: |
+        ListEndUserIntegrations returns all integrations which are available to the given End User.
+
+        This API should be used to populate the embedded UI with the integrations that the end user can activate.
+
+        If the `user_id` is referencing the external ID of the user, then the `hub` query parameter is required in order
+        to identify the correct Hub to retrieve the integrations from.
+      tags:
+        - Embedded
+      parameters:
+        - name: deployed
+          in: query
+          description: |
+            Deployed allowing filtering integrations to only return either deployed (`true`) or not deployed (`false`) 
+            integrations. 
+
+            If not set, all integrations are returned.
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbeddedIntegrationPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /embed/{hub_id}/users/{user_id}/integrations/{integration_id}:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+      - $ref: '#/components/parameters/user_id'
+      - $ref: '#/components/parameters/integration_id'
+      - $ref: '#/components/parameters/identifier_type'
+    get:
+      operationId: GetEmbeddedIntegration
+      summary: Retrieve an Embedded Integration
+      description: |
+        GetEmbeddedIntegration returns the Integration for the given ID to be displayed to the user in the embedded UI.
+      tags:
+        - Embedded
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmbeddedIntegration'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /embed/{hub_id}/connector/{connector_id}/oauth2/initialise:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+      - $ref: '#/components/parameters/connector_id'
+    post:
+      operationId: InitialiseOAuth2EmbeddedConnection
+      summary: Initialise OAuth 2.0 Connection
+      description: |
+        InitialiseOAuth2Connection returns a URL to redirect the user to an OAuth 2.0 Provider's Authorize endpoint.
+
+        Only URLs constructed via this API can be used to connect to an OAuth 2.0 connector within
+        Versori, since a `state` parameter is generated and validated upon redirection to the
+        redirect_uri.
+
+        Additional query parameters can be added to the resultant URL via the `additionalParams` 
+        property in the body. In addition to the standard parameters defined in the body, this API
+        adds the following parameters:
+
+        - `redirect_uri`: The URI to redirect the user to after the OAuth 2.0 Provider has
+          authenticated the user.
+        - `state`: A secure string generated by the API to authenticate requests to the redirect URI.
+        - `prompt`: See documentation on the `prompt` property of the request body.
+        - `scope`: See documentation on the `scopes` property of the request body.
+        - `response_type`: The response type to use. This is always `code` for OAuth 2.0.
+        - `client_id`: The client ID provided by the request body, this must match the client ID
+          which is stored under the provided `credentialId` otherwise the handling of the redirect
+          request will fail.
+
+        Full details on the standard parameters can be found in the OIDC Core specification:
+        https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+      tags:
+        - connections
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialiseOAuth2ConnectionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitialiseOAuth2ConnectionResponse'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /embed/{hub_id}/users/{user_id}/activations:
+    parameters:
+      - $ref: '#/components/parameters/hub_id'
+      - $ref: '#/components/parameters/user_id'
+    get:
+      operationId: ListEndUserActivations
+      summary: List End User Activations
+      description: |
+        ListEndUserActivations returns all activations which are available to the given End User. This API can be 
+        filtered to only return activations for a given integration.
+      tags:
+        - Embedded
+      parameters:
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - name: integration_id
+          in: query
+          description: |
+            IntegrationID allows returning only activations for a specific integration.
+          schema:
+            type: string
+            format: ulid
+            x-go-name: IntegrationID
+            x-go-type: ulid.ULID
+            x-go-skip-optional-pointer: true
+            x-go-type-import:
+              path: versori.dev/vergo/ulid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUserActivationPage'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /activations:
+    post:
+      operationId: ActivateIntegration
+      summary: Activate Integration
+      description: |
+        ActivateIntegration activates an Integration for an End User. This is the final step in the activation
+        process and will create the necessary connections and configurations to allow the Integration to run.
+
+        This endpoint can either reference existing connections or create new ones. Once these connections are 
+        resolved/created, if there are any missing connections to what the integration requires, an error will be 
+        returned.
+      tags:
+        - Activations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivationCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activation'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /activations/{activation_id}:
+    parameters:
+      - $ref: '#/components/parameters/activation_id'
+    get:
+      operationId: GetActivation
+      summary: Retrieve an Activation
+      description: |
+        GetActivation returns the Activation for the given ID.
+      tags:
+        - Activations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activation'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteActivation
+      summary: Delete an Activation
+      description: |
+        DeleteActivation deletes the Activation for the given ID.
+      tags:
+        - Activations
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /healthz:
+    get:
+      summary: Health Check
+      operationId: HealthCheck
+      description: |
+        HealthCheck returns a successful status if the API is healthy.
+      tags:
+        - Miscellaneous
+      responses:
+        '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+components:
+  parameters:
+    organisation_id:
+      name: organisation_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: ulid
+        x-go-type: ulid.ULID
+        x-go-type-import:
+          path: versori.dev/vergo/ulid
+    connector_id:
+      name: connector_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ULID'
+    hub_id:
+      name: hub_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ULID'
+    user_id:
+      description: |
+        UserID references an End User in the Hub. 
+
+        Most APIs support setting this value to either the internal Versori identifier or their external ID as 
+        determined by the organisation. The `identifier_type` query parameter is used to indicate which type of ID is
+        being used.
+      name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    connection_template_id:
+      description: |
+        ConnectionTemplateID references a Connection Template in the Hub.
+      name: connection_template_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ULID'
+    identifier_type:
+      name: identifier_type
+      in: query
+      description: |
+        IdentifierType indicates whether the `user_id` path parameter is a internal identifier created by Versori, or an 
+        external identifier. If the value is `external`, some endpoints also require the `hub` query parameter to
+        identify the correct Hub.
+      required: false
+      schema:
+        type: string
+        enum:
+          - internal
+          - external
+        default: external
+    integration_id:
+      name: integration_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ULID'
+    activation_id:
+      name: activation_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ULID'
+    first:
+      name: first
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 20
+    before:
+      name: before
+      in: query
+      required: false
+      schema:
+        type: string
+    after:
+      name: after
+      in: query
+      required: false
+      schema:
+        type: string
+    sort:
+      name: sort
+      in: query
+      required: false
+      examples:
+        single column ascending:
+          summary: Single column search in ascending order
+          value: id:asc
+        single column descending:
+          summary: Single column search in descending order
+          value: name:desc
+        multiple columns:
+          summary: Multiple column search
+          value: name:asc,id:desc
+      schema:
+        type: string
+        pattern: ^([^:,]+:[^:,]+)(,[^:,]+:[^:,]+)*$
+  schemas:
+    InferredReference:
+      description: |
+        InferredReference is an object with a single `id` property that is used to reference another object. The type of
+        entity being referenced is inferred from the context in which the reference is used.
+      type: object
+      properties:
+        id:
+          type: string
+          x-go-type-name: ID
+      required:
+        - id
+    HubConnectionTemplateCreate:
+      description: CreateHubConnectionTemplate defines the request body for creating a new Hub Connector
+      type: object
+      properties:
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+          x-go-type-skip-optional-pointer: true
+        connectorId:
+          description: |
+            ConnectorID is the unique identifier of the Connector that the Hub Connector is wrapping.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ConnectorID
+      required:
+        - connectorId
+        - authSchemeConfig
+    IntegrationMetadata:
+      description: HubMetadata is used to define metadata for a hub.
+      type: object
+      properties:
+        usedConnectionTemplates:
+          type: array
+          x-go-type-skip-optional-pointer: true
+          items:
+            type: string
+            format: ulid
+            x-go-type: ulid.ULID
+            x-go-type-skip-optional-pointer: true
+            x-go-type-import:
+              path: versori.dev/vergo/ulid
+            x-go-name: ConnectorID
+    HubConnectorVariable:
+      description: |
+        HubConnectorVariable is a variable that can be used to customise the behaviour of the connector.
+
+        Variables are stored on the Connector and signal the defaults to use when connecting. The user can override
+        these defaults when connecting to the connector.
+      type: object
+      properties:
+        name:
+          description: |
+            Name defines the variable name being configured.
+          type: string
+        value:
+          description: |
+            Value defines the value of the variable, this may be any valid JSON value.
+        label:
+          description: |
+            Label is a human-friendly name for the variable. This is used to display the variable to the end user when
+            they are connecting to the connector.
+          type: string
+        description:
+          description: |
+            Description allows for a longer description of what this variable is used for. This may be shown to the end
+            user when they are connecting to the connector in the form of a tooltip or expandable info view.
+        required:
+          description: |
+            Required indicates whether the variable is required when connecting to the connector. If the variable is
+            required, the user must provide a value for the variable when connecting.
+          type: boolean
+      required:
+        - name
+        - value
+    HubConnectionTemplate:
+      description: |
+        A Hub Connection Template is a lightweight wrapper around a Connector from Connect API, but includes additional
+        information to make embedding the integration simpler.
+
+        Versori-users do not need to establish connections in an integration. These are connected to
+        by end-users when they activate the integration from the embedded integration hub.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier of the Hub Connection Template.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        connectorId:
+          description: ConnectorID is the unique identifier of the Connector.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-type-skip-optional-pointer: true
+          x-go-name: ConnectorID
+        imageUrl:
+          description: |
+            ImageURL is a URL to an image/icon that represents the connector. This image is used within the 
+            integration tile displayed in the embedded UI.
+          type: string
+          format: uri
+          x-go-name: ImageURL
+        name:
+          description: |
+            name denotes the name of the Connector that the template is wrapping.
+          type: string
+        isUsed:
+          type: boolean
+          description: IsUsed indicates that this connection template is in use by the hub.
+        isPrimary:
+          type: boolean
+          description: IsPrimary indicates that this is the primary connections on the hub.
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+      required:
+        - id
+        - connectorId
+        - name
+        - imageUrl
+        - connectionTemplates
+        - variables
+        - authSchemeConfig
+        - isUsed
+        - isPrimary
+    ConnectorInfo:
+      description: |
+        A Hub Connection Template is a lightweight wrapper around a Connector from Connect API, but includes additional
+        information to make embedding the integration simpler.
+
+        Versori-users do not need to establish connections in an integration. These are connected to
+        by end-users when they activate the integration from the embedded integration hub.
+      type: object
+      properties:
+        connectorId:
+          description: ID is the unique identifier of the Hub Connector.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ConnectorID
+        name:
+          description: |
+            name denotes the name of the Connector that the template is wrapping.
+          type: string
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+        imageUrl:
+          description: |
+            ImageURL is a URL to an image/icon that represents the integration. This image is used within the integration
+            tile displayed in the embedded UI.
+          type: string
+          format: uri
+          x-go-name: ImageURL
+        variables:
+          $ref: '#/components/schemas/ActivationVariables'
+      required:
+        - connectorId
+        - name
+        - imageUrl
+        - variables
+        - authSchemeConfig
+    HubConnectionTemplatePage:
+      description: |
+        HubConnectionTemplatePage is a paginated list of Hub Connection Templates.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            connectionTemplates:
+              type: array
+              items:
+                $ref: '#/components/schemas/HubConnectionTemplate'
+          required:
+            - connectionTemplates
+    EndUser:
+      type: object
+      properties:
+        id:
+          description: |
+            ID is the Versori identifier for the user. Most APIs will not use this field but instead reference
+            users by their externalId.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        externalId:
+          description: |
+            ExternalID is the identifier for the user as determined by the organisation. This typically should
+            be the same as the user's ID on the Primary Connector for the Hub. Regardless of the value, it must 
+            be unique within the Hub.
+          type: string
+          x-go-name: ExternalID
+        displayName:
+          description: |
+            DisplayName is an optional human-readable name for the user. If not set, the default is an empty string.
+          type: string
+        hubId:
+          description: The hub ID to which the user belongs to.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: HubID
+        primaryConnection:
+          description: |
+            PrimaryConnection is the connection that the user will use to authenticate to the primary connector.
+          $ref: '#/components/schemas/Connection'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the user was created.
+          x-go-type: time.Time
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the user was last updated.
+          x-go-type: time.Time
+      required:
+        - id
+        - externalId
+        - displayName
+        - hubId
+        - primaryConnection
+        - createdAt
+        - updatedAt
+    EndUserSummary:
+      type: object
+      properties:
+        id:
+          description: |
+            ID is the Versori identifier for the user. Most APIs will not use this field but instead reference
+            users by their externalId.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        externalId:
+          description: |
+            ExternalID is the identifier for the user as determined by the organisation. This typically should
+            be the same as the user's ID on the Primary Connector for the Hub. Regardless of the value, it must 
+            be unique within the Hub.
+          type: string
+          x-go-name: ExternalID
+        displayName:
+          description: |
+            DisplayName is an optional human-readable name for the user. If not set, the default is an empty string.
+          type: string
+        hubId:
+          description: The hub ID to which the user belongs to.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: HubID
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the user was created.
+          x-go-type: time.Time
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the user was last updated.
+          x-go-type: time.Time
+      required:
+        - id
+        - externalId
+        - displayName
+        - hubId
+        - createdAt
+        - updatedAt
+    ListIntegrations:
+      type: object
+      properties:
+        total:
+          description: Total integrations for the given Hub
+          type: integer
+        integrations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Integration'
+      required:
+        - total
+        - integrations
+    CreateIntegrationRequest:
+      description: Request to create a new Integration - updatedAt
+    EndUserConnectionsPage:
+      description: ConnectorConnectionPage defines a page of Connection summaries.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            connections:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConnectionSummary'
+              x-go-type-skip-optional-pointer: true
+    EndUserCreate:
+      description: Request to create a new End User
+      type: object
+      properties:
+        externalId:
+          description: ExternalID is the identifier of the user as identified in the Hub's primary connector/system.
+          type: string
+          x-go-type-name: ExternalID
+        displayName:
+          description: DisplayName is a human-readable name for the user
+          type: string
+          x-go-type-skip-optional-pointer: true
+        primaryConnection:
+          description: |
+            PrimaryConnection is the connection that the user will use to authenticate to the primary connector.
+          $ref: '#/components/schemas/ConnectionCreate'
+      required:
+        - externalId
+        - primaryConnection
+    EndUserPage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/EndUserSummary'
+          required:
+            - users
+    IntegrationCreate:
+      description: |
+        IntegrationCreate contains the payload to create a new Embedded Integration.
+      type: object
+      properties:
+        connectionTemplate:
+          $ref: '#/components/schemas/HubConnectionTemplateCreate'
+        description:
+          description: Short description of the Integration
+          type: string
+          examples:
+            - My Integration to a shiny new service
+          x-go-type-skip-optional-pointer: true
+        summary:
+          description: The summary of the Integration
+          type: string
+          examples:
+            - My Integration to a shiny new service
+          x-go-type-skip-optional-pointer: true
+        name:
+          description: The name of the Integration
+          type: string
+          x-go-type-skip-optional-pointer: true
+        variablesScheme:
+          description: |
+            VariablesScheme is the JSON scheme for the variables defined for this integration.
+          type: object
+          x-go-type-skip-optional-pointer: true
+          x-go-type: json.RawMessage
+        organisationId:
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: OrganisationID
+      required:
+        - organisationId
+        - name
+    Integration:
+      description: |
+        Integration represents an embedded integration that can be activated by end users.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        name:
+          description: |
+            Name is a short name for the integration, this is typically the name of the Connector being integrated to.
+          type: string
+        imageUrl:
+          description: |
+            ImageURL is a URL to an image/icon that represents the integration. This image is used within the 
+            integration tile displayed in the embedded UI.
+          type: string
+          format: uri
+          x-go-name: ImageURL
+        description:
+          description: |
+            Description can be used to provide a longer description of the integration. This can be shown to end users
+            in the embedded integration hub UI.
+          type: string
+        variablesScheme:
+          description: |
+            VariablesScheme is the JSON scheme for the variables defined for this integration.
+          type: object
+          x-go-type-skip-optional-pointer: true
+          x-go-type: json.RawMessage
+        boardId:
+          description: |
+            BoardID is a reference to underlying board that configures the integration. 
+
+            For more information on boards see Switchboard API.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: BoardID
+      required:
+        - id
+        - name
+        - boardId
+    UpdateIntegration:
+      description: |
+        Integration represents an embedded integration that can be activated by end users.
+      type: object
+      properties:
+        name:
+          description: |
+            Name is a short name for the integration, this is typically the name of the Connector being integrated to.
+          type: string
+        imageUrl:
+          description: |
+            ImageURL is a URL to an image/icon that represents the integration. This image is used within the 
+            integration tile displayed in the embedded UI.
+          type: string
+          format: uri
+          x-go-name: ImageURL
+        description:
+          description: |
+            Description can be used to provide a longer description of the integration. This can be shown to end users
+            in the embedded integration hub UI.
+          type: string
+        variablesScheme:
+          description: |
+            VariablesScheme is the JSON scheme for the variables defined for this integration.
+          type: object
+          x-go-type-skip-optional-pointer: true
+          x-go-type: json.RawMessage
+    IntegrationPage:
+      description: |
+        IntegrationPage is a paginated list of integrations.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            integrations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Integration'
+          required:
+            - integrations
+    HubCreate:
+      description: |
+        CreateHubRequest is the payload to create a new Hub.
+      type: object
+      properties:
+        organisationId:
+          description: The ID of the organisation that the Hub belongs to
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: OrganisationID
+        name:
+          description: The name of the Hub
+          type: string
+        primaryConnectorId:
+          description: |
+            PrimaryConnectorID references the Connector that the Hub will be built around.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: PrimaryConnectorID
+        authSchemeConfig:
+          description: |
+            AuthSchemeConfig defines how your End Users should authenticate to the primary connector.
+
+            This is used to drive the front-end experience for the end user, however any authentication scheme
+            config can be used when connecting to a connector over the API.
+          $ref: '#/components/schemas/AuthSchemeConfig'
+      required:
+        - organisationId
+        - name
+        - primaryConnectorId
+        - authSchemeConfig
+    Hub:
+      description: A Hub description
+      type: object
+      properties:
+        id:
+          description: The ID of the Hub
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        name:
+          description: The name of the Hub
+          type: string
+        primaryConnector:
+          description: |
+            PrimaryConnector is the connector that the Hub is built around.
+          $ref: '#/components/schemas/ConnectorInfo'
+      required:
+        - id
+        - name
+        - primaryConnector
+    HubsPage:
+      description: |
+        HubsPage contains a list of hubs using Versori's pagination response types. Initially the ListHubs endpoint 
+        will return all hubs, but this is subject to change in the future and may become paginated.
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            hubs:
+              type: array
+              items:
+                $ref: '#/components/schemas/Hub'
+          required:
+            - hubs
+    EmbeddedIntegration:
+      description: |
+        EmbeddedIntegration represents an integration that is available to an end user and contains all the necessary
+        information for the UI to determine how the user should activate the integration.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier for the Integration
+          $ref: '#/components/schemas/ULID'
+        name:
+          description: |
+            Name is a short name for the integration, this is typically the name of the Connector being integrated to.
+          type: string
+        imageUrl:
+          description: |
+            ImageURL is a URL to an image/icon that represents the integration. This image is used within the integration
+            tile displayed in the embedded UI.
+          type: string
+          format: uri
+          x-go-name: ImageURL
+        variablesScheme:
+          description: |
+            VariablesScheme is the JSON scheme for the variables defined for this integration.
+          type: object
+          x-go-type-skip-optional-pointer: true
+          x-go-type: json.RawMessage
+        description:
+          description: |
+            Description can be used to provide a longer description of the integration. This can be shown to end users
+            in the embedded integration hub UI.
+          type: string
+        isDeployed:
+          description: |
+            IsDeployed indicates whether the integration is deployed and available to end users. If not deployed, the
+            integration cannot be activated.
+          type: boolean
+        isActivated:
+          description: |
+            IsActivated indicates whether the integration is activated for the end user. If the integration is not
+            activated, the user can activate it from the embedded integration hub.
+          type: boolean
+        connectionTemplates:
+          description: |
+            ConnectionTemplates is a list of connections that the end user can authenticate to when activating the integration.
+          type: array
+          items:
+            $ref: '#/components/schemas/HubConnectionTemplate'
+      required:
+        - id
+        - name
+        - imageUrl
+        - description
+        - isDeployed
+        - isActivated
+        - connectionTemplates
+    EmbeddedIntegrationSummary:
+      description: |
+        EndUserIntegration represents an integration that is available to an end user.
+
+        This object is only a summary of the integration and does not contain all the information to enable the user
+        to activate it. The GetEmbeddedIntegration endpoint should be used to retrieve the full integration details.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        name:
+          description: |
+            Name is a short name for the integration, this is typically the name of the Connector being integrated to.
+          type: string
+        imageUrl:
+          description: |
+            ImageURL is a URL to an image/icon that represents the integration. This image is used within the 
+            integration tile displayed in the embedded UI.
+          type: string
+          format: uri
+          x-go-name: ImageURL
+        description:
+          description: |
+            Description can be used to provide a longer description of the integration. This can be shown to end users
+            in the embedded integration hub UI.
+          type: string
+        variablesScheme:
+          description: |
+            VariablesScheme is the JSON scheme for the variables defined for this integration.
+          type: object
+          x-go-type-skip-optional-pointer: true
+          x-go-type: json.RawMessage
+        isDeployed:
+          description: |
+            IsDeployed indicates whether the integration is deployed and available to end users. If not deployed, the
+            integration cannot be activated.
+          type: boolean
+        isActivated:
+          description: |
+            IsActivated indicates whether the integration is activated for the end user. If the integration is not
+            activated, the user can activate it from the embedded integration hub.
+          type: boolean
+      required:
+        - id
+        - name
+        - imageUrl
+        - description
+        - isDeployed
+        - isActivated
+    EmbeddedIntegrationPage:
+      description: |
+        EndUserIntegrationPage is a paginated list of integrations to be displayed to the user when embedding the
+        integration hub.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            integrations:
+              type: array
+              items:
+                $ref: '#/components/schemas/EmbeddedIntegrationSummary'
+            totalConnected:
+              description: |
+                TotalConnected is the total number of integrations that are connected for the end user. This can be used
+                to display a badge on the embedded integration hub to show the user how many integrations they have
+                connected.
+              type: integer
+          required:
+            - integrations
+    DynamicVariables:
+      type: object
+      x-go-type-skip-optional-pointer: true
+      x-go-type: map[string]any
+    EndUserActivation:
+      type: object
+      description: |
+        EndUserActivation is a summary of an activation for an end user. The details of the user are omitted since it's
+        assumed that the user is known when using this API.
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        hubId:
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: HubID
+        integration:
+          $ref: '#/components/schemas/EmbeddedIntegrationSummary'
+      required:
+        - id
+        - hubId
+        - integration
+    EndUserActivationPage:
+      description: |
+        EndUserActivationPage is a paginated list of Activations for an end user.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            activations:
+              type: array
+              items:
+                $ref: '#/components/schemas/EndUserActivation'
+          required:
+            - activations
+    Activation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ID
+        user:
+          $ref: '#/components/schemas/EndUser'
+        hubId:
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: HubID
+        integration:
+          $ref: '#/components/schemas/EmbeddedIntegrationSummary'
+      required:
+        - id
+        - user
+        - hubId
+        - integration
+    ActivationVariable:
+      description: |
+        ActivationVariable is a variable that is passed to the Integration when it is activated.
+      type: object
+      properties:
+        name:
+          description: Name defines the variable name being configured.
+          type: string
+        value:
+          description: Value defines the value of the variable.
+      required:
+        - name
+        - value
+    ActivationVariables:
+      description: |
+        ActivationVariables is a map of variables that are passed to the Integration when it is activated. These
+        variables are used to configure the Integration for the end user.
+      type: array
+      items:
+        $ref: '#/components/schemas/ActivationVariable'
+    ActivationConnectionCreateExisting:
+      description: |
+        ActivationConnectionCreateNew defines a new Connection to be used in an Activation
+      type: object
+      properties:
+        templateId:
+          description: |
+            TemplateID is a reference to a Connection Template which this Activation Connection is binding to.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: TemplateID
+        connectionId:
+          description: |
+            ID is the unique identifier of an existing Connection.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: ConnectionID
+      required:
+        - templateId
+        - connectionId
+    ActivationConnectionCreateNew:
+      description: |
+        ActivationConnectionCreateNew defines a new Connection to be used in an Activation
+      type: object
+      properties:
+        templateId:
+          description: |
+            TemplateID is a reference to a Connection Template which this Activation Connection is binding to.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: TemplateID
+        name:
+          type: string
+          description: Name is the name of the Connection.
+        credentials:
+          $ref: '#/components/schemas/ConnectionCredentialsCreate'
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionVariable'
+      required:
+        - templateId
+        - name
+        - credentials
+        - variables
+    ActivationConnectionCreate:
+      description: |
+        ActivationConnectionCreate defines how an Activation Connection should be created. It may reference an existing
+        Connection belonging to this Ens User, or a new Connection can be created.
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/ActivationConnectionCreateExisting'
+        - $ref: '#/components/schemas/ActivationConnectionCreateNew'
+    ActivationCreate:
+      description: |
+        ActivationCreate is the request payload to activate an Integration for End User
+      type: object
+      properties:
+        userId:
+          description: |
+            UserID references the user to activate the integration for, this may be their Versori identifier or their
+            external identifier, indicated by the `userIdType` field.
+          type: string
+          x-go-name: UserID
+        integrationId:
+          description: |
+            IntegrationID references the Integration that the activation is for.
+          type: string
+          format: ulid
+          x-go-type: ulid.ULID
+          x-go-type-skip-optional-pointer: true
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-name: IntegrationID
+        connections:
+          description: |
+            Connections is a list of Activation Connections to create for this Activation. Each Activation Connection
+            can either reference an existing underlying Connection, or a new Connection can be created.
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivationConnectionCreate'
+        variables:
+          $ref: '#/components/schemas/ActivationVariables'
+        dynamicVariables:
+          $ref: '#/components/schemas/DynamicVariables'
+      required:
+        - userId
+        - integrationId
+        - connections
+        - variables
+    ActivationPage:
+      description: |
+        ActivationPage is a paginated list of Activations.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PageInfo'
+        - type: object
+          properties:
+            activations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Activation'
+          required:
+            - activations
+    ULID:
+      type: string
+      format: ulid
+      x-go-type: ulid.ULID
+      x-go-type-skip-optional-pointer: true
+      x-go-type-import:
+        path: versori.dev/vergo/ulid
+    HealthResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    ErrorField:
+      description: ErrorField denotes a field which has an error.
+      type: object
+      properties:
+        field:
+          type: string
+          description: |
+            Field is the name of the field which has an error, this may be a path to a nested field, including array
+            elements. The format of this field is of the form: "field1.field2[0].field3"
+        message:
+          type: string
+          description: Message is the error message for this specific field.
+      required:
+        - field
+        - message
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code is a machine-readable error code.
+        message:
+          type: string
+          description: Message is a human-readable error message.
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorField'
+          x-go-type-skip-optional-pointer: true
+        details:
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - code
+        - message
+    PageInfo:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        next:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        prev:
+          type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - totalCount
+    MessageSeverity:
+      type: string
+      enum:
+        - info
+        - warning
+        - error
+    Message:
+      description: |
+        Message is a message to be displayed to the user to indicate some information about the
+        preceding request.
+      type: object
+      properties:
+        text:
+          description: Text contains the text of the message.
+          type: string
+        severity:
+          $ref: '#/components/schemas/MessageSeverity'
+        detail:
+          description: |
+            Details contains additional information about the message. This is intended to be used
+            to provide more information about the message, such as a list of validation errors.
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+      required:
+        - text
+        - severity
+    AuthSchemeConfigBase:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the AuthSchemeConfig, this is generated by the client and
+            only requires to be unique amongst the elements of the array in which is it contained.
+          x-go-name: ID
+        description:
+          description: |
+            Description enables users to distinguish multiple configurations which use the same 
+            schemeType.
+          type: string
+        validationMessages:
+          description: |
+            ValidationMessages is a list of messages which are generated when the AuthSchemeConfig 
+            is validated. This is typically used to provide feedback to the user when they are 
+            creating or updating the AuthSchemeConfig.
+
+            This field will be ignored if sent to the API.
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          x-go-type-skip-optional-pointer: true
+      required:
+        - id
+        - description
+    AuthSchemeConfigNone:
+      description: |
+        AuthSchemeConfigNone is a placeholder object with the schemeType set to `none`. There is no other configuration
+        required.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
+        - type: object
+          properties:
+            schemeType:
+              type: string
+              const: none
+          required:
+            - schemeType
+    AuthSchemeConfigAPIKeyIn:
+      description: |
+        AuthSchemeConfigAPIKeyIn defines the location of the API key in the request.
+      type: string
+      enum:
+        - query
+        - header
+        - cookie
+    AuthSchemeConfigAPIKey:
+      description: |
+        AuthSchemeConfigAPIKey defines how a Connector uses an API key credential to authenticate with the system.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
+        - type: object
+          properties:
+            schemeType:
+              type: string
+              const: api-key
+            name:
+              type: string
+              description: Name is the query parameter/header/cookie name which will be used to send the API key.
+            in:
+              $ref: '#/components/schemas/AuthSchemeConfigAPIKeyIn'
+          required:
+            - schemeType
+            - name
+            - in
+    AuthSchemeConfigBasicAuth:
+      description: |
+        AuthSchemeConfigBasicAuth is a placeholder object with the schemeType set to `basic-auth`. There is no other
+        configuration required.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
+        - type: object
+          properties:
+            schemeType:
+              type: string
+              const: basic-auth
+          required:
+            - schemeType
+    OAuth2Scope:
+      description: |
+        OAuth2Scope represents a single scope which can be requested by an OAuth2 application.
+      type: object
+      properties:
+        name:
+          type: string
+          description: |
+            Name is the name of the scope as determined by the application to which this Connector 
+            is connecting to.
+        description:
+          type: string
+          description: |
+            Description describes the scope in human-friendly terminology. This text may be 
+            displayed to users via a help tooltip or similar.
+          x-go-type-skip-optional-pointer: true
+      required:
+        - name
+    AuthSchemeConfigOAuth2GrantAuthorizationCode:
+      description: |
+        AuthSchemeConfigOAuth2GrantAuthorizationCode contains grant-specific configuration for the 
+        `authorization_code` grant type.
+
+        How the API manages changes to this configuration is as follows:
+
+        - CredentialID and OrganisationID are not set, a new credential is created containing the
+          sensitive information and the non-sensitive information is updated in the database.  
+        - Otherwise, both the credential and the database are updated using JSON Merge Patch, with
+          undefined properties not being updated.
+        - Any other permutation will result in a 400 Bad Request.
+      type: object
+      properties:
+        grantType:
+          type: string
+          const: authorization_code
+        credentialId:
+          description: |
+            CredentialID is the unique identifier of the Credential which contains the client ID and
+            client secret to be used as part of the `password` flow.
+          type: string
+          format: ulid
+          x-go-name: CredentialID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-type-skip-optional-pointer: true
+        organisationId:
+          description: |
+            OrganisationID is the unique identifier of the Organisation that owns the Credential. 
+            This can be different to the Connector's OrganisationID since some may be imported from 
+            Versori's public library.
+          type: string
+          format: ulid
+          x-go-name: OrganisationID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-type-skip-optional-pointer: true
+        clientId:
+          description: |
+            ClientID is the OAuth 2.0 client's identifier. This is not a sensitive value and may be 
+            presented to the user in plaintext.
+          type: string
+          x-go-name: ClientID
+        clientSecret:
+          description: |
+            ClientSecret is the OAuth 2.0 client's secret. This is a sensitive value and will not be
+            displayed to the user.
+          type: string
+      required:
+        - grantType
+    AuthSchemeConfigOAuth2GrantClientCredentials:
+      type: object
+      properties:
+        grantType:
+          type: string
+          const: client_credentials
+      required:
+        - grantType
+    AuthSchemeConfigOAuth2GrantPassword:
+      description: |
+        AuthSchemeConfigOAuth2GrantPassword contains grant-specific configuration for the `password` 
+        grant type.
+
+        How the API manages changes to this configuration is as follows:
+
+        - CredentialID and OrganisationID are not set, a new credential is created containing the
+          sensitive information and the non-sensitive information is created/updated in the 
+          database.  
+        - Otherwise, both the credential and the database are updated using JSON Merge Patch.
+        - Any other permutation will result in a 400 Bad Request.
+      type: object
+      properties:
+        grantType:
+          type: string
+          const: password
+        credentialId:
+          description: |
+            CredentialID is the unique identifier of the Credential which contains the client ID and
+            client secret to be used as part of the `password` flow.
+          type: string
+          format: ulid
+          x-go-name: CredentialID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-type-skip-optional-pointer: true
+        organisationId:
+          description: |
+            OrganisationID is the unique identifier of the Organisation that owns the Credential. This can be different
+            to the Connector's OrganisationID since some may be imported from Versori's public library.
+          type: string
+          format: ulid
+          x-go-name: OrganisationID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+          x-go-type-skip-optional-pointer: true
+        clientId:
+          description: |
+            ClientID is the OAuth 2.0 client's identifier. This is not a sensitive value and may be presented to the 
+            user in plaintext.
+          type: string
+          x-go-name: ClientID
+        clientSecret:
+          description: |
+            ClientSecret is the OAuth 2.0 client's secret. This is a sensitive value and will not be displayed to the 
+            user. It may be populated when updating the Credential.
+          type: string
+      required:
+        - grantType
+    AuthSchemeConfigOAuth2Grant:
+      type: object
+      discriminator:
+        propertyName: grantType
+        mapping:
+          authorization_code: '#/components/schemas/AuthSchemeConfigOAuth2GrantAuthorizationCode'
+          client_credentials: '#/components/schemas/AuthSchemeConfigOAuth2GrantClientCredentials'
+          password: '#/components/schemas/AuthSchemeConfigOAuth2GrantPassword'
+      oneOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantAuthorizationCode'
+        - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantClientCredentials'
+        - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantPassword'
+    AuthSchemeConfigOAuth2:
+      description: |
+        AuthSchemeConfigOAuth2 defines how a Connector uses an OAuth2 credential to authenticate 
+        with the system. This is to be used for all OAuth 2.0 flows which require a client ID and 
+        client secret as part of the Connector's configuration. Connectors which use the 
+        `client_credentials` grant type, where the user provides the Client ID  and Client Secret at
+        the point where they connect, should use the `AuthSchemeConfigOAuth2ClientCredentials` type 
+        instead.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
+        - type: object
+          properties:
+            schemeType:
+              type: string
+              const: oauth2
+            authorizeUrl:
+              type: string
+              format: uri
+              description: |
+                AuthorizeURL is the URL which the user will be redirected to in order to authorize 
+                the application.
+              x-go-name: AuthorizeURL
+            tokenUrl:
+              type: string
+              format: uri
+              description: |
+                TokenURL is the URL which the application will use to issue an access token.
+              x-go-name: TokenURL
+            scopes:
+              description: |
+                Scopes is the list of all OAuth2 scopes which the application supports. The user 
+                will be allowed to choose which scopes to request when configuring the Connection.
+              type: array
+              items:
+                $ref: '#/components/schemas/OAuth2Scope'
+            defaultScopes:
+              description: |
+                DefaultScopes is the list of scopes which will be requested by default when the user
+                connects the Connector. This is useful for Connectors which require a specific set 
+                of scopes to function correctly.
+              type: array
+              items:
+                type: string
+            additionalAuthorizeParams:
+              description: |
+                AdditionalAuthorizeParams is a URL-encoded query string which should be attached to 
+                the AuthorizeURL when the user is redirected to the OAuth 2.0 authorization 
+                endpoint.
+
+                This value is only used by the UI to drive the default values when connecting, the 
+                API to `InitialiseOAuth2Connection` can be provided a different value if required.
+              type: string
+              x-go-type-skip-optional-pointer: true
+            additionalTokenParams:
+              description: |
+                AdditionalTokenParams is a URL-encoded string following the 
+                `application/x-www-form-urlencoded` mime-type, which can be used to pass additional
+                parameters to the OAuth 2.0 token endpoint within the request body.
+              type: string
+              x-go-type-skip-optional-pointer: true
+            mtlsEnabled:
+              type: boolean
+              description: |
+                MTLSEnabled is a flag which determines whether the Connector should use Mutual TLS 
+                (mTLS) to authenticate with the OAuth 2.0 token endpoint. This is useful for 
+                Connectors which require a higher level of security.
+              x-go-name: MTLSEnabled
+              x-go-type-skip-optional-pointer: true
+            mtlsCredentialId:
+              type: string
+              description: |
+                MTLSCredentialID is the unique identifier of the Credential which contains the 
+                client certificate and private key to be used as part of the mTLS connection. 
+
+                This may be unset when creating a connection, in which case if `mtlsEnabled` is 
+                true, then the API will find an associated AuthSchemeConfigCertificate and link 
+                them automatically.
+              x-go-name: MTLSCredentialID
+            grant:
+              $ref: '#/components/schemas/AuthSchemeConfigOAuth2Grant'
+          required:
+            - schemeType
+            - authorizeUrl
+            - tokenUrl
+            - scopes
+            - defaultScopes
+            - grant
+    AuthSchemeConfigHMACIn:
+      description: AuthSchemeConfigHMACIn defines where the signature should be set on requests.
+      type: string
+      enum:
+        - query
+        - header
+        - cookie
+    AuthSchemeConfigHMAC:
+      description: |
+        AuthSchemeConfigHMAC defines how a Connector uses an HMAC credential to authenticate with the system.
+
+        This may be used on outbound requests to sign the request body, however it is more commonly used on inbound
+        requests (i.e. from Webhook Triggers) to verify the sender of the request is allowed to invoke the Trigger.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
+        - type: object
+          properties:
+            schemeType:
+              type: string
+              const: hmac
+            name:
+              type: string
+              description: Name is the query parameter/header/cookie name which will be used to send the signature.
+            in:
+              $ref: '#/components/schemas/AuthSchemeConfigHMACIn'
+            algorithm:
+              description: AuthSchemeConfigHMACAlgorithm defines the hashing algorithm to use when generating the HMAC signature.
+              type: string
+              enum:
+                - sha1
+                - sha256
+                - sha512
+            digestInputs:
+              description: |
+                AuthSchemeConfigHMACInputs defines what parts of a HTTP request are consumed to generate the HMAC signature. Some systems
+                only generate the signature from the request body, others may include the URL. The order of this array
+                defines the order in which the input is fed into the hashing function.
+              type: array
+              items:
+                type: string
+                enum:
+                  - body
+                  - url
+          required:
+            - schemeType
+            - name
+            - in
+            - algorithm
+            - digestInputs
+    AuthSchemeConfigCertificate:
+      description: |
+        AuthSchemeConfigCertificate is a placeholder object with the schemeType set to `certificate`. 
+        There is no other config required
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
+        - type: object
+          properties:
+            schemeType:
+              type: string
+              const: certificate
+          required:
+            - schemeType
+    AuthSchemeConfig:
+      description: |
+        AuthSchemeConfig defines how a Connector implements the AuthScheme in order to fulfil its 
+        authentication requirements. This is purely the configuration and not the actual credential 
+        which is used to authenticate. The credential uses this configuration to determine how to 
+        authenticate.
+      discriminator:
+        propertyName: schemeType
+        mapping:
+          none: '#/components/schemas/AuthSchemeConfigNone'
+          api-key: '#/components/schemas/AuthSchemeConfigAPIKey'
+          basic-auth: '#/components/schemas/AuthSchemeConfigBasicAuth'
+          oauth2: '#/components/schemas/AuthSchemeConfigOAuth2'
+          hmac: '#/components/schemas/AuthSchemeConfigHMAC'
+          certificate: '#/components/schemas/AuthSchemeConfigCertificate'
+      oneOf:
+        - $ref: '#/components/schemas/AuthSchemeConfigNone'
+        - $ref: '#/components/schemas/AuthSchemeConfigAPIKey'
+        - $ref: '#/components/schemas/AuthSchemeConfigBasicAuth'
+        - $ref: '#/components/schemas/AuthSchemeConfigOAuth2'
+        - $ref: '#/components/schemas/AuthSchemeConfigHMAC'
+        - $ref: '#/components/schemas/AuthSchemeConfigCertificate'
+    CredentialType:
+      description: |
+        CredentialType denotes the type of the credential which determines what the Credential's `data` property will
+        contain.
+
+        - none: No credential is required to authenticate with the Connector.
+        - string: The credential is a string value, such as an API key or password.
+        - binary: The credential is a binary value, such as a private key, certificate or other file.
+        - basic-auth: The credential is a username and password to be used for basic authentication.
+        - oauth2-client: The credential is an OAuth2 client ID and secret to be used for OAuth2 authentication.
+        - oauth2-code: The credential is a temporary authorization code which will be exchanged for an oauth2-token.
+        - oauth2-password: The credential is an OAuth2 username and password with an optional client ID and secret to be used for OAuth2 authentication.
+        - oauth2-token: The credential is an OAuth2 access_token to be used for OAuth2 authentication.
+        - custom-function: The credential is a custom function which will be called to authenticate with the Connector.
+        - jwt-bearer: The credential is the JWT setup values to be used for generating a bearer token.
+        - certificate: The credential is a PEM encoded certificate, key and CA to be used for TLS client authentication.
+      type: string
+      enum:
+        - none
+        - string
+        - binary
+        - basic-auth
+        - oauth2-client
+        - oauth2-code
+        - oauth2-password
+        - oauth2-token
+        - custom-function
+        - certificate
+        - jwt-bearer
+      x-go-type-skip-optional-pointer: true
+    CredentialDataNone:
+      description: |
+        CredentialDataNone contains no data as no credential is required to authenticate with the Connector. It is used
+        purely as a placeholder to implement a consistent interface across all CredentialType/AuthSchemeTypes.
+      type: object
+      additionalProperties: false
+    CredentialDataString:
+      description: |
+        CredentialDataString contains a string value and nothing else and is commonly used for API keys. This value 
+        will be redacted when returned in a response.
+      type: object
+      properties:
+        value:
+          type: string
+          description: |
+            Value is a UTF-8 string containing the credential data. When read from the API this field will be redacted.
+      required:
+        - value
+    CredentialDataBinary:
+      description: |
+        CredentialDataBinary is commonly used to store non-string data such as binary files or encryption keys. This 
+        value will be redacted when returned in a response.
+      type: object
+      properties:
+        valueBase64:
+          type: string
+          description: |
+            Value is a base64 encoded string containing the credential data. This could decode to a valid utf-8 string,
+            or it could decode to a binary file such as a private key etc. When read from the API this field will be 
+            redacted.
+      required:
+        - valueBase64
+    CredentialDataBasicAuth:
+      description: |
+        CredentialDataBasicAuth contains the username and password required to authenticate with the Connector. The
+        `password` property will be redacted when returned in a response.
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username is the username used to authenticate with the Connector.
+        password:
+          type: string
+          description: |
+            Password is the password used to authenticate with the Connector. Will be redacted when returned in a
+            response.
+      required:
+        - username
+        - password
+    CredentialDataOAuth2Client:
+      description: |
+        CredentialDataOAuth2Client contains the OAuth2 client credentials required to either issue an access token from
+        a refresh_token, or via the `client_credentials` and `authorization_code` grant types. The `clientSecret` property will be redacted when
+        returned in a response.
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: |
+            ClientID is the OAuth2 client ID used to authenticate with the Connector.
+          x-go-name: ClientID
+        clientSecret:
+          type: string
+          description: |
+            ClientSecret is the OAuth2 client secret used to authenticate with the Connector. Will be redacted when
+            returned in a response.
+        authorizeUrl:
+          type: string
+          format: uri
+          description: |
+            AuthorizeURL is the URL which the user will be redirected to in order to authorize the application. If
+            the client is being used for a `client_credentials` grant type, this field should be set to an empty 
+            string.
+          x-go-name: AuthorizeURL
+        tokenUrl:
+          type: string
+          format: uri
+          description: TokenURL is the URL which the application will use to issue an access token.
+          x-go-name: TokenURL
+        scopes:
+          type: array
+          items:
+            type: string
+          description: |
+            Scopes is a list of scopes which should be requested when issuing an access token. This is only required if
+            this credential is being used on a `client_credentials` grant type, for `authorization_code` grant types the
+            requested scopes come from the `CredentialDataOAuth2Token` credential.
+          x-go-type-skip-optional-pointer: true
+        additionalParams:
+          description: |
+            AdditionalParams is a URL-encoded query string which can be used to pass additional 
+            parameters to the OAuth 2.0 token endpoint. These parameters are attached to the body
+            in the formatted as the `application/x-www-form-urlencoded` content-type.
+          type: string
+          x-go-type-skip-optional-pointer: true
+        mTLSEnabled:
+          type: boolean
+          description: |
+            MTLSEnabled is a boolean flag which determines whether the client should use mutual TLS authentication when 
+            communicating with the OAuth2 provider. If enabled, the `mTLSCredentialId` field must be set, or it must be 
+            created via the `CreateConnection` endpoint with an associated mTLS credential defined beforehand, in which
+            case the mTLSCredentialID field will be populated upon saving by the API.
+          x-go-type-skip-optional-pointer: true
+        mTLSCredentialId:
+          type: string
+          description: |
+            MTLSCredentialID is an optional reference to another credential being created. 
+            If set the certificate credential will be used when making a request to the tokenUrl.
+          x-go-name: MTLSCredentialID
+          x-go-type-skip-optional-pointer: true
+      required:
+        - clientId
+        - clientSecret
+        - authorizeUrl
+        - tokenUrl
+    CredentialDataOAuth2Code:
+      description: |
+        CredentialDataOAuth2Code is used to exchange an authorization code for an access token and
+        is denoted by the `oauth2-code` type. 
+        This is only used when creating or updating an OAuth 2.0 connection using the 
+        `authorization_code` grant type. Retrieving this credential will return a payload of
+        type `oauth2-token` in the shape of a `CredentialDataOAuth2Token` object.
+      type: object
+      properties:
+        code:
+          description: |
+            Code is the authorization code which will be exchanged for an access token.
+          type: string
+        state:
+          description: |
+            State is the state value which is propagated through the OAuth2 flow.
+          type: string
+      required:
+        - code
+        - state
+    CredentialDataOAuth2Token:
+      description: |
+        CredentialDataOAuth2Token is primarily used to store the refresh_token for an user who has authorized an OAuth2
+        Application to access their data. However, this information is not exposed publicly and the only data visible
+        via the API are the `scopes` which the user has granted consent for. This can be used to determine whether
+        the user should be prompted to re-authorize the application with additional scopes in the event they choose to
+        use a new endpoint which requires additional scopes to what they've already consented to.
+      type: object
+      properties:
+        scopes:
+          type: array
+          items:
+            type: string
+          description: Scopes is a list of scopes which the user has granted consent for.
+        accessToken:
+          type: string
+          description: |
+            AccessToken is the OAuth2 access token which can be used to authenticate with the Connector. This 
+            information is redacted when read from the API.
+          x-go-type-skip-optional-pointer: true
+        refreshToken:
+          type: string
+          description: |
+            RefreshToken is the OAuth2 refresh token which can be used to issue new access tokens. This information is
+            redacted when read from the API.
+          x-go-type-skip-optional-pointer: true
+      required:
+        - scopes
+    CredentialDataOAuth2Password:
+      description: |
+        CredentialDataOAuth2Password contains the username and password of a Resource Owner within an OAuth 2.0
+        application. The `password` property will be redacted when returned in a response.
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username is the username used to authenticate with the Connector.
+        password:
+          type: string
+          description: |
+            Password is the password used to authenticate with the Connector. Will be redacted when returned in a
+            response.
+      required:
+        - username
+        - password
+    CredentialDataCertificate:
+      description: |
+        CredentialDataCertificate contains the Certificate, Certificate key and CA(Certificate authority).
+      type: object
+      properties:
+        certificate:
+          type: string
+          description: Certificate is the certificate that will be send to the connection.
+        key:
+          type: string
+          description: Key is the accompanying key for the certificate.
+        ca:
+          type: string
+          description: CA is the Certificate Authority to verify the server certificates against.
+      required:
+        - certificate
+        - key
+        - ca
+    CredentialCreate:
+      description: CredentialCreateBase contains the common fields to create a new credential.
+      type: object
+      properties:
+        name:
+          description: Name is the name of the Credential.
+          type: string
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/CredentialDataNone'
+            - $ref: '#/components/schemas/CredentialDataString'
+            - $ref: '#/components/schemas/CredentialDataBinary'
+            - $ref: '#/components/schemas/CredentialDataBasicAuth'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Client'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Code'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Token'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Password'
+            - $ref: '#/components/schemas/CredentialDataCertificate'
+      required:
+        - name
+        - type
+        - data
+    ConnectionCredentialCreate:
+      description: ConnectionCredentialCreate contains an AuthSchemeConfig and either a Credential to create, or a reference to  an existing Credential to define how the connection should authenticate to a Connector.
+      properties:
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+        credential:
+          $ref: '#/components/schemas/CredentialCreate'
+      required:
+        - authSchemeConfig
+        - credential
+    ConnectionCredentialsCreate:
+      description: |
+        ConnectionCredentialsCreate defines the Action and Trigger credentials for the owning Connector.
+
+        This supports defining multiple credentials for each type, which are applied to the request in the order they
+        are defined. This is to enable Connectors which require both a user session token and an API key to be provided
+        in the request.
+
+        This object can either define a reference to an existing Credential via the InferredReference object, or it can
+        define a new Credential via the CredentialCreate object.
+      type: object
+      properties:
+        action:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionCredentialCreate'
+          x-go-type-skip-optional-pointer: true
+        trigger:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionCredentialCreate'
+          x-go-type-skip-optional-pointer: true
+    ConnectionVariable:
+      description: ConnectionVariable denotes an arbitrary key/value pair which can be used to configure a connector.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the name of the connection variable.
+        value:
+          type: string
+          description: Value is the value of the connection variable.
+      required:
+        - name
+        - value
+    ConnectionCreate:
+      description: ConnectionCreate defines the connection to create against a Connector.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the name of the Connection.
+        credentials:
+          $ref: '#/components/schemas/ConnectionCredentialsCreate'
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionVariable'
+      required:
+        - name
+        - credentials
+        - variables
+    ProtocolType:
+      description: ProtocolType denotes the set of all valid connector types.
+      type: string
+      enum:
+        - http
+        - bigquery
+    ConnectorSummaryBase:
+      description: ConnectorSummaryBase exposes a summary of a Connector irrespective of protocol.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: ID is the unique identifier of the Connector.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        organisationId:
+          type: string
+          format: ulid
+          description: OrganisationID is the unique identifier of the Organisation that owns the Connector.
+          x-go-name: OrganisationID
+        name:
+          type: string
+          description: Name is the user-provided name of the Connector
+        protocol:
+          $ref: '#/components/schemas/ProtocolType'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time at which the ConnectorVersion was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: |
+            UpdatedAt is the time at which the ConnectorVersion was last updated, including any changes to child
+            resources.
+      required:
+        - id
+        - organisationId
+        - name
+        - protocol
+        - createdAt
+        - updatedAt
+    CredentialUsageConnection:
+      description: |
+        CredentialUsageConnection contains the information about an Connection which is using a Credential. This also
+        includes a summary of the Connector it belongs to.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Connection. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connector's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the name of the Connection.
+        connector:
+          $ref: '#/components/schemas/ConnectorSummaryBase'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the Connection was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the Connection was last updated.
+      required:
+        - id
+        - name
+        - connector
+        - createdAt
+        - updatedAt
+    CredentialUsage:
+      description: |
+        CredentialUsage contains the information about a Connector which is using a Credential. This object currently
+        only supports tracking usage by other connections, but in the future new fields may be added to track usage
+        by other entities such as, but not limited to, Boards, Hubs and Users.
+      type: object
+      properties:
+        connection:
+          $ref: '#/components/schemas/CredentialUsageConnection'
+      required:
+        - connection
+    CredentialUsages:
+      description: |
+        CredentialUsages is a list of references to the Connectors which are using this Credential. To aid performance,
+        this field will only be defined for specific endpoints. An undefined property means that the usages have not
+        been loaded, whereas an empty array indicates that the credential is not used by any connectors.
+      type: array
+      items:
+        $ref: '#/components/schemas/CredentialUsage'
+      x-go-type-skip-optional-pointer: true
+    Credential:
+      description: |
+        CredentialBase is the base type for all credentials. It contains the common properties which are shared across
+        all credential types.
+      type: object
+      properties:
+        id:
+          description: ID is the unique identifier of the Credential.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        organisationId:
+          description: OrganisationID is the unique identifier of the Organisation which owns the Credential.
+          type: string
+          format: ulid
+          x-go-name: OrganisationID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        type:
+          $ref: '#/components/schemas/CredentialType'
+        name:
+          type: string
+          description: Name is the name of the Credential.
+        usages:
+          $ref: '#/components/schemas/CredentialUsages'
+        errors:
+          description: |
+            Errors is a list of errors which occurred when attempting to validate the credential. This field may be
+            undefined, which implies that validation has not occurred and the consumer cannot assume whether this
+            Credential is valid or not. An empty array indicates that the Credential is valid.
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/CredentialDataNone'
+            - $ref: '#/components/schemas/CredentialDataString'
+            - $ref: '#/components/schemas/CredentialDataBinary'
+            - $ref: '#/components/schemas/CredentialDataBasicAuth'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Client'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Token'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Code'
+            - $ref: '#/components/schemas/CredentialDataOAuth2Password'
+            - $ref: '#/components/schemas/CredentialDataCertificate'
+        expiresAt:
+          type: string
+          format: date-time
+          description: |
+            ExpiresAt denotes the time this credential should be automatically deleted. External systems can subscribe 
+            to deletion events and if the reason is "expired", can trigger the correct notifications to interested
+            parties (such as un-publishing jobs which rely on the credential and emailing the owner to rectify it).
+      required:
+        - id
+        - organisationId
+        - type
+        - name
+        - data
+    ConnectionCredential:
+      description: ConnectionCredential contains the a Credential and the AuthSchemeConfig to define how the Credential should be used against the Connection's Connector.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        authSchemeConfig:
+          $ref: '#/components/schemas/AuthSchemeConfig'
+        credential:
+          $ref: '#/components/schemas/Credential'
+      required:
+        - id
+        - authSchemeConfig
+        - credential
+    ConnectionCredentials:
+      description: |
+        ConnectionCredentials defines the Action and Trigger credentials for the owning Connector. If multiple
+        credentials are defined for each type, they are applied to the request in the order they are defined. This is to
+        enable Connectors which require both a user session token and an API key to be provided in the request.
+      type: object
+      properties:
+        action:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionCredential'
+          x-go-type-skip-optional-pointer: true
+        trigger:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionCredential'
+          x-go-type-skip-optional-pointer: true
+      minProperties: 1
+    Connection:
+      description: |
+        Connection defines the Action and Trigger credentials for the owning Connector, and additional variables
+        which can be used to customize the Connector in a particular connection.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Connection. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connector's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the name of the Connection. This must be unique within the owning Connector.
+        credentials:
+          $ref: '#/components/schemas/ConnectionCredentials'
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionVariable'
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the Connection was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the Connection was last updated.
+      required:
+        - id
+        - name
+        - credentials
+        - variables
+        - createdAt
+        - updatedAt
+    ConnectionSummary:
+      description: ConnectionSummary defines a summary of an Connection.
+      type: object
+      properties:
+        id:
+          type: string
+          format: ulid
+          description: |
+            ID is the unique identifier of the Connection. Typically this is only used internally and most (if not all)
+            public-facing APIs will use the `name` in combination with the Connector's `id` instead.
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name is the name of the Connection.
+        createdAt:
+          type: string
+          format: date-time
+          description: CreatedAt is the time the Connection was created.
+        updatedAt:
+          type: string
+          format: date-time
+          description: UpdatedAt is the time the Connection was last updated.
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+    InitialiseOAuth2ConnectionRequest:
+      description: |
+        InitialiseOAuth2ConnectionRequest is the payload to initialise an OAuth 2.0 connection.
+      type: object
+      properties:
+        credential:
+          type: object
+          properties:
+            id:
+              description: |
+                ID is the unique identifier of the credential which is being used to
+                initialise the connection. This is used to load the client_secret when the authorisation
+                code is exchanged for an access token.
+              type: string
+              format: ulid
+              x-go-name: ID
+              x-go-type: ulid.ULID
+              x-go-type-import:
+                path: versori.dev/vergo/ulid
+            organisationId:
+              description: |
+                OrganisationID is the unique identifier of the organisation which the credential is
+                associated with. This is used to ensure that the credential is only used to initialise
+                connections for the organisation which owns the credential.
+              type: string
+              format: ulid
+              x-go-name: OrganisationID
+              x-go-type: ulid.ULID
+              x-go-type-import:
+                path: versori.dev/vergo/ulid
+          required:
+            - id
+            - organisationId
+        authorizeUrl:
+          description: |
+            AuthorizeURL is the URL which the user will be redirected to in order to authorize
+            the application.
+          type: string
+          format: uri
+          x-go-name: AuthorizeURL
+        clientId:
+          description: |
+            ClientID is the OAuth 2.0 client ID which is used to identify the application to the
+            OAuth 2.0 provider.
+          type: string
+          x-go-name: ClientID
+        scopes:
+          description: |
+            Scopes is a list of OAuth 2.0 scopes which the application is requesting access to.
+
+            Unless `disableOfflineAccess` is set to true, the API will also include the standard
+            `offline_access` scope in addition to the ones provided here.
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+        disableOfflineAccess:
+          description: |
+            DisableOfflineAccess is a flag which can be set to true to disable the inclusion of the
+            standard `offline_access` scope in the list of scopes. This is defined separately to
+            `scopes` to make it clear that the API will always include the `offline_access` scope
+            by default, but can be disabled if the system does not implement the standards so that
+            the user can define their own custom scope as part of `scopes`.
+          type: boolean
+          x-go-type-skip-optional-pointer: true
+        prompt:
+          description: |
+            Prompt controls the behaviour of the OAuth 2.0 provider when the user is redirected to
+            the authorize URL. This is typically used to force the user to re-authenticate or to
+            select a user account.
+
+            If set, should be one of "none", "login", "consent", "select_account". However the
+            specification dictates that arbitrary prompts may be provided in case of new values
+            added in the future. Some providers also allow multiple values to be provided, separated
+            by the '+' symbol, i.e. `consent+select_account`.
+
+            If not provided, this API defaults to "login", unless `additionalParams` contains the
+            `approval_prompt` parameter (thanks, Google refresh tokens), in which case this value
+            does not default to anything.
+          type: string
+        additionalParams:
+          description: |
+            AdditionalParams is a URL-encoded query string which can be used to pass additional
+            parameters to the OAuth 2.0 authorize endpoint. These cannot conflict with any of the
+            other parameters defined by the request, an attempt to do so will result in an error.
+
+            These parameters are attached to returned URL as query parameters.
+          type: string
+          examples:
+            two query parameters: bar=baz&foo=cat%20bob
+          x-go-type-skip-optional-pointer: true
+      required:
+        - credential
+        - authorizeUrl
+        - clientId
+    InitialiseOAuth2ConnectionResponse:
+      description: |
+        InitialiseOAuth2ConnectionResponse contains the URL to redirect the user to in order to
+        initiate an OAuth 2.0 `authorization_code` grant flow.
+      type: object
+      properties:
+        url:
+          description: The URL to redirect the user to.
+          type: string
+          x-go-name: URL
+      required:
+        - url

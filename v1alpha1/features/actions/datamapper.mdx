@@ -1,0 +1,107 @@
+---
+title: 'Datamapper'
+description:
+    'Datamapper provides storage within Switchboard for remembering cross-system references to different entities.'
+---
+
+<Tabs>
+  <Tab title="Documentation">
+  The Datamapper can be thought of as a key-value store for cross-system references. This can be useful for long running workflows that need to handle both creating and updating across external systems.
+
+### Use Cases
+
+Imagine you are managing an ecommerce integration into an ERP system. You have a workflow that creates a new product in
+the ERP system, and then updates the product with additional information from the ecommerce system when those updates
+happen at a later date.
+
+If Switchboard isn't aware of what products are the same product across both systems - how can it know which product to
+update? This is where the datamapper comes in.
+
+### How it Works
+
+The Datamapper has two modes - `Check` and `Put`. The `Check` mode is used to check if a reference exists in the
+Datamapper storage. The `Put` mode is used to store a new reference in the Datamapper.
+
+If in `Check` mode - the Datamapper has two outputs - one for if the reference exists, and one for when it doesn't:
+
+<Frame caption="Multiple outputs if reference exists">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/datamapper/datamapper-twooutputs.png" />
+</Frame>
+
+If in `Put` mode - the Datamapper has one output - this is to allow the flow to carry on after creating the reference.
+
+### Configuration
+
+`Value Type` is the expected type of value to be saved.
+
+A single saved reference in the Datamapper consists of a `Key` and a `Value`.
+
+#### Key
+
+The `Key` is typically the source system's ID for the entity to be saved.
+
+`App Version` should be defined as something unique to your organisation - for example: `ecommerce-app.v1`. This allows
+this reference to also be used across other boards in your integration - if this app is used elsewhere.
+
+`Kind` should be the type of entity being saved - for example: `product`. This allows you to save references for
+multiple types of entities in the same Datamapper app version.
+
+`Value From` - this is the actual value from your board data that you wish to save a reference for. This could be a
+field from a previous action, or a value from a previous step in your workflow. Typically this will be an ID.
+
+{" "}
+
+<Frame caption="Key configuration form">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/datamapper/datamapper-key.png" />
+</Frame>
+
+#### Value
+
+The `Value` is only available to set in `Put` mode - seeing as we are creating a new reference in the Datamapper.
+
+The configuration for `Value` is the same as `Key` - this is the partner stored against the key and will typically be
+the ID of your entity in your target system.
+
+For example, `App Version` might be `erp-app.v1`, `Kind` might be `Item`, and `Value From` might be the ID of the `Item`
+in your ERP system.
+
+{" "}
+
+<Frame caption="Value configuration form">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/datamapper/datamapper-put-mode.png" />
+</Frame>
+
+### Using Datamapper with Selectors
+
+The output of the data mapper will be on object in the form of:
+
+```json
+{
+  "key": {
+    "appVersion": "string",
+    "kind": "string",
+    "value": (Selected Value)
+  },
+  "value": {
+    "appVersion": "string",
+    "kind": "string",
+    "value": (Value Type)
+  }
+}
+```
+
+This allows you to use the saved values in further selectors also.
+
+  </Tab>
+   <Tab title="Video Guide">
+    <iframe
+      width="100%"
+      height="407"
+      src="https://www.youtube.com/embed/RNv1Rk8nGuM?si=l3YSu9sAakOvr_ym"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </Tab>
+</Tabs>

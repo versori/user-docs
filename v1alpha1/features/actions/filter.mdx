@@ -1,0 +1,52 @@
+---
+title: 'Filter'
+description: 'The filter action allows you to filter the resulting data based on a series of conditions.'
+---
+
+The filter accepts one input and one output. The input is the data to be filtered, and the output will be the data that
+passes the filter.
+
+### Use cases
+
+The filter action is one of Switchboards method to provide conditional logic, so for example:
+
+Imagine you have a list of users, and you want to remove any users that aren't active for use further along your
+workflows. You can do this by using the filter action and setting the condition to `user.active` + `Equal to` + `true`.
+
+<Note>
+    Remember that the Filter passes forward values that pass the defined rules and conditions, rather than filtering out
+    those values.
+</Note>
+
+### Configuration
+
+The filter is a multi condition interface - with two operators - `AND` and `OR`. These rules can be paired with `IF` and
+`NOT IF` to create complex conditional logic.
+
+<Frame caption="Multi-row conditionals">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/filter/filter-initial.png" />
+</Frame>
+
+The filter supports being able to filter based on a literal field value, or by using a selector to a previous field
+value.
+
+<Frame caption="Defining a filter value">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/filter/filter-source.png" />
+</Frame>
+
+#### Available Conditions
+
+Values passing through the filter can be combined in rules with varying conditions, such as `Equal to` and `Exists`. See
+more options below:
+
+<Frame caption="All available conditions">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/filter/filter-conditions.png" />
+</Frame>
+
+#### Grouping Conditions
+
+Rules can also be grouped to provide multiple levels of validating whether values should be filtered or not.
+
+<Frame caption="Grouping conditions">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/actions/filter/filter-grouping.png" />
+</Frame>

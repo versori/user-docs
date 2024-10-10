@@ -1,0 +1,39 @@
+---
+title: Apps
+description: 'Within Switchboard, apps are the external-system nodes that you use to build out your integrations.'
+---
+
+### What is an app?
+
+An app is an external api or system that has been onboarded to Switchboard. Versori provides a number of public apps by
+default, however the value of the platform is in the ability to onboard your own custom app connections to use within
+Switchboard.
+
+An App is currently one of the following types:
+
+<CardGroup cols={1}>
+    <Card title="REST API" href="/v1alpha1/how-to-guides/apps/onboarding-apps/rest-api">
+        When onboarding a REST API, you upload an OpenAPI Specification (OAS) file. This file is used to generate the
+        app's operations and available security schemes, as well as the available servers.
+    </Card>
+    <Card title="GraphQL API" href="/v1alpha1/how-to-guides/apps/onboarding-apps/graphql-api">
+        When onboarding a GraphQL API, you provide an introspection url. This url is used to validate the queries and
+        mutations that you create within Switchboard for the app.
+    </Card>
+    <Card title="SQL Database" href="/v1alpha1/how-to-guides/apps/onboarding-apps/sql-app">
+        When onboarding a SQL Database, you create all of your SQL queries and also save those as operations.
+    </Card>
+</CardGroup>
+
+When onboarding a REST API, you upload an OpenAPI Specification (OAS) file. This file is used to generate the app's
+operations and available security schemes, as well as the available servers.
+
+When onboarding a GraphQL API, you provide an introspection url. This url is used to validate the queries and mutations
+that you create within Switchboard for the app.
+
+When onboarding a SQL Database, you create all of your SQL queries and also save those as operations.
+
+### What is an operation?
+
+An operation is a single endpoint or action that is available on an app, as well as webhook subscriptions and callbacks.
+Operations are created when you onboard an app, and can be created manually for SQL Databases and GraphQL APIs.

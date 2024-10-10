@@ -1,0 +1,100 @@
+---
+title: 'Core Concepts'
+description: 'Welcome to the user documentation for the Versori Platform'
+---
+
+### Apps
+
+Apps are the core building blocks of the platform. Each app is essentially an API.
+
+Apps exist either as public (made available by Versori) or private (created by you).
+
+When onboarding your own apps, we support multiple formats:
+
+-   **OpenAPI 3.x.x** - An app that is defined by an OpenAPI 3.x.x specification. This is the most common type of app.
+-   **GraphQL** - An app with configured GraphQL endpoints. We can use introspection to validate your queries and
+    mutations.
+-   **SQL** - A connection to an SQL database that's available on the internet.
+
+When onboarding via OpenAPI - we automatically populate all operations into the platform, as well as defined
+`securitySchemes`.
+
+We are also progressively adding support for other types of apps, such as:
+
+-   **SOAP** - An app that is defined by a SOAP specification.
+
+And more to come...
+
+### Connections
+
+Connections exist against an app - whether you've created the app or it's one of the public apps made available by
+Versori, you will need to connect to use your external account credentials within the platform.
+
+We support multiple types of authentication:
+
+-   **OAuth 2.0** - We support the following OAuth 2.0 flows:
+    -   **Authorization Code** - This is the most common OAuth 2.0 flow. It's used by apps such as Google, Facebook, and
+        many others.
+    -   **Client Credentials** - This flow is used when you want to connect to an app as a service account.
+-   **Basic** - This is the most basic form of authentication.
+-   **API Key** - This is a simple key that is passed as part of your requests.
+-   **Bearer** - This is a token that is passed as part of your requests.
+-   **Database Connection** - This is a connection to an SQL database that's available on the internet.
+-   **Custom HTTP** - This is a custom HTTP auth that you can define for dynamic implementations.
+
+### Operations
+
+Operations are the individual actions available within an app, such as `GET /customers` or
+`PUT /customers/{customerId}`.
+
+### Boards
+
+Boards are the foundation of your integrations. A board is a graph of `nodes` and `edges` that define the flow of data
+between your apps.
+
+The Board Editor is a drag and drop interface that allows you to build your integrations visually, without having to
+write any code.
+
+Nodes can be made up of Apps and Actions. Edges are the connecting lines between nodes.
+
+### Actions
+
+Actions are the tools that implement various forms of logic within your workflows. They can be used to transform data,
+perform conditional logic, and more.
+
+We currently have the following actions available:
+
+-   **Transformer** - This action allows you to transform data using a drag and drop interface - it allows you to expand
+    objects, iterate over arrays, and more.
+-   **Filter** - This action allows you to filter data as it passes through your workflow. You can filter by a specific
+    value, or by a condition, or by a combination of both.
+-   **Datamapper** - The datamapper is used to create a system reference between two entities of data - typically across
+    different system. For example, you may want to map a customer from your CRM to a customer in your accounting system
+    for future consideration/use within your flows.
+-   **Splitter** - This action accepts an input of an array property. The splitter will iterate through each item and
+    perform the rest of the flow journey for each item.
+-   **Databuilder** - The databuilder is similar to the transformer, however provides a form interface with a user
+    experience focused more on templating values, for example passing `{firstName} {lastName}` to create a full name.
+-   **Batch** - The batch action allows you to gather requests over a period of time and combine them into a single
+    request.
+-   **Delay** - Delay can be used to delay the execution of the next action in your workflow.
+-   **Trigger** - The trigger action can be used to trigger requests that otherwise would never be triggered externally,
+    or if you want to trigger on a defined schedule - such as every 24 hours.
+
+### Selectors
+
+Selectors are used to select data from a previous action in your workflow. They can be used to select a specific
+property, or to select the full response from any previous nodes.
+
+Selectors can also be combined with Post Processors. Post Processors allow you to perform additional logic on the data
+that you've selected, for example:
+
+-   **Switch** - The switch post processor allows you to perform conditional logic on the data that you've selected.
+-   **Size** - The size post processor allows you to get the size of an array.
+
+Plus more...
+
+### Publishing
+
+When you're done building your integration, you can publish it to make it available to your users. When you publish your
+board, each node is spun up into it's own service, with data messages passing over edges.
