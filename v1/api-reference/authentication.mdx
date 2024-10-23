@@ -19,13 +19,15 @@ Authorization: Bearer <API_KEY>
 
 Signing Keys allows an Organisation to issue short-lived tokens which can represent itself, or for an End User of the Organisation.
 
-Signing Keys consist of a RS256 key pair, Versori do not store the private key and once shared with the user, are unrecoverable. A signing key token is a JWT which has been signed by the keypair. These tokens are provided on requests to Versori APIs via the Authorization header using the JWT prefix.
+Signing Keys consist of a RS256 key pair, Versori do not store the private key and once shared with the user, are
+unrecoverable. A signing key token is a JWT which has been signed by the keypair. These tokens are provided on requests
+to Versori APIs via the `Authorization` header using the `JWT` prefix.
 
 
 ### Key Generation
 
 You can generate a new signing key pair through the Versori Platform. The private key will be returned to you along
-with a `<KEY_ID>`. You will need to create and sign the JWT.
+with a `<KEY_ID>`. You will need them to create and sign the JWT.
 
 
 ### JWT Creation and Submission
@@ -37,8 +39,8 @@ You need to create a JSON object containing the following claims:
 ```
 // end-user JWT
 {
-  "sub": "end_user",
-  "iss": "https://versori.com/sk/:id"
+  "sub": "<END_USER_ID>",
+  "iss": "https://versori.com/sk/<KEY_ID>"
 }
 ```
 
@@ -56,7 +58,7 @@ An example JWT for an end user would look like this:
   "sub": "<END_USER_ID>",
   "iss": "https://versori.com/sk/<KEY_ID>",
   "exp": 1234567890,
-  "nbf": 1234567890,
+  "nbf": 1234567890
 }
 ```
 
