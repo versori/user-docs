@@ -105,15 +105,19 @@
                         "v1/concepts/connectors/triggers"
                     ]
                 },
+                "v1/concepts/boards"
+            ]
+        },
+        {
+            "group": "Integration Tools",
+            "version": "v1",
+            "pages": [
+                "v1/tools",
                 {
                     "group": "Tools",
                     "version": "v1",
-                    "pages": [
-                        "v1/tools/email",
-                        "v1/tools/trigger"
-                    ]
-                },
-                "v1/concepts/boards"
+                    "pages": ["v1/tools/email", "v1/tools/trigger"]
+                }
             ]
         },
         {
