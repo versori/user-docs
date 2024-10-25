@@ -108,7 +108,7 @@
                 {
                     "group": "Tools",
                     "version": "v1",
-                    "pages": ["v1/tools/email"]
+                    "pages": ["v1/tools/email", "v1/tools/jay"]
                 },
                 "v1/concepts/boards"
             ]
