@@ -1,28 +1,17 @@
 ---
-title: Email
+title: Dynamic Extractor
 ---
 
-The Email action allows you to send emials as part of your integration.
+The Dynamic Extractor tool allows you to set the end-user for the execution. Connectors that use dynamic connections after the Dynamic Extractor will use the end-user credentials for the connector.
+Additionally any dynamic variable selectors will use the values defined for the user.
 
 ### Configuration
 
-The email action doesn't have any configuration options but it expects the data it recieves to be in the following format:
-
-```json
-{
-    "to": "",
-    "subject": "",
-    "body": "",
-    "html_body": ""
-}
-```
-
-`to` and`subject` are the only required options. The body if the email can be left empty.
-
-`body` and `html_body` allow you to write a plain text email or styled email respectively.
+To configure the Dynamic extractor you need to use a selector to choose the end-user uinique identifier.
 
 ### Example usage
 
-![exampel](/images/tools/email_usage.png "Example usage")
+![exampel](/images/tools/dynamic_extractor.png "Example usage")
 
+Configures the end-user for the execution using the `username` from the webhook payload.
 

@@ -108,7 +108,13 @@
                 {
                     "group": "Tools",
                     "version": "v1",
-                    "pages": ["v1/tools/email", "v1/tools/user_extractor", "v1/tools/global_variables"]
+
+                    "pages": [
+                        "v1/tools/email",
+                        "v1/tools/trigger",
+                        "v1/tools/user_extractor",
+                        "v1/tools/global_variables"
+                    ]
                 },
                 "v1/concepts/boards"
             ]
