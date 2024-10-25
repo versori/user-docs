@@ -128,7 +128,15 @@
                         "v1/integrate/boards",
                         {
                             "group": "Tools",
-                            "pages": ["v1/integrate/boards/tools"]
+                            "pages": [
+                              "v1/integrate/boards/tools",
+                              "v1/integrate/boards/tools/jay",
+                              "v1/integrate/boards/tools/trigger",
+                              "v1/integrate/boards/tools/filter",
+                              "v1/integrate/boards/tools/transformer",
+                              "v1/integrate/boards/tools/code_tool",
+                              "v1/integrate/boards/tools/email"
+                            ]
                         }
                     ]
                 }
