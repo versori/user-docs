@@ -615,6 +615,7 @@ paths:
       parameters:
         - name: slug
           in: path
+          required: true
           schema:
             type: string
       responses:
