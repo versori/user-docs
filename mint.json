@@ -158,7 +158,8 @@
                 "v1/integrate/boards/tools/transformer",
                 "v1/integrate/boards/tools/code_tool",
                 "v1/integrate/boards/tools/email",
-                "v1/integrate/boards/tools/global_variables"
+                "v1/integrate/boards/tools/global_variables",
+                "v1/integrate/boards/tools/splitter"
               ]
             }
           ]

@@ -1,0 +1,51 @@
+---
+title: Splitter
+description: Process list items individually in an Integration workflow
+---
+
+# What is Splitter?
+
+The Splitter tool accepts a list input and processes each item individually. This allows you to handle each item in a
+list separately within your Integration workflow.
+
+## How the Splitter Works
+
+The Splitter must be configured with a Selector to define its input. This Selector must be of a List or Array type. The
+Splitter iterates over each item in the list and processes them one at a time.
+
+Everything beyond the Splitter in the workflow will be executed for each item in the list. For example, if you have a
+Splitter with a list of 10 items followed by a Slack Action, the Slack Action will execute 10 times—once for each
+item—resulting in 10 Slack messages.
+
+## Configuration
+
+The Splitter tool has the following configuration options:
+
+### Item Event Type
+
+The Item Event Type is predefined with a default value and can generally be left unchanged.
+
+### Item Content Type Override
+
+The Item Content Type Override allows you to override the output content type. If left blank, it will inherit the
+content type from the Selector you've chosen. In most cases, this can be left blank.
+
+### Selector
+
+The Selector is a crucial part of the Splitter configuration. It defines the list or array of items to be processed. The
+Selector must reference a List or Array type data structure from previous steps in the workflow.
+
+## Using Selectors in Splitter
+
+By using selectors to access data from any previous step in the workflow, the Splitter can process each item in a list
+individually. This provides granular control over how each item is handled in the Integration.
+
+<Warning>
+    Be mindful that actions following the Splitter will be executed for each item in the list. Ensure this behavior
+    aligns with your workflow requirements to avoid unintended results, such as sending multiple messages or creating
+    multiple records.
+</Warning>
+
+<Frame caption="Example Splitter">
+    <img src="https://storage.googleapis.com/versori-assets/apps/user-docs/tools/splitter/ExampleSplitter.png" />
+</Frame>
