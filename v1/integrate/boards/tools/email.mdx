@@ -1,0 +1,27 @@
+---
+title: Email
+---
+
+The Email action allows you to send emials as part of your integration.
+
+### Configuration
+
+The email action doesn't have any configuration options but it expects the data it recieves to be in the following
+format:
+
+```json
+{
+    "to": "",
+    "subject": "",
+    "body": "",
+    "html_body": ""
+}
+```
+
+`to` and`subject` are the only required options. The body if the email can be left empty.
+
+`body` and `html_body` allow you to write a plain text email or styled email respectively.
+
+### Example usage
+
+![example](/images/tools/email_usage.png 'Example usage')

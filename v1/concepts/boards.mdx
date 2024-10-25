@@ -1,3 +1,59 @@
 ---
-title: Boards
+title: Overview
+description: Build integrations between your systems with Boards.
 ---
+
+import BoardsOverview from '/snippets/boards/overview.mdx';
+
+<BoardsOverview />
+
+## Glossary
+
+In order to understand Boards, it is important to understand the following terms:
+
+-   **Board**: A collection of steps that define a workflow.
+-   **Step**: A single piece of functionality within a Board.
+-   **Edge**: A connection between two steps.
+-   **Execution**: A single run of a Board.
+-   **Trigger**: A step that starts a Board.
+-   **Message**: The data that flows between steps.
+
+## Steps
+
+A Board is defined by a series of steps, where the output of a step feeds into zero or more subsequent steps, and each
+step provides a single piece of functionality. Trigger steps are the start-point of a Board, and when they are triggered
+an Execution is created and the steps are processed in order.
+
+A step may be connected to multiple other steps, which allows for branching the flow of data. When this is configured,
+the branches execute in parallel.
+
+A step may also be configured to output multiple pieces of data, for example the Splitter tool takes a data array and
+outputs each element of the array as a separate message
+
+There are many different types of steps available, and more are being added all the time. These fall into two
+categories: Connectors and Tools.
+
+### Connector Step
+
+A Connector step is a step that interacts with an external system and references a [Connector](/v1/concepts/connectors)
+which defines its behaviour. These can be one of two types: Actions or Triggers. Actions are steps that perform a
+specific operation on an external system, such as creating a new record in a CRM, while Triggers are steps that wait for
+an external system to perform an operation to Versori, such as a webhook.
+
+### Tool Step
+
+There are many types of tools available in Versori, each providing a different piece of functionality. These are
+explained in more detail in the [Tools](/v1/integrate/boards/tools) section, but are listed here for reference:
+
+-   Transformer
+-   Filter
+-   Data Builder
+-   Trigger (Manual or Scheduled)
+-   Data Mapper
+-   Splitter
+-   Delay
+-   Responder
+-   Email
+-   Variables
+-   Webhook
+-   Code
