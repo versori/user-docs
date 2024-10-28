@@ -1,34 +1,51 @@
-# Mintlify Starter Kit
+# Versori Documentation
 
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
+This repository is the source for https://docs.versori.com.
 
-- Guide pages
-- Navigation
-- Customizations
-- API Reference pages
-- Use of popular components
+The site is powered by [Mintlify][mintlify], and updates to the `main` branch will be automatically deployed.
 
-### 👩‍💻 Development
+## 🚀 Getting Started
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
+Start the development server using the following command:
 
-```
-npm i -g mintlify
+```sh
+npx mintlify dev -p 3333
 ```
 
-Run the following command at the root of your documentation (where mint.json is)
+### 📝 Editing existing files
 
+Edit any files as necessary and the changes will be reflected in the browser. 
+
+### 📄 Creating new files
+
+Files are served at the same path as they are located in this repository. Add a new `.mdx` file at the location
+of your choosing and it will be available at that path.
+
+In order for the page to appear in sidebar, it must be added to the `navigation` array in `mint.json`.
+
+### 🔩 API References
+
+The API Reference pages are generated using the following command:
+
+```sh
+npx @mintlify/scraping@latest openapi-file <openapi-file> -o <output-directory>
 ```
-mintlify dev
-```
 
-### 😎 Publishing Changes
+The OpenAPI specifications in this repository are not the source of truth for the Versori APIs, manual changes 
+*MUST NOT* be made in this repository. If you notice any issues with the API Reference pages, they must be made 
+upstream within their respective repositories.
 
-Changes will be deployed to production automatically after pushing to the default branch.
+> External contributors should consult the 
+> [Contributing OpenAPI specification changes](CONTRIBUTING.md#contributing-openapi-specification-changes) section of
+> the CONTRIBUTING.md guidelines for more information for contributing to the API Reference pages.
 
-You can also preview changes using PRs, which generates a preview link of the docs.
+### 🙋 Need more help?
 
-#### Troubleshooting
+Check out the [Mintlify documentation][mintlify-docs] for more information.
 
-- Mintlify dev isn't running - Run `mintlify install` it'll re-install dependencies.
-- Page loads as a 404 - Make sure you are running in a folder with `mint.json`
+## 🤝 Contributing
+
+We welcome contributions to this project. Please read the [Contributing Guidelines](CONTRIBUTING.md) for more information.
+
+[mintlify]: https://mintlify.com
+[mintlify-docs]: https://mintlify.com/docs
