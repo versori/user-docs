@@ -11,7 +11,7 @@ Versori Embedded is broken down into the following key concepts:
 
 ## Hubs
 
-A Hub is a collection of integrations that are available to your end users. Typically most users will only require a
+A Hub is a collection of integrations that are available to your [End Users](#end-users). Typically you will only require a
 single hub, however using multiple is possible. Integrations, End Users and Activations are all associated with a Hub.
 
 ### Primary Connector
@@ -39,8 +39,8 @@ If this functionality is required, please reach out to support to discuss your r
 
 An Integration is implemented as a [Board](/v1/concepts/boards) which defines workflows and data transformations between
 your Primary Connector (and if applicable, any Secondary Connectors) and other external Connectors. However, these
-Boards are different to regular boards created through [Versori Integrate](/v1/integrate) in that the Connections need
-not be defined before deploying the Integration. Instead, these Boards use Connection Templates, which define how an End
+Boards are different to regular boards created through [Versori Integrate](/v1/integrate) in that Connections do not need
+to be defined before deploying the Integration. Instead these Boards use Connection Templates, which define how an End
 User should connect to the Connector.
 
 Every Connector within a Versori Embedded Integration may either be pre-connected with a regular Connection, or declared
