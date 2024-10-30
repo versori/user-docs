@@ -9,7 +9,7 @@ The site is powered by [Mintlify][mintlify], and updates to the `main` branch wi
 Start the development server using the following command:
 
 ```sh
-npx mintlify dev -p 3333
+npx mintlify dev --port 3333
 ```
 
 ### 📝 Editing existing files
