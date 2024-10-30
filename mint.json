@@ -113,6 +113,13 @@
           ]
         },
         {
+          "group": "Connections",
+          "version": "v1",
+          "pages": [
+            "v1/concepts/connections"
+          ]
+        },
+        {
           "group": "Boards",
           "version": "v1",
           "pages": [
@@ -126,6 +133,14 @@
       "version": "v1",
       "pages": [
         "v1/embedded",
+        "v1/embedded/how-it-works",
+        {
+          "group": "SDKs",
+          "pages": [
+            "v1/embedded/sdks/typescript",
+            "v1/embedded/sdks/react"
+          ]
+        },
         {
           "group": "Integrations",
           "pages": [
@@ -156,9 +171,9 @@
                 "v1/integrate/boards/tools/trigger",
                 "v1/integrate/boards/tools/filter",
                 "v1/integrate/boards/tools/transformer",
-                "v1/integrate/boards/tools/code_tool",
+                "v1/integrate/boards/tools/code-tool",
                 "v1/integrate/boards/tools/email",
-                "v1/integrate/boards/tools/global_variables",
+                "v1/integrate/boards/tools/global-variables",
                 "v1/integrate/boards/tools/splitter"
               ]
             }
