@@ -1899,6 +1899,7 @@ components:
         - id
         - description
     AuthSchemeConfigNone:
+      title: None
       description: |
         AuthSchemeConfigNone is a placeholder object with the schemeType set to `none`. There is no other configuration
         required.
@@ -1921,6 +1922,7 @@ components:
         - header
         - cookie
     AuthSchemeConfigAPIKey:
+      title: API Key
       description: |
         AuthSchemeConfigAPIKey defines how a Connector uses an API key credential to authenticate with the system.
       type: object
@@ -1941,6 +1943,7 @@ components:
             - name
             - in
     AuthSchemeConfigBasicAuth:
+      title: Basic Auth
       description: |
         AuthSchemeConfigBasicAuth is a placeholder object with the schemeType set to `basic-auth`. There is no other
         configuration required.
@@ -1973,6 +1976,7 @@ components:
       required:
         - name
     AuthSchemeConfigOAuth2GrantAuthorizationCode:
+      title: Authorization Code
       description: |
         AuthSchemeConfigOAuth2GrantAuthorizationCode contains grant-specific configuration for the 
         `authorization_code` grant type.
@@ -2026,6 +2030,7 @@ components:
       required:
         - grantType
     AuthSchemeConfigOAuth2GrantClientCredentials:
+      title: Client Credentials
       type: object
       properties:
         grantType:
@@ -2034,6 +2039,7 @@ components:
       required:
         - grantType
     AuthSchemeConfigOAuth2GrantPassword:
+      title: Password
       description: |
         AuthSchemeConfigOAuth2GrantPassword contains grant-specific configuration for the `password` 
         grant type.
@@ -2098,6 +2104,7 @@ components:
         - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantClientCredentials'
         - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantPassword'
     AuthSchemeConfigOAuth2:
+      title: OAuth 2.0
       description: |
         AuthSchemeConfigOAuth2 defines how a Connector uses an OAuth2 credential to authenticate 
         with the system. This is to be used for all OAuth 2.0 flows which require a client ID and 
@@ -2193,6 +2200,7 @@ components:
         - header
         - cookie
     AuthSchemeConfigHMAC:
+      title: HMAC
       description: |
         AuthSchemeConfigHMAC defines how a Connector uses an HMAC credential to authenticate with the system.
 
@@ -2236,6 +2244,7 @@ components:
             - algorithm
             - digestInputs
     AuthSchemeConfigCertificate:
+      title: mTLS
       description: |
         AuthSchemeConfigCertificate is a placeholder object with the schemeType set to `certificate`. 
         There is no other config required
@@ -2302,12 +2311,14 @@ components:
         - jwt-bearer
       x-go-type-skip-optional-pointer: true
     CredentialDataNone:
+      title: None
       description: |
         CredentialDataNone contains no data as no credential is required to authenticate with the Connector. It is used
         purely as a placeholder to implement a consistent interface across all CredentialType/AuthSchemeTypes.
       type: object
       additionalProperties: false
     CredentialDataString:
+      title: String
       description: |
         CredentialDataString contains a string value and nothing else and is commonly used for API keys. This value 
         will be redacted when returned in a response.
@@ -2320,6 +2331,7 @@ components:
       required:
         - value
     CredentialDataBinary:
+      title: Binary File
       description: |
         CredentialDataBinary is commonly used to store non-string data such as binary files or encryption keys. This 
         value will be redacted when returned in a response.
@@ -2334,6 +2346,7 @@ components:
       required:
         - valueBase64
     CredentialDataBasicAuth:
+      title: Basic Auth
       description: |
         CredentialDataBasicAuth contains the username and password required to authenticate with the Connector. The
         `password` property will be redacted when returned in a response.
@@ -2351,6 +2364,7 @@ components:
         - username
         - password
     CredentialDataOAuth2Client:
+      title: Client Credentials
       description: |
         CredentialDataOAuth2Client contains the OAuth2 client credentials required to either issue an access token from
         a refresh_token, or via the `client_credentials` and `authorization_code` grant types. The `clientSecret` property will be redacted when
@@ -2417,6 +2431,7 @@ components:
         - authorizeUrl
         - tokenUrl
     CredentialDataOAuth2Code:
+      title: OAuth 2.0 Authorization Code
       description: |
         CredentialDataOAuth2Code is used to exchange an authorization code for an access token and
         is denoted by the `oauth2-code` type. 
@@ -2437,6 +2452,7 @@ components:
         - code
         - state
     CredentialDataOAuth2Token:
+      title: OAuth 2.0 Token
       description: |
         CredentialDataOAuth2Token is primarily used to store the refresh_token for an user who has authorized an OAuth2
         Application to access their data. However, this information is not exposed publicly and the only data visible
@@ -2465,6 +2481,7 @@ components:
       required:
         - scopes
     CredentialDataOAuth2Password:
+      title: OAuth 2.0 Password
       description: |
         CredentialDataOAuth2Password contains the username and password of a Resource Owner within an OAuth 2.0
         application. The `password` property will be redacted when returned in a response.
@@ -2482,6 +2499,7 @@ components:
         - username
         - password
     CredentialDataCertificate:
+      title: TLS
       description: |
         CredentialDataCertificate contains the Certificate, Certificate key and CA(Certificate authority).
       type: object
