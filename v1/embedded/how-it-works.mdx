@@ -11,8 +11,8 @@ Versori Embedded is broken down into the following key concepts:
 
 ## Hubs
 
-A Hub is a collection of integrations that are available to your [End Users](#end-users). Typically you will only require a
-single hub, however using multiple is possible. Integrations, End Users and Activations are all associated with a Hub.
+A Hub is the entrypoint into Versori Embedded, all other entities are encapsulated by a Hub. Typically most users will
+only require a single Hub, however using multiple is possible.
 
 ### Primary Connector
 
@@ -43,20 +43,29 @@ Boards are different to regular boards created through [Versori Integrate](/v1/i
 to be defined before deploying the Integration. Instead these Boards use Connection Templates, which define how an End
 User should connect to the Connector.
 
+### Connection Templates
+
 Every Connector within a Versori Embedded Integration may either be pre-connected with a regular Connection, or declared
 as a Connection Template. When an End User activates an Integration, they must provide connection details for each
 Connection Template in that Integration.
+
+When a Connection Template is created, if the connector supports multiple
+[Authentication Methods](/v1/concepts/connectors/authentication-methods), you also must choose which method should be
+used by your End Users. When building your embedded integration hub in your own application, you may choose to override
+this method when creating a Connection for an End User.
 
 ## End Users
 
 An End User is a user of your application who has access to your integration hub and can activate integrations. End
 Users are created with an `externalId` which is unique to the Hub in which they belong.
 
-<Note>It is recommended to use the same user ID which you assign to your users, however this is not mandatory.</Note>
+<Note>
+    It is recommended to use the same user ID which you assign to your users in your own application, however this is
+    not mandatory.
+</Note>
 
-When an End User is created, they must provide their connection details for the Primary Connector, and optionally any
-Secondary Connectors which are available to them. End Users may be created ahead of time via API, or created immediately
-before the first activation of an Integration.
+When an End User is created, their connection details for the Primary Connector must also be defined, and optionally any
+Secondary Connectors which are available to them. An End User must exist before the first Activation can be created.
 
 All API endpoints which reference an End User (either by path or query parameters) may reference that user by Versori's
 own End User `id` field, or by their `externalId` which is determined by you. Additionally, all endpoints which are
@@ -68,5 +77,5 @@ UI elements of your integration hub before the user actually exists within Verso
 
 An Activation maintains the state that an End User has activated an Integration. In order to create an Activation, the
 End User must provide connection details for each Connection Template in that Integration. This may be achieved by
-referencing an existing [Connection](/v1/concepts/connections) which the End User has already created, or by creating a
-new one.
+referencing an existing [Connection](/v1/concepts/connectors/connections) which the End User has already created, or by
+creating a new one.
