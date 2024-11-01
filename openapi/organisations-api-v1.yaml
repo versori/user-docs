@@ -13,7 +13,129 @@ tags:
     description: |
       Organisations is the root-level entity for the Versori platform. All resources are scoped under an Organisation,
       each Organisation has an owner and can have multiple members.
+  - name: signing-keys
+    description: |
+      Signing keys are used to sign JWTs which can be used to authenticate requests to the Versori platform.
 paths:
+  /keys/{id}:
+    get:
+      operationId: GetPublicKey
+      summary: Retrieve public key
+      description: |
+        GetPublicKey returns the public key for the given Signing Key ID. This can be used to verify JWTs signed by an 
+        Organisation's Signing Key.
+      tags:
+        - signing-keys
+        - public
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            x-go-type: ulid.ULID
+            x-go-type-import:
+              path: versori.dev/vergo/ulid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicKey"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/keys:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+    post:
+      operationId: CreateSigningKey
+      summary: Create Signing Key
+      description: |
+        CreateSigningKey creates a new Signing Key for the Organisation. 
+        
+        This API creates a new RSA key pair, storing the public key and returning the private key. The private key must 
+        be kept secure and should not be shared publicly as it has the ability to sign JWTs which can be used to 
+        authenticate to Versori APIs on behalf of your Organisation (or scoped to a specific End User within 
+        Versori Embedded).
+        
+        If the private key is lost, it cannot be recovered and a new key pair must be generated. In this scenario, it is
+        the Organisation's responsibility to delete the Signing Key from Versori so that any JWTs signed by the lost key
+        are invalidated.
+      tags:
+        - signing-keys
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePublicKey"
+      responses:
+        "204":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SigningKeySet"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      operationId: ListSigningKeys
+      summary: List Signing Keys
+      description: |
+        ListSigningKeys returns a list of all Signing Keys for the Organisation.
+      tags:
+        - signing-keys
+      responses:
+        "204":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SigningKeysListResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /organisations/{organisation_id}/keys/{key_id}:
+    parameters:
+      - $ref: "#/components/parameters/organisation_id"
+      - name: key_id
+        in: path
+        x-go-name: KeyID
+        required: true
+        schema:
+          type: string
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+    delete:
+      operationId: DeleteSigningKey
+      summary: Delete Signing Key
+      description: |
+        DeleteSigningKey deletes the signing key for the Organisation.
+        
+        Any existing JWTs signed by this key will be invalidated and will no longer be accepted by the Versori platform.
+      tags:
+        - signing-keys
+      responses:
+        "204":
+          description: OK
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /active-organisation:
     get:
       operationId: GetActiveOrganisation
@@ -1136,8 +1258,8 @@ components:
           format: date
         billingPeriodEnd:
           description: >-
-              BillingPeriodEnd is the end date of the current billing period. This is the date at which the current
-              billing period ends. This time should always be in UTC.
+            BillingPeriodEnd is the end date of the current billing period. This is the date at which the current
+            billing period ends. This time should always be in UTC.
           type: string
           format: date
         isBespoke:
@@ -1238,6 +1360,84 @@ components:
       required:
         - ok
         - messages
+    PublicKey:
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the public key.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name of the public key.
+          example: "Organisation Public Key 1"
+        publicKey:
+          type: string
+          description: The public key in PEM format.
+          example: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvZgZz...==\n-----END PUBLIC KEY-----"
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the public key was created.
+          example: "2023-01-01T12:00:00Z"
+      required:
+        - createdAt
+        - publicKey
+        - name
+        - id
+    CreatePublicKey:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the public key.
+      required:
+        - name
+    SigningKeySet:
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the public key.
+          type: string
+          format: ulid
+          x-go-name: ID
+          x-go-type: ulid.ULID
+          x-go-type-import:
+            path: versori.dev/vergo/ulid
+        name:
+          type: string
+          description: Name of the public key.
+          example: "Organisation Public Key 1"
+        publicKey:
+          type: string
+          description: The public key in PEM format.
+        privateKey:
+          type: string
+          description: The private key in PEM format.
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the public key was created.
+          example: "2023-01-01T12:00:00Z"
+      required:
+        - createdAt
+        - privateKey
+        - publicKey
+        - name
+        - id
+    SigningKeysListResponse:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicKey"
+      required:
+        - keys
     UpdateSubscriptionRequest:
       type: object
       properties:

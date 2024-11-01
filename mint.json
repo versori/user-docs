@@ -72,6 +72,7 @@
   },
   "openapi": [
     "/openapi/connect-api-v1.yaml",
+    "/openapi/embedded-api-v1.yaml",
     "/openapi/organisations-api-v1.yaml",
     "/openapi/switchboard-api-v1alpha1.yaml"
   ],
@@ -118,7 +119,7 @@
             "v1/concepts/connectors/authentication-methods",
             "v1/concepts/connectors/actions",
             "v1/concepts/connectors/triggers",
-            "v1/concepts/connections"
+            "v1/concepts/connectors/connections"
           ]
         },
         {
@@ -318,65 +319,86 @@
       "pages": [
         "v1/api-reference/embedded",
         {
-          "group": "Hubs",
+          "group": "Endpoints",
           "pages": [
-            "v1/api-reference/embedded-api/hubs/list-hubs",
-            "v1/api-reference/embedded-api/hubs/create-a-new-hub",
-            "v1/api-reference/embedded-api/hubs/retrieve-a-hub",
-            "v1/api-reference/embedded-api/hubs/create-integration",
-            "v1/api-reference/embedded-api/hubs/update-integration-information"
+            {
+              "group": "Hubs",
+              "pages": [
+                "v1/api-reference/embedded-api/hubs/list-hubs",
+                "v1/api-reference/embedded-api/hubs/create-a-new-hub",
+                "v1/api-reference/embedded-api/hubs/retrieve-a-hub",
+                "v1/api-reference/embedded-api/hubs/create-integration",
+                "v1/api-reference/embedded-api/hubs/update-integration-information"
+              ]
+            },
+            {
+              "group": "End Users",
+              "pages": [
+                "v1/api-reference/embedded-api/end-users/list-end-users",
+                "v1/api-reference/embedded-api/end-users/create-an-end-user",
+                "v1/api-reference/embedded-api/end-users/retrieve-an-end-user"
+              ]
+            },
+            {
+              "group": "Connections",
+              "pages": [
+                "v1/api-reference/embedded-api/connections/list-end-user-connections",
+                "v1/api-reference/embedded-api/connections/create-end-user-connection",
+                "v1/api-reference/embedded-api/connections/initialise-oauth-20-connection"
+              ]
+            },
+            {
+              "group": "Integrations",
+              "pages": [
+                "v1/api-reference/embedded-api/integrations/list-integrations",
+                "v1/api-reference/embedded-api/integrations/delete-an-integration"
+              ]
+            },
+            {
+              "group": "Connectors",
+              "pages": [
+                "v1/api-reference/embedded-api/connectors/list-hub-connectors",
+                "v1/api-reference/embedded-api/connectors/create-a-hub-connector"
+              ]
+            },
+            {
+              "group": "Embed",
+              "pages": [
+                "v1/api-reference/embedded-api/embedded/list-end-user-integrations",
+                "v1/api-reference/embedded-api/embedded/retrieve-an-embedded-integration",
+                "v1/api-reference/embedded-api/embedded/list-end-user-activations"
+              ]
+            },
+            {
+              "group": "Activations",
+              "pages": [
+                "v1/api-reference/embedded-api/activations/activate-integration",
+                "v1/api-reference/embedded-api/activations/retrieve-an-activation",
+                "v1/api-reference/embedded-api/activations/delete-an-activation"
+              ]
+            },
+            {
+              "group": "Miscellaneous",
+              "pages": [
+                "v1/api-reference/embedded-api/miscellaneous/health-check"
+              ]
+            }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "group": "Organisations API",
+      "version": "v1",
+      "pages": [
+        "v1/api-reference/organisations-api",
         {
-          "group": "End Users",
+          "group": "Signing Keys",
           "pages": [
-            "v1/api-reference/embedded-api/end-users/list-end-users",
-            "v1/api-reference/embedded-api/end-users/create-an-end-user",
-            "v1/api-reference/embedded-api/end-users/retrieve-an-end-user"
-          ]
-        },
-        {
-          "group": "Connections",
-          "pages": [
-            "v1/api-reference/embedded-api/connections/list-end-user-connections",
-            "v1/api-reference/embedded-api/connections/create-end-user-connection",
-            "v1/api-reference/embedded-api/connections/initialise-oauth-20-connection"
-          ]
-        },
-        {
-          "group": "Integrations",
-          "pages": [
-            "v1/api-reference/embedded-api/integrations/list-integrations",
-            "v1/api-reference/embedded-api/integrations/delete-an-integration"
-          ]
-        },
-        {
-          "group": "Connectors",
-          "pages": [
-            "v1/api-reference/embedded-api/connectors/list-hub-connectors",
-            "v1/api-reference/embedded-api/connectors/create-a-hub-connector"
-          ]
-        },
-        {
-          "group": "Embed",
-          "pages": [
-            "v1/api-reference/embedded-api/embedded/list-end-user-integrations",
-            "v1/api-reference/embedded-api/embedded/retrieve-an-embedded-integration",
-            "v1/api-reference/embedded-api/embedded/list-end-user-activations"
-          ]
-        },
-        {
-          "group": "Activations",
-          "pages": [
-            "v1/api-reference/embedded-api/activations/activate-integration",
-            "v1/api-reference/embedded-api/activations/retrieve-an-activation",
-            "v1/api-reference/embedded-api/activations/delete-an-activation"
-          ]
-        },
-        {
-          "group": "Miscellaneous",
-          "pages": [
-            "v1/api-reference/embedded-api/miscellaneous/health-check"
+            "v1/api-reference/organisations-api/v1/signing-keys/post-organisations-keys",
+            "v1/api-reference/organisations-api/v1/signing-keys/get-organisations-keys",
+            "v1/api-reference/organisations-api/v1/signing-keys/delete-organisations-keys",
+            "v1/api-reference/organisations-api/v1/signing-keys/get-keys"
           ]
         }
       ]
