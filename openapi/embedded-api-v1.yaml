@@ -10,7 +10,7 @@ servers:
   - description: Production
     url: https://platform.versori.com/api/embedded/v1
   - description: Staging
-    url: https://platform-staging.versori.com/api/embedded/v1
+    url: https://platform-staging.versori.com/api/embedded/v1/
   - description: Development
     url: http://localhost:8950/embedded/v1
 tags:
@@ -94,6 +94,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    patch:
+      operationId: UpdateHubDetails
+      summary: Update a Hub's details
+      description: |
+        UpdateHub updates the Hub for the given ID. This can only be used to update a Hubs name, IsDefault and
+        tags (coming soon).
+      tags:
+        - Hubs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HubUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hub'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteHub
+      summary: Delete a Hub
+      description: |
+        DeleteHub deletes the Hub for the given ID.
+
+        > Note: Versori may change this behaviour in future versions of the API without backwards-capability 
+        > guarantees. 
+
+        This only soft-deletes the Hub itself, and will not remove any data associated with the Hub. API endpoints 
+        retrieving integrations, activations and user's by their ID will continue to work.
+
+        This endpoint will also not result in unpublishing any integrations that are associated with the Hub. They will 
+        continue to function as normal.
+      tags:
+        - Hubs
+      responses:
+        '204':
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /hubs/{hub_id}/users:
     parameters:
       - $ref: '#/components/parameters/hub_id'
@@ -170,7 +221,8 @@ paths:
       operationId: GetEndUser
       summary: Retrieve an End User
       description: |
-        GetEndUser returns the End User for the given ID.
+        GetEndUser returns the End User for the given ID. By default, this ID is assumed to be the external ID for the
+        user. If the `identifier_type` query parameter is set to `internal`, then the internal ID is used.
       tags:
         - End Users
       responses:
@@ -180,6 +232,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EndUser'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteEndUser
+      summary: Delete an End User
+      description: |
+        DeleteEndUser deletes the End User for the given ID. By default, this ID is assumed to be the external ID for the
+        user. If the `identifier_type` query parameter is set to `internal`, then the internal ID is used.
+          
+        This will also delete any connections/activations that the user has to the Hub's Connectors/integrations.
+      tags:
+        - End Users
+      responses:
+        '204':
+          description: No Content
         default:
           description: Error
           content:
@@ -377,6 +448,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      operationId: GetIntegration
+      summary: Returns an integration based on the ID.
+      tags:
+        - Hubs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Integration'
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /integrations/{integration_id}/connection-templates:
     parameters:
       - $ref: '#/components/parameters/integration_id'
@@ -493,7 +582,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      operationId: UpdateDynamicVariables
+      operationId: UpdateDynamicVariablesInternal
       summary: Updates the dynamic variables for the given user and integration.
       description: |
         UpdateDynamicVariables updates the dynamic variables for the given user and integration.
@@ -676,11 +765,6 @@ paths:
           schema:
             type: string
             format: ulid
-            x-go-name: IntegrationID
-            x-go-type: ulid.ULID
-            x-go-skip-optional-pointer: true
-            x-go-type-import:
-              path: versori.dev/vergo/ulid
       responses:
         '200':
           description: OK
@@ -758,6 +842,40 @@ paths:
       responses:
         '204':
           description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /activations/{activation_id}/variables:
+    parameters:
+      - $ref: '#/components/parameters/activation_id'
+    put:
+      operationId: UpdateDynamicVariables
+      summary: Updates the dynamic variables for the given activation.
+      description: |
+        UpdateDynamicVariables updates the dynamic variables for the given activation.
+      tags:
+        - Activations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dynamicVariables:
+                  $ref: '#/components/schemas/DynamicVariables'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dynamicVariables:
+                    $ref: '#/components/schemas/DynamicVariables'
         default:
           description: Error
           content:
@@ -1052,7 +1170,13 @@ components:
           format: uri
           x-go-name: ImageURL
         variables:
-          $ref: '#/components/schemas/ActivationVariables'
+          description: |
+            Variables is a list of Name and Value pairs that are scoped to each connection. These variables can be used to
+            mutate the URL of the connector. For example if End Users connect to a service and each user has their own
+            instance of that service which is hosted at a different URL, the user can provide the URL as a variable.
+          type: array
+          items:
+            $ref: '#/components/schemas/ConnectionVariable'
       required:
         - connectorId
         - name
@@ -1261,9 +1385,9 @@ components:
           description: The name of the Integration
           type: string
           x-go-type-skip-optional-pointer: true
-        variablesScheme:
+        variablesSchema:
           description: |
-            VariablesScheme is the JSON scheme for the variables defined for this integration.
+            VariablesSchema is the JSON schema for the variables defined for this integration.
           type: object
           x-go-type-skip-optional-pointer: true
           x-go-type: json.RawMessage
@@ -1301,14 +1425,20 @@ components:
           type: string
           format: uri
           x-go-name: ImageURL
+        screenshotUrl:
+          description: |
+            ScreenshotURL is a PNG image/screenshot of the integration and can be used in the Hub Overview screen when displaying all integrations.
+          type: string
+          format: uri
+          x-go-name: ScreenshotURL
         description:
           description: |
             Description can be used to provide a longer description of the integration. This can be shown to end users
             in the embedded integration hub UI.
           type: string
-        variablesScheme:
+        variablesSchema:
           description: |
-            VariablesScheme is the JSON scheme for the variables defined for this integration.
+            VariablesSchema is the JSON schema for the variables defined for this integration.
           type: object
           x-go-type-skip-optional-pointer: true
           x-go-type: json.RawMessage
@@ -1349,9 +1479,9 @@ components:
             Description can be used to provide a longer description of the integration. This can be shown to end users
             in the embedded integration hub UI.
           type: string
-        variablesScheme:
+        variablesSchema:
           description: |
-            VariablesScheme is the JSON scheme for the variables defined for this integration.
+            VariablesSchema is the JSON schema for the variables defined for this integration.
           type: object
           x-go-type-skip-optional-pointer: true
           x-go-type: json.RawMessage
@@ -1408,6 +1538,19 @@ components:
         - name
         - primaryConnectorId
         - authSchemeConfig
+    HubUpdate:
+      description: |
+        UpdateHubRequest is the payload to update an existing Hub.
+      type: object
+      properties:
+        name:
+          description: The name of the Hub
+          type: string
+        isDefault:
+          description: |
+            IsDefault indicates whether this Hub is the default Hub for the organisation. Only one Hub can be the default
+            Hub for an organisation.
+          type: boolean
     Hub:
       description: A Hub description
       type: object
@@ -1428,10 +1571,16 @@ components:
           description: |
             PrimaryConnector is the connector that the Hub is built around.
           $ref: '#/components/schemas/ConnectorInfo'
+        isDefault:
+          description: |
+            IsDefault indicates whether this Hub is the default Hub for the organisation. Only one Hub can be the default
+            Hub for an organisation.
+          type: boolean
       required:
         - id
         - name
         - primaryConnector
+        - isDefault
     HubsPage:
       description: |
         HubsPage contains a list of hubs using Versori's pagination response types. Initially the ListHubs endpoint 
@@ -1466,9 +1615,9 @@ components:
           type: string
           format: uri
           x-go-name: ImageURL
-        variablesScheme:
+        variablesSchema:
           description: |
-            VariablesScheme is the JSON scheme for the variables defined for this integration.
+            VariablesSchema is the JSON schema for the variables defined for this integration.
           type: object
           x-go-type-skip-optional-pointer: true
           x-go-type: json.RawMessage
@@ -1527,9 +1676,9 @@ components:
             Description can be used to provide a longer description of the integration. This can be shown to end users
             in the embedded integration hub UI.
           type: string
-        variablesScheme:
+        variablesSchema:
           description: |
-            VariablesScheme is the JSON scheme for the variables defined for this integration.
+            VariablesSchema is the JSON schema for the variables defined for this integration.
           type: object
           x-go-type-skip-optional-pointer: true
           x-go-type: json.RawMessage
@@ -1572,6 +1721,10 @@ components:
           required:
             - integrations
     DynamicVariables:
+      description: |
+        Dynamic variables can be used on an integration at run time. The user specifies the value of these variables
+        when activating an integration. When an integration is created, the name and types of these variables can
+        be defined.
       type: object
       x-go-type-skip-optional-pointer: true
       x-go-type: map[string]any
@@ -1645,26 +1798,6 @@ components:
         - user
         - hubId
         - integration
-    ActivationVariable:
-      description: |
-        ActivationVariable is a variable that is passed to the Integration when it is activated.
-      type: object
-      properties:
-        name:
-          description: Name defines the variable name being configured.
-          type: string
-        value:
-          description: Value defines the value of the variable.
-      required:
-        - name
-        - value
-    ActivationVariables:
-      description: |
-        ActivationVariables is a map of variables that are passed to the Integration when it is activated. These
-        variables are used to configure the Integration for the end user.
-      type: array
-      items:
-        $ref: '#/components/schemas/ActivationVariable'
     ActivationConnectionCreateExisting:
       description: |
         ActivationConnectionCreateNew defines a new Connection to be used in an Activation
@@ -1758,8 +1891,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ActivationConnectionCreate'
-        variables:
-          $ref: '#/components/schemas/ActivationVariables'
         dynamicVariables:
           $ref: '#/components/schemas/DynamicVariables'
       required:
@@ -1899,7 +2030,6 @@ components:
         - id
         - description
     AuthSchemeConfigNone:
-      title: None
       description: |
         AuthSchemeConfigNone is a placeholder object with the schemeType set to `none`. There is no other configuration
         required.
@@ -1922,7 +2052,6 @@ components:
         - header
         - cookie
     AuthSchemeConfigAPIKey:
-      title: API Key
       description: |
         AuthSchemeConfigAPIKey defines how a Connector uses an API key credential to authenticate with the system.
       type: object
@@ -1943,7 +2072,6 @@ components:
             - name
             - in
     AuthSchemeConfigBasicAuth:
-      title: Basic Auth
       description: |
         AuthSchemeConfigBasicAuth is a placeholder object with the schemeType set to `basic-auth`. There is no other
         configuration required.
@@ -1976,7 +2104,6 @@ components:
       required:
         - name
     AuthSchemeConfigOAuth2GrantAuthorizationCode:
-      title: Authorization Code
       description: |
         AuthSchemeConfigOAuth2GrantAuthorizationCode contains grant-specific configuration for the 
         `authorization_code` grant type.
@@ -2030,7 +2157,6 @@ components:
       required:
         - grantType
     AuthSchemeConfigOAuth2GrantClientCredentials:
-      title: Client Credentials
       type: object
       properties:
         grantType:
@@ -2039,7 +2165,6 @@ components:
       required:
         - grantType
     AuthSchemeConfigOAuth2GrantPassword:
-      title: Password
       description: |
         AuthSchemeConfigOAuth2GrantPassword contains grant-specific configuration for the `password` 
         grant type.
@@ -2104,7 +2229,6 @@ components:
         - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantClientCredentials'
         - $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantPassword'
     AuthSchemeConfigOAuth2:
-      title: OAuth 2.0
       description: |
         AuthSchemeConfigOAuth2 defines how a Connector uses an OAuth2 credential to authenticate 
         with the system. This is to be used for all OAuth 2.0 flows which require a client ID and 
@@ -2200,7 +2324,6 @@ components:
         - header
         - cookie
     AuthSchemeConfigHMAC:
-      title: HMAC
       description: |
         AuthSchemeConfigHMAC defines how a Connector uses an HMAC credential to authenticate with the system.
 
@@ -2244,7 +2367,6 @@ components:
             - algorithm
             - digestInputs
     AuthSchemeConfigCertificate:
-      title: mTLS
       description: |
         AuthSchemeConfigCertificate is a placeholder object with the schemeType set to `certificate`. 
         There is no other config required
@@ -2280,6 +2402,19 @@ components:
         - $ref: '#/components/schemas/AuthSchemeConfigOAuth2'
         - $ref: '#/components/schemas/AuthSchemeConfigHMAC'
         - $ref: '#/components/schemas/AuthSchemeConfigCertificate'
+    ConnectionVariable:
+      description: ConnectionVariable denotes an arbitrary key/value pair which can be used to configure a connector.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name is the name of the connection variable.
+        value:
+          type: string
+          description: Value is the value of the connection variable.
+      required:
+        - name
+        - value
     CredentialType:
       description: |
         CredentialType denotes the type of the credential which determines what the Credential's `data` property will
@@ -2311,14 +2446,12 @@ components:
         - jwt-bearer
       x-go-type-skip-optional-pointer: true
     CredentialDataNone:
-      title: None
       description: |
         CredentialDataNone contains no data as no credential is required to authenticate with the Connector. It is used
         purely as a placeholder to implement a consistent interface across all CredentialType/AuthSchemeTypes.
       type: object
       additionalProperties: false
     CredentialDataString:
-      title: String
       description: |
         CredentialDataString contains a string value and nothing else and is commonly used for API keys. This value 
         will be redacted when returned in a response.
@@ -2331,7 +2464,6 @@ components:
       required:
         - value
     CredentialDataBinary:
-      title: Binary File
       description: |
         CredentialDataBinary is commonly used to store non-string data such as binary files or encryption keys. This 
         value will be redacted when returned in a response.
@@ -2346,7 +2478,6 @@ components:
       required:
         - valueBase64
     CredentialDataBasicAuth:
-      title: Basic Auth
       description: |
         CredentialDataBasicAuth contains the username and password required to authenticate with the Connector. The
         `password` property will be redacted when returned in a response.
@@ -2364,7 +2495,6 @@ components:
         - username
         - password
     CredentialDataOAuth2Client:
-      title: Client Credentials
       description: |
         CredentialDataOAuth2Client contains the OAuth2 client credentials required to either issue an access token from
         a refresh_token, or via the `client_credentials` and `authorization_code` grant types. The `clientSecret` property will be redacted when
@@ -2431,7 +2561,6 @@ components:
         - authorizeUrl
         - tokenUrl
     CredentialDataOAuth2Code:
-      title: OAuth 2.0 Authorization Code
       description: |
         CredentialDataOAuth2Code is used to exchange an authorization code for an access token and
         is denoted by the `oauth2-code` type. 
@@ -2452,7 +2581,6 @@ components:
         - code
         - state
     CredentialDataOAuth2Token:
-      title: OAuth 2.0 Token
       description: |
         CredentialDataOAuth2Token is primarily used to store the refresh_token for an user who has authorized an OAuth2
         Application to access their data. However, this information is not exposed publicly and the only data visible
@@ -2472,16 +2600,34 @@ components:
             AccessToken is the OAuth2 access token which can be used to authenticate with the Connector. This 
             information is redacted when read from the API.
           x-go-type-skip-optional-pointer: true
+        tokenType:
+          type: string
+          description: |
+            TokenType is the type of token which is being issued. Defaults to "Bearer" if not set.
+          default: Bearer
+          x-go-type-skip-optional-pointer: true
+        expiresAt:
+          type: string
+          format: date-time
+          description: |
+            ExpiresAt is the time at which the access token will expire. If not defined, the accessToken will be 
+            reused until a 401 response is received from the Connector, at which point the token should be refreshed
+            with the provided `refreshToken`. Ideally this should be provided so that erroneous failures can be 
+            avoided.
+          x-go-type-skip-optional-pointer: true
         refreshToken:
           type: string
           description: |
             RefreshToken is the OAuth2 refresh token which can be used to issue new access tokens. This information is
             redacted when read from the API.
-          x-go-type-skip-optional-pointer: true
+
+            This is a required field as it is used to refresh the access token when it expires. If users are providing
+            an access token which does not expire using this credential type, then the same functionality may be 
+            achieved by using a simple API key and OAuth 2.0 need not be used.
       required:
         - scopes
+        - refreshToken
     CredentialDataOAuth2Password:
-      title: OAuth 2.0 Password
       description: |
         CredentialDataOAuth2Password contains the username and password of a Resource Owner within an OAuth 2.0
         application. The `password` property will be redacted when returned in a response.
@@ -2499,7 +2645,6 @@ components:
         - username
         - password
     CredentialDataCertificate:
-      title: TLS
       description: |
         CredentialDataCertificate contains the Certificate, Certificate key and CA(Certificate authority).
       type: object
@@ -2573,19 +2718,6 @@ components:
           items:
             $ref: '#/components/schemas/ConnectionCredentialCreate'
           x-go-type-skip-optional-pointer: true
-    ConnectionVariable:
-      description: ConnectionVariable denotes an arbitrary key/value pair which can be used to configure a connector.
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name is the name of the connection variable.
-        value:
-          type: string
-          description: Value is the value of the connection variable.
-      required:
-        - name
-        - value
     ConnectionCreate:
       description: ConnectionCreate defines the connection to create against a Connector.
       type: object
