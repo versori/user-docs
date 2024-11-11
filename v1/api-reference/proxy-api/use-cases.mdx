@@ -1,0 +1,41 @@
+---
+title: Use Cases
+---
+
+This section outlines some possible use cases of where the Proxy API can be useful.
+
+## Embedded Integration Hub
+
+This is most useful when building an Embedded Integration Hub and you need to make requests to external systems on the
+user's behalf in order to provide the best user experience.
+
+For example, if you want to provide your own End Users the ability to connect your SaaS platform to an external system,
+like Slack, you may want the user to choose from a list of channels to post messages to. Before the Proxy API, each
+use-case like this required a specific workflow to be implemented in your Integration. Now, you can use the Proxy API to
+make requests to the Slack API directly from your application and show the results to the user.
+
+Another use case for this functionality is when a Connection requires some Connection Variables to be defined to make
+requests from a Board. This situation is common when your Connector defines a dynamic base URL such as subdomain or a
+region/data-center, but this information can only be known by making a request using the user's credentials after they
+have connected through Versori. Here, you can create a Connection as normal, then use the Proxy API to retrieve the
+value of a Connection Variable, then use the [Update Connection][update-connection-api] API to set the value of the
+Connection Variable.
+
+## Testing Connectors
+
+After onboarding a [Connector][connector] to the Platform, providing the OpenAPI specification or the manually created
+Actions are valid, prior to the Proxy API there was no other way to test the Connector's functionality without building
+a Board to actually use the Connector.
+
+With the Proxy API, users can now send requests to the system and validate that the Connector is working as expected.
+
+### Testing Connections
+
+Similar to testing Connectors, users can test the Connection to ensure that the credentials are correct and the system
+responds as expected. This is particularly useful for credentials which are manually inputted by the user without
+validation, for example API Key or Basic Authentication. However, even for OAuth 2.0 connections using
+`authorization_code`, which requires proper authentication and will fail if provided invalid data, there's still the
+chances that the required `scope` for an operation is not granted, or the user has revoked the access.
+
+[connector]: /v1/concepts/connectors
+[update-connection-api]: /v1/api-reference/connect-api/connections/update-connection

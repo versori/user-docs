@@ -404,6 +404,15 @@
       ]
     },
     {
+      "group": "Proxy API",
+      "version": "v1",
+      "pages": [
+        "v1/api-reference/proxy-api",
+        "v1/api-reference/proxy-api/use-cases",
+        "v1/api-reference/proxy-api/endpoint"
+      ]
+    },
+    {
       "group": "Concepts",
       "version": "v1alpha1",
       "pages": [
