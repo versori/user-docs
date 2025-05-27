@@ -1,0 +1,130 @@
+---
+title: Hooks
+---
+
+# Hooks
+
+This section provides an overview of the hooks available in the `embed-react/src/hooks` directory. These hooks are useful 
+
+---
+
+## `useEmbeddedProjectQuery`
+
+Fetches project details and connection templates for a given project ID.
+
+### Parameters
+
+- `projectId` (`string`): The ID of the project to fetch.
+
+### Returns
+
+- `isLoading (boolean)`: Indicates if the data is still loading.
+- `error (ApiError | undefined)`: Error object if the request fails.
+- `project (Project | undefined)`: The fetched project details.
+- `connectionTemplates (ConnectionTemplate[])`: List of connection templates for the project.
+
+### Example
+
+```tsx
+import { useEmbeddedProjectQuery } from '../hooks/useEmbeddedProjectQuery';
+
+export function ProjectDetails() {
+
+    const { isLoading, error, project, connectionTemplates } = useEmbeddedProjectQuery({ projectId: '01JW97BNEXS699BD16XW9PWP6R' });
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    return <div>Project Name: {project?.name}</div>;
+}
+```
+
+---
+
+## `useDisconnectActivation`
+
+Handles the disconnection of an integration.
+
+### Returns
+
+ - `onDisconnectIntegration ((integrationId: string) => Promise<void>)`: Function to disconnect an integration by its ID.
+
+### Example
+
+```tsx
+    import { useDisconnectActivation } from '../hooks/useDisconnectActivation';
+
+    const { onDisconnectIntegration } = useDisconnectActivation();
+
+    const handleDisconnect = async (projectId: string) => {
+        await onDisconnectIntegration(projectId);
+        console.log('Integration disconnected');
+    };
+```
+
+---
+
+## `usePageSelectedState`
+
+Manages the state of the selected page in the integration UI.
+
+### Returns
+
+ - `state ({ projectId: string; method: string } | null)`: The current selected state.
+ - `onOpenChange ((open: boolean) => void)`: Function to toggle the open state.
+ - `onConnectClick ((projectId: string) => void)`: Function to handle the connect button click.
+ - `onManageClick ((projectId: string) => void)`: Function to handle the manage button click.
+
+
+### Example
+
+```tsx
+import { usePageSelectedState } from '../hooks/usePageSelectedState';
+
+const { state, onOpenChange, onConnectClick, onManageClick } = usePageSelectedState();
+
+onConnectClick('01JW97BNEXS699BD16XW9PWP6R');
+onManageClick('01JW97BNEXS699BD16XW9PWP6R');
+onOpenChange(true);
+```
+
+---
+
+## `useEmbeddedIntegrationPageQuery`
+
+Fetches a list of projects and handles integration page data.
+
+### Parameters
+
+- `params` (`{ deployed?: boolean }`): Optional parameters to filter projects. If true, then only deployed projects are fetched. Returns all projects if not specified or false.
+
+### Returns
+
+- `isLoading (boolean)`: Indicates if the data is still loading.
+- `error (ApiError | undefined)`: Error object if the request fails.
+- `projects (UserProjectSummary[])`: List of user project summaries. This includes the project along with an `isActivated` booelean indicating if the user is activated on the project.
+- `refresh (() => void)`: Function to refresh the data.
+
+### Example
+
+```tsx
+import { useEmbeddedIntegrationPageQuery } from '../hooks/useEmbeddedIntegrationPageQuery';
+
+export function ProjectList() {
+    const { isLoading, error, projects, refresh } = useEmbeddedIntegrationPageQuery({ deployed: true });
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    return (
+        <ul>
+            {projects.map((project) => (
+                <li key={project.id}>{project.name}</li>
+            ))}
+        </ul>
+    );
+}
+```
+
+
+
