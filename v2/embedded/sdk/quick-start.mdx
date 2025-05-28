@@ -1,10 +1,9 @@
 ---
-title: Quickstart React
+title: Quick Start React
+description: How to get an integration hub up and running in a React application in minutes.
 ---
 
-This quickstart guide uses our React SDK to embed a native integration hub into your application. More information on
-the React SDK, and other lower-level SDKs Versori provides, can be found in the [versori/versori-js-sdk][sdk-repo]
-repository.
+This quickstart guuide uses our React SDK to embed a native integration hub into your application.
 
 <Note>
     The React SDK is the quickest way to get started with Versori Embedded, however it also offers the least amount of
@@ -17,10 +16,8 @@ repository.
     There are limitations in this approach at the time of writing, but we are working on improving this functionality
     in future releases:
 
-    - Only the first page of integrations are displayed
-    - Connection Variables are not supported
-    - Integration Variables are not supported
-
+    - There is no pagination support for the integration hub as of now
+    - Dynamic Variables are not supported
 </Warning>
 
 Before you start, it's expected that you already have a React application. If not, we recommend using
@@ -29,15 +26,19 @@ Before you start, it's expected that you already have a React application. If no
 Next, install our SDK packages using your package manager of choice:
 
 <CodeGroup>
-```bash NPM
+```bash npm
 npm install @versori/embed-react
 ```
 
-```bash Yarn
+```bash yarn
 yarn add @versori/embed-react
 ```
-
 </CodeGroup>
+
+<Warning>
+    Ensure that at least version `2.x.x`+ of the `@versori/embed-react` package is installed, as this is the version
+    that supports the platform API.
+</Warning>
 
 Now you can render our `VersoriEmbeddedProvider` component in your application, and pass in some configuration:
 
@@ -46,32 +47,24 @@ import { VersoriEmbeddedProvider, VersoriEmbeddedRenderer } from '@versori/embed
 import { CredentialCreate } from '@versori/sdk/embedded';
 
 export type ComponentProps = {
-    // Your Hub ID
-    hubId: string;
+    // Your Organisation ID
+    orgId: string;
 
     // A JWT token representing your user, with the "sub" claim set to the desired End User's `externalId`. This JWT
     // is issued by a Signing Key from your own API and should authenticate your user in the same way any other
     // endpoints are authenticated)
     token: string;
-
-    // A function which generates a primary credential for your user, this will be invoked only when creating the user
-    // for the first time. If the SDK detects the user already exists, this function will not be used.
-    generatePrimaryCredential: () => Promise<CredentialCreate>;
 };
 
-export function Component({ hubId, token, generatePrimaryCredential }: ComponentProps) {
+export function Component({ orgId, token }: ComponentProps) {
     return (
         <VersoriEmbeddedProvider
             options={{
-                hubId,
+                orgId,
                 endUserAuth: {
                     type: 'jwt',
                     token,
-                },
-                primaryCredential: {
-                    type: 'auto',
-                    generate: generatePrimaryCredential,
-                },
+                }
             }}
         >
             <VersoriEmbeddedRenderer />
@@ -79,6 +72,8 @@ export function Component({ hubId, token, generatePrimaryCredential }: Component
     );
 }
 ```
+
+The `token` in the above example is a JWT with the subject claim set to the `externalId` of the End User. The `VersoriEmbeddedProvider` then knows which environments the End User is activated on, and will display the relevant integrations in the UI. You can see the [Security](/v2/embedded/security) section for more information on how to generate this token.
 
 This example is the most minimal setup required to get started. The `VersoriEmbeddedProvider` component configures an
 `EmbedClient` instance and exposes it over a React context. The `VersoriEmbeddedRenderer` component is a pre-built
@@ -92,3 +87,6 @@ For more information on using the SDK, the source code is available in the [vers
 repository.
 
 [sdk-repo]: https://github.com/versori/versori-js-sdk
+
+This repository also contains an example React application with the SDK along with an example client website that uses Cookies to store the JWT token so that it is persisted across page reloads and redirects to the Embedded Integration Hub.
+

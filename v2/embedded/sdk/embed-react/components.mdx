@@ -1,0 +1,287 @@
+---
+title: Components
+---
+
+This section provides an overview of the components available in the `embed-react/src/components` directory. These components are designed to be used in your React application to integrate with the Versori Embedded SDK.
+
+## DialogContent
+
+### Description
+The `DialogContent` component is used to render the content of a dialog, including a title, description, and any additional children components.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `children`   | `ReactNode` | No       | Additional content to be displayed inside the dialog.                      |
+| `title`      | `string`    | Yes      | The title of the dialog, hidden visually but accessible to screen readers. |
+| `description`| `string`    | Yes      | The description of the dialog, hidden visually but accessible to screen readers. |
+
+### Example
+```tsx
+<DialogContent title="Dialog Title" description="Dialog Description">
+  <p>Additional content goes here.</p>
+</DialogContent>
+```
+
+---
+
+## IntegrationPage
+
+### Description
+The `IntegrationPage` component displays a grid of integration tiles, allowing users to connect, manage, or disconnect integrations.
+
+### Props
+
+| Name               | Type                              | Required | Description                                                                 |
+|--------------------|-----------------------------------|----------|-----------------------------------------------------------------------------|
+| `id`               | `string`                         | No       | The unique identifier for the component.                                   |
+| `className`        | `string`                         | No       | Additional CSS classes for styling.                                        |
+| `projects`         | `UserProjectSummary[]`           | Yes      | A list of user projects to display as integration tiles.                   |
+| `onConnectClick`   | `(integrationId: string) => void`| Yes      | Callback for when the "Connect" button is clicked.                         |
+| `onManageClick`    | `(integrationId: string) => void`| Yes      | Callback for when the "Manage" button is clicked.                          |
+| `onDisconnectClick`| `(integrationId: string) => void`| Yes      | Callback for when the "Disconnect" button is clicked.                      |
+| `isConnectingId`   | `string`                         | No       | The ID of the integration currently being connected.                       |
+
+### Example
+```tsx
+<IntegrationPage
+  projects={projects}
+  onConnectClick={handleConnect}
+  onManageClick={handleManage}
+  onDisconnectClick={handleDisconnect}
+/>
+```
+
+---
+
+## ConnectButton
+
+### Description
+The `ConnectButton` component is used to display a button for connecting, managing, or indicating the status of an integration.
+
+### Props
+
+| Name         | Type                              | Required | Description                                                                 |
+|--------------|-----------------------------------|----------|-----------------------------------------------------------------------------|
+| `isDeployed` | `boolean`                        | Yes      | Indicates if the integration is deployed and available to end users.       |
+| `isActivated`| `boolean`                        | Yes      | Indicates if the integration is activated for the user.                    |
+| `onClick`    | `(e: SyntheticEvent<HTMLButtonElement>) => void` | Yes | Callback for button click events.                                          |
+| `id`         | `string`                         | No       | The unique identifier for the button.                                      |
+| `className`  | `string`                         | No       | Additional CSS classes for styling.                                        |
+
+### Example
+```tsx
+<ConnectButton
+  isDeployed={true}
+  isActivated={false}
+  onClick={handleClick}
+/>
+```
+
+---
+
+## IntegrationTile
+
+### Description
+The `IntegrationTile` component represents a single integration in the grid, displaying its name, image, and connection status.
+
+### Props
+
+| Name               | Type                              | Required | Description                                                                 |
+|--------------------|-----------------------------------|----------|-----------------------------------------------------------------------------|
+| `id`               | `string`                         | No       | The unique identifier for the tile.                                        |
+| `className`        | `string`                         | No       | Additional CSS classes for styling.                                        |
+| `projectId`        | `string`                         | Yes      | The unique identifier for the project.                                     |
+| `name`             | `string`                         | Yes      | The name of the integration.                                               |
+| `imageUrl`         | `string`                         | No       | The URL of the image representing the integration.                         |
+| `description`      | `string`                         | Yes      | A description of the integration.                                          |
+| `isDeployed`       | `boolean`                        | Yes      | Indicates if the integration is deployed and available to end users.       |
+| `isActivated`      | `boolean`                        | Yes      | Indicates if the integration is activated for the user.                    |
+| `onConnectClick`   | `(integrationId: string) => void`| Yes      | Callback for when the "Connect" button is clicked.                         |
+| `onManageClick`    | `(integrationId: string) => void`| Yes      | Callback for when the "Manage" button is clicked.                          |
+| `onDisconnectClick`| `(integrationId: string) => void`| Yes      | Callback for when the "Disconnect" button is clicked.                      |
+| `isConnecting`     | `boolean`                        | No       | Indicates if the integration is currently being connected.                 |
+
+### Example
+```tsx
+<IntegrationTile
+  projectId="123"
+  name="Integration Name"
+  description="Integration Description"
+  isDeployed={true}
+  isActivated={false}
+  onConnectClick={handleConnect}
+  onManageClick={handleManage}
+  onDisconnectClick={handleDisconnect}
+/>
+```
+
+## Connect
+
+### Description
+The `Connect` component is the main entry point for managing integrations, providing a user interface for connecting and managing integration templates.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `templates`  | `Template[]` | Yes    | A list of integration templates available for connection.                  |
+| `onConnect`  | `(templateId: string) => void` | Yes | Callback triggered when a template is connected.                           |
+
+### Example
+```tsx
+<Connect templates={templates} onConnect={handleConnect} />
+```
+
+---
+
+## ConnectSingleTemplate
+
+### Description
+The `ConnectSingleTemplate` component is used to manage a single integration template, allowing users to configure and connect it.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `template`   | `Template` | Yes      | The integration template to be managed.                                    |
+| `onSave`     | `(template: Template) => void` | Yes | Callback triggered when the template is saved.                             |
+
+### Example
+```tsx
+<ConnectSingleTemplate template={template} onSave={handleSave} />
+```
+
+---
+
+## CredentialDataBasicAuth
+
+### Description
+The `CredentialDataBasicAuth` component handles the input and validation of credentials for Basic Authentication.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `data`       | `{ basicAuth: { username: string; password: string; } }` | Yes | The credential data for Basic Authentication, including username and password. |
+| `onDataChange` | `(data: { basicAuth: { username: string; password: string; } }) => void` | Yes | Callback triggered when the credential data changes.                       |
+
+### Example
+```tsx
+<CredentialDataBasicAuth
+  data={{ basicAuth: { username: 'user', password: 'pass' } }}
+  onDataChange={handleDataChange}
+/>
+```
+
+---
+
+## CredentialDataBinary
+
+### Description
+The `CredentialDataBinary` component handles the input and validation of binary credential data.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `data`       | `{ binary: { binaryData: string; } }` | Yes | The binary credential data, represented as a base64-encoded string.        |
+| `onDataChange` | `(data: { binary: { binaryData: string; } }) => void` | Yes | Callback triggered when the credential data changes.                       |
+
+### Example
+```tsx
+<CredentialDataBinary
+  data={{ binary: { binaryData: 'base64encodedstring' } }}
+  onDataChange={handleDataChange}
+/>
+```
+
+---
+
+## CredentialDataOAuth2ClientCredentials
+
+### Description
+The `CredentialDataOAuth2ClientCredentials` component handles the input and validation of OAuth2 Client Credentials.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `data`       | `{ oauth2Client: { clientId: string; clientSecret: string; } }` | Yes | The OAuth2 Client Credentials data, including client ID and client secret. |
+| `onDataChange` | `(data: { oauth2Client: { clientId: string; clientSecret: string; } }) => void` | Yes | Callback triggered when the credential data changes.                       |
+
+### Example
+```tsx
+<CredentialDataOAuth2ClientCredentials
+  data={{ oauth2Client: { clientId: 'client-id', clientSecret: 'client-secret' } }}
+  onDataChange={handleDataChange}
+/>
+```
+
+---
+
+## CredentialDataOAuth2Code
+
+### Description
+The `CredentialDataOAuth2Code` component handles the input and validation of OAuth2 Code credentials.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `data`       | `{ oauth2Code: { authorizationCode: string; redirectUri: string; } }` | Yes | The OAuth2 Code credential data, including authorization code and redirect URI. |
+| `onDataChange` | `(data: { oauth2Code: { authorizationCode: string; redirectUri: string; } }) => void` | Yes | Callback triggered when the credential data changes.                       |
+
+### Example
+```tsx
+<CredentialDataOAuth2Code
+  data={{ oauth2Code: { authorizationCode: 'auth-code', redirectUri: 'https://example.com/callback' } }}
+  onDataChange={handleDataChange}
+/>
+```
+
+---
+
+## CredentialDataOAuth2Password
+
+### Description
+The `CredentialDataOAuth2Password` component handles the input and validation of OAuth2 Password credentials.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `data`       | `{ oauth2Password: { username: string; password: string; } }` | Yes | The OAuth2 Password credential data, including username and password.      |
+| `onDataChange` | `(data: { oauth2Password: { username: string; password: string; } }) => void` | Yes | Callback triggered when the credential data changes.                       |
+
+### Example
+```tsx
+<CredentialDataOAuth2Password
+  data={{ oauth2Password: { username: 'user', password: 'pass' } }}
+  onDataChange={handleDataChange}
+/>
+```
+
+---
+
+## CredentialDataString
+
+### Description
+The `CredentialDataString` component handles the input and validation of string-based credential data.
+
+### Props
+
+| Name         | Type       | Required | Description                                                                 |
+|--------------|------------|----------|-----------------------------------------------------------------------------|
+| `data`       | `{ string: { value: string; } }` | Yes | The string-based credential data, represented as a single string value.    |
+| `onDataChange` | `(data: { string: { value: string; } }) => void` | Yes | Callback triggered when the credential data changes.                       |
+
+### Example
+```tsx
+<CredentialDataString
+  data={{ string: { value: 'example-string' } }}
+  onDataChange={handleDataChange}
+/>
+```
+
