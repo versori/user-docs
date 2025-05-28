@@ -17,17 +17,16 @@ server-side logic to facilitate the integration hub, in which case the hybrid ap
 
 #### Authentication
 
-When using the fully client-side approach, you will need to authenticate your users against Versori APIs using [Signing
-Key][signing-keys] tokens.
+When using the fully client-side approach, you will need to authenticate your users against Versori APIs using [Signing-Key](/v2/embedded/security) tokens.
 
 <Warning>
     You should not expose your Signing Key to your users. This key should be kept secure and only used in your
-    server-side code to issue JWT tokens.
+    server-side code to issue JWTs.
 
 </Warning>
 
 This approach involves implementing a new API endpoint in your own application which can authenticate your end user and
-issue a JWT token signed with a [Signing Key][signing-keys]. This token can then be used to authenticate your user
+issue a JWT signed with a [Signing-Key](/v2/embedded/security). This token can then be used to authenticate your user
 against Versori APIs, and they will only have access to manage their own activations to your integration hub.
 
 <Info>

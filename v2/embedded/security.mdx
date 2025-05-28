@@ -34,11 +34,11 @@ const token = await new SignJWT({ sub: externalId })
     .sign(key);
 ```
 
-Then you can authenticate calls to Versori API’s by setting the `Authorization` header to a value of `JWT {jwt-goes-here}`, for example:
+Then you can authenticate calls to Versori API’s by setting the `Authorization` header to a value of `JWT <jwt-goes-here>`, for example:
 
 ```bash
 curl -X GET https://platform.versori.com/api/v2/o/<orgId>/users/<externalId>
--H "Authorization: JWT {jwt-goes-here}"
+-H "Authorization: JWT <jwt-goes-here>"
 ```
 
  You can find your singingkeyId on the signing key page, shown above, to set the issuer claim.
