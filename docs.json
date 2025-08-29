@@ -667,5 +667,18 @@
   "search": {
     "prompt": "Search the docs..."
   },
-  "redirects": []
+  "redirects": [
+    {
+      "source": "/v1/*",
+      "destination": "/legacy/*"
+    },
+    {
+      "source": "/v1alpha1/api-reference/*",
+      "destination": "/legacy/api-reference/*"
+    },
+    {
+      "source": "/v1alpha1/*",
+      "destination": "/legacy/switchboard/*"
+    }
+  ]
 }
