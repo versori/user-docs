@@ -1,33 +1,40 @@
 {
-    "arrowParens": "always",
-    "bracketSpacing": true,
-    "endOfLine": "lf",
-    "htmlWhitespaceSensitivity": "css",
-    "insertPragma": false,
-    "jsxSingleQuote": false,
-    "printWidth": 120,
-    "proseWrap": "always",
-    "quoteProps": "as-needed",
-    "requirePragma": false,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "useTabs": false,
-    "vueIndentScriptAndStyle": false,
-    "tabWidth": 4,
-    "overrides": [
-        {
-            "files": ["OWNERS", "OWNERS_ALIASES"],
-            "options": {
-                "parser": "yaml"
-            }
-        },
-        {
-            "files": ["*.yml", "*.yaml"],
-            "options": {
-                "parser": "yaml",
-                "tabWidth": 2
-            }
-        }
-    ]
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "htmlWhitespaceSensitivity": "css",
+  "insertPragma": false,
+  "jsxSingleQuote": false,
+  "printWidth": 120,
+  "proseWrap": "always",
+  "quoteProps": "as-needed",
+  "requirePragma": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "vueIndentScriptAndStyle": false,
+  "tabWidth": 4,
+  "overrides": [
+    {
+      "files": ["OWNERS", "OWNERS_ALIASES"],
+      "options": {
+        "parser": "yaml"
+      }
+    },
+    {
+      "files": [".prettierrc", "*.json"],
+      "options": {
+        "parser": "json",
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": ["*.yml", "*.yaml"],
+      "options": {
+        "parser": "yaml",
+        "tabWidth": 2
+      }
+    }
+  ]
 }

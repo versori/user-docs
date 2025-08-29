@@ -1,0 +1,110 @@
+---
+title: Endpoint
+---
+
+The Proxy API is made up of a single endpoint described by this page.
+
+## Allowed Methods
+
+This endpoint supports the commonly-used HTTP methods:
+
+-   GET
+-   POST
+-   PUT
+-   PATCH
+-   DELETE
+
+## Path Parameters
+
+Requests to the Proxy API are sent to the following URL, with the parameters described below:
+
+```
+https://platform.versori.com/api/proxy/legacy/{connection_id}/{path...}
+```
+
+<ParamField path="connection_id" type="string">
+    The ID of the Connection to use for the request. The API will respond with a 404 if this Connection does not exist.
+</ParamField>
+
+<ParamField path="path..." type="string">
+    The remainder of the URL after `connection_id` is used as the path for the upstream request to the Connector
+    identified by the provided Connection. This is appended to the base URL of the Connector (which can also be
+    overridden by a special header - see [below](#special-headers)).
+</ParamField>
+
+## Query Parameters
+
+Any query parameters specified will be passed through to the upstream request. These are not processed by the Proxy API
+with any special meaning.
+
+## Headers
+
+Any headers which begin with `X-Versori-` are not forwarded to the upstream request.
+
+All other headers received by the Proxy API will be forwarded to the upstream request. This may include headers not
+explicitly set by the user, for example those which are added by our own infrastructure (i.e. at load balancers or
+reverse proxies), or any which are added by the browser if the requests are being made from a web application.
+
+### Special Headers
+
+There are a few headers which can modify the proxying behaviour:
+
+<ParamField header="X-Versori-Connection-Variable" type="string">
+    This header can be used to define Connection Variables which should be applied to the base URL of the request and
+    override those already defined by the Connection.
+
+    The format of this header is a url-encoded form (specifically, `application/x-www-form-urlencoded`) string, where
+    each key-value pair is separated by an equals sign (`=`) and each pair is separated by an ampersand (`&`).
+
+    Example:
+
+    ```
+    X-Versori-Connection-Variable: subdomain=example&region=eu
+    ```
+
+    This header may be specified multiple times, all values will be applied in the order they are defined, with later
+    values overriding earlier ones.
+
+</ParamField>
+
+<ParamField header="X-Versori-Ignore-Headers" type="string" >
+    In certain circumstances, the Proxy API may receive some headers which are incompatible with the upstream system.
+    This header can be used to specify a comma-separated list of headers which should be removed from the request before
+    it is sent to the Connector.
+
+    Example:
+
+    ```
+    X-Versori-Ignore-Headers: X-Forwarded-For, X-Forwarded-Proto
+    ```
+
+</ParamField>
+
+<ParamField header="X-Versori-Override-Base-Url" type="string">
+    This header can be used to override the base URL of the Connector. This is useful when the Connector has a dynamic
+    base URL, such as a subdomain or a region/data-center, and the value of this base URL is not known until the user
+    has connected through Versori.
+
+    Example:
+
+    ```
+    X-Versori-Override-Base-Url: https://example.com
+    ```
+
+</ParamField>
+
+<ParamField header="X-Versori-Force-Refresh-Credential" type="boolean">
+    This header can be used to force the Proxy API to refresh the credential for the Connection before making the
+    request. This is useful when testing a Connection can be refreshed without user interaction
+
+    Example:
+
+    ```
+    X-Versori-Force-Refresh-Credential: true
+    ```
+
+</ParamField>
+
+## Request Body
+
+The request body is passed through to the upstream request without modification.
