@@ -99,10 +99,7 @@
               },
               {
                 "group": "Developer Guides",
-                "pages": [
-                  "legacy/embedded/developer/intro",
-                  "legacy/embedded/developer/quickstart-react"
-                ]
+                "pages": ["legacy/embedded/developer/intro", "legacy/embedded/developer/quickstart-react"]
               },
               {
                 "group": "SDKs",

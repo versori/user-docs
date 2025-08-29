@@ -4,66 +4,61 @@ title: Getting Started
 
 # Installation
 
-To get started with the Versori Embedded SDK for React, you need to install the package. You can do this using npm or yarn:
+To get started with the Versori Embedded SDK for React, you need to install the package. You can do this using npm or
+yarn:
 
-<CodeGroup>
-```bash npm
-npm install @versori/embed-react
-```
-```bash yarn
-yarn add @versori/embed-react
-```
-</CodeGroup>
+<CodeGroup>```bash npm npm install @versori/embed-react ``` ```bash yarn yarn add @versori/embed-react ```</CodeGroup>
 
 # Usage
 
-Once you have installed the package, you can import the `Embed` component from `@versori/embed-react` and use it in your React application.
+Once you have installed the package, you can import the `Embed` component from `@versori/embed-react` and use it in your
+React application.
 
 All of the components and hooks provided will need to be wrapped in the `VersoriEmbeddedProvider` component.
 
 # VersoriEmbeddedProvider
 
-The `VersoriEmbeddedProvider` is a React component that initializes and provides the Versori Embedded Platform client to its children via context. It also allows customization of some default settings and validation messages.
-Currently the only default setting is the default integration tile image.
+The `VersoriEmbeddedProvider` is a React component that initializes and provides the Versori Embedded Platform client to
+its children via context. It also allows customization of some default settings and validation messages. Currently the
+only default setting is the default integration tile image.
 
 ## Props
 
 ### `options` (required)
+
 - **Type**: `InitOptions`
 - **Description**: Configuration options required to initialize the Versori Embedded Platform client.
 - **Required Properties**:
     - `orgId`: Your organisation ID.
-    - `endUserAuth`: Authentication details for the end user, can only be of type `jwt` right now.
-                     Must be an object that looks like this:
-                     ```typescript
-                     {
-                       type: 'jwt',
-                       token: '<your-end-user-jwt-token>'
-                     }
-                     ```
-    
+    - `endUserAuth`: Authentication details for the end user, can only be of type `jwt` right now. Must be an object
+      that looks like this:
+      `typescript                {                  type: 'jwt',                  token: '<your-end-user-jwt-token>'                }                `
 
 ### `children`
+
 - **Type**: `ReactNode`
 - **Description**: The child components that will have access to the Versori Embedded context.
 
 ### `defaults`
+
 - **Type**: `Partial<VersoriEmbeddedDefaults>`
 - **Description**: Custom default settings to override the predefined defaults.
 
 ### `validation`
+
 - **Type**: `VersoriEmbeddedProviderValidation`
 - **Description**: Validation configuration, including custom locale messages for form validation.
 
 #### `VersoriEmbeddedProviderValidation`
+
 - **`locale`**: A `LocaleObject` to customize validation messages. Defaults to:
-  ```typescript
-  {
-    mixed: {
-      required: 'Field is required',
-    },
-  }
-  ```
+    ```typescript
+    {
+      mixed: {
+        required: 'Field is required',
+      },
+    }
+    ```
 
 ## Usage
 
@@ -77,22 +72,22 @@ const App = () => {
         endUserAuth: {
             type: 'jwt',
             token, // Your end users JWT token signed by your organisations signing key
-        }
+        },
     };
 
-  const validation = {
-    locale: {
-      mixed: {
-        required: 'This field must be filled out',
-      },
-    },
-  };
+    const validation = {
+        locale: {
+            mixed: {
+                required: 'This field must be filled out',
+            },
+        },
+    };
 
-  return (
-    <VersoriEmbeddedProvider options={options} validation={validation}>
-      <YourComponent />
-    </VersoriEmbeddedProvider>
-  );
+    return (
+        <VersoriEmbeddedProvider options={options} validation={validation}>
+            <YourComponent />
+        </VersoriEmbeddedProvider>
+    );
 };
 ```
 
@@ -109,6 +104,6 @@ If the `PlatformClient` is not yet initialized, the provider will render a loadi
 
 ```tsx
 <Flex justify="center" align="center" height="100%">
-  <Spinner />
+    <Spinner />
 </Flex>
 ```

@@ -4,9 +4,9 @@ info:
   description: The Organisations API provides users the ability to manage their organisations.
   version: v1
 servers:
-  - url: "https://platform.versori.com/api/organisations/v1"
+  - url: 'https://platform.versori.com/api/organisations/v1'
     description: Production server
-  - url: "http://localhost:8081/v1"
+  - url: 'http://localhost:8081/v1'
     description: Localhost
 tags:
   - name: organisations
@@ -37,32 +37,32 @@ paths:
             x-go-type-import:
               path: versori.dev/vergo/ulid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PublicKey"
+                $ref: '#/components/schemas/PublicKey'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/keys:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: CreateSigningKey
       summary: Create Signing Key
       description: |
         CreateSigningKey creates a new Signing Key for the Organisation. 
-        
+
         This API creates a new RSA key pair, storing the public key and returning the private key. The private key must 
         be kept secure and should not be shared publicly as it has the ability to sign JWTs which can be used to 
         authenticate to Versori APIs on behalf of your Organisation (or scoped to a specific End User within 
         Versori Embedded).
-        
+
         If the private key is lost, it cannot be recovered and a new key pair must be generated. In this scenario, it is
         the Organisation's responsibility to delete the Signing Key from Versori so that any JWTs signed by the lost key
         are invalidated.
@@ -72,20 +72,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreatePublicKey"
+              $ref: '#/components/schemas/CreatePublicKey'
       responses:
-        "204":
+        '204':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SigningKeySet"
+                $ref: '#/components/schemas/SigningKeySet'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     get:
       operationId: ListSigningKeys
       summary: List Signing Keys
@@ -94,21 +94,21 @@ paths:
       tags:
         - signing-keys
       responses:
-        "204":
+        '204':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SigningKeysListResponse"
+                $ref: '#/components/schemas/SigningKeysListResponse'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/keys/{key_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
       - name: key_id
         in: path
         x-go-name: KeyID
@@ -123,19 +123,19 @@ paths:
       summary: Delete Signing Key
       description: |
         DeleteSigningKey deletes the signing key for the Organisation.
-        
+
         Any existing JWTs signed by this key will be invalidated and will no longer be accepted by the Versori platform.
       tags:
         - signing-keys
       responses:
-        "204":
+        '204':
           description: OK
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /active-organisation:
     get:
       operationId: GetActiveOrganisation
@@ -143,89 +143,89 @@ paths:
       description: >-
         GetActiveOrganisation returns the active Organisation for the current user.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Organisation"
+                $ref: '#/components/schemas/Organisation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations:
     get:
       operationId: GetOrganisations
       summary: Get Organisations
       description: >-
         GetOrganisations returns a paginated list of Organisations which the current user is a member of. If there is no
-        filter provided, the result will always contain the active Organisation as the first item of the first page. 
+        filter provided, the result will always contain the active Organisation as the first item of the first page.
         Otherwise, the filter is applied to the name and slug using a case-insensitive substring match.
       parameters:
-        - $ref: "#/components/parameters/filter"
+        - $ref: '#/components/parameters/filter'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrganisationsPage"
+                $ref: '#/components/schemas/OrganisationsPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     post:
       operationId: CreateOrganisation
       summary: Create Organisation
       description: >-
-        CreateOrganisation creates a new Organisation with the current user as the owner. A user can create as many 
-        Organisations as they like, but each has their own billing profile and must be on a paid plan to use certain 
+        CreateOrganisation creates a new Organisation with the current user as the owner. A user can create as many
+        Organisations as they like, but each has their own billing profile and must be on a paid plan to use certain
         features.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrganisationCreate"
+              $ref: '#/components/schemas/OrganisationCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Organisation"
+                $ref: '#/components/schemas/Organisation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     get:
       operationId: GetOrganisation
       summary: Get Organisation
       description: Get an Organisation by its ID
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Organisation"
+                $ref: '#/components/schemas/Organisation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/members:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     get:
       operationId: GetMembers
       summary: Get Members
@@ -237,59 +237,59 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/MembersPage"
+                  $ref: '#/components/schemas/MembersPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/members/{member_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/member_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/member_id'
     get:
       operationId: GetMember
       summary: Get Member
       description: >-
         GetMember returns a member for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Member"
+                $ref: '#/components/schemas/Member'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
       operationId: DeleteMember
       summary: Delete Member
       description: >-
         DeleteMember removes a member from the given Organisation.
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/service-accounts:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: CreateServiceAccount
       summary: Create Service Account
@@ -300,79 +300,79 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ServiceAccountCreate"
+              $ref: '#/components/schemas/ServiceAccountCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServiceAccount"
+                $ref: '#/components/schemas/ServiceAccount'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     get:
       operationId: GetServiceAccounts
       summary: Get Service Accounts
       description: >-
         GetServiceAccounts returns a paginated list of ServiceAccounts for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ServiceAccountsPage"
+                  $ref: '#/components/schemas/ServiceAccountsPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/service-accounts/{service_account_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/service_account_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/service_account_id'
     get:
       operationId: GetServiceAccount
       summary: Get Service Account
       description: >-
         GetServiceAccount returns a ServiceAccount for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ServiceAccount"
+                $ref: '#/components/schemas/ServiceAccount'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
       operationId: DeleteServiceAccount
       summary: Delete Service Account
       description: >-
         DeleteServiceAccount deletes a ServiceAccount for the given Organisation.
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/groups:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: CreateGroup
       summary: Create Group
@@ -382,128 +382,128 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GroupCreate"
+              $ref: '#/components/schemas/GroupCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Group"
+                $ref: '#/components/schemas/Group'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     get:
       operationId: GetGroups
       summary: Get Groups
       description: >-
         GetGroups returns a paginated list of Groups for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/GroupsPage"
+                  $ref: '#/components/schemas/GroupsPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/groups/{group_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/group_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/group_id'
     get:
       operationId: GetGroup
       summary: Get Group
       description: >-
         GetGroup returns a Group for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Group"
+                $ref: '#/components/schemas/Group'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
       operationId: DeleteGroup
       summary: Delete Group
       description: >-
         DeleteGroup deletes a Group for the given Organisation.
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/invitations:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: InviteMember
       summary: Invite Member
       description: >-
-        InviteMember invites a new User to the given Organisation. The user will receive an email with a link to
-        accept the invitation. The invitation is valid for 7 days, after which the invitation will need to be resent or
+        InviteMember invites a new User to the given Organisation. The user will receive an email with a link to accept
+        the invitation. The invitation is valid for 7 days, after which the invitation will need to be resent or
         deleted. Expired invitations may be deleted manually, or will be automatically deleted after 60 days.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/InvitationCreate"
+              $ref: '#/components/schemas/InvitationCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Invitation"
+                $ref: '#/components/schemas/Invitation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     get:
       operationId: GetInvitations
       summary: Get Invitations
       description: >-
         GetInvitations returns a paginated list of invitations for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/InvitationsPage"
+                  $ref: '#/components/schemas/InvitationsPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/invitations/{invitation_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/invitation_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/invitation_id'
     delete:
       operationId: DeleteInvitation
       summary: Delete Invitation
@@ -511,18 +511,18 @@ paths:
         DeleteInvitation deletes an invitation for the given Organisation. This is typically used to invalidate an
         invitation which is no longer required.
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/invitations/{invitation_id}/accept:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/invitation_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/invitation_id'
     put:
       operationId: AcceptInvitation
       summary: Accept Invitation
@@ -530,85 +530,85 @@ paths:
         AcceptInvitation accepts an invitation for the given Organisation. The authenticated user email must match the
         email address of the invitation.
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/invitations/{invitation_id}/resend:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/invitation_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/invitation_id'
     put:
       operationId: ResendInvitation
       summary: Resend Invitation
       description: >-
         ResendInvitation resends an invitation for the given Organisation. This is typically used to resend an
-        invitation which has expired or was not received. Everytime an invitation is resent, the expiresAt time is 
+        invitation which has expired or was not received. Everytime an invitation is resent, the expiresAt time is
         updated to 7 days from the current time.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/InvitationResend"
+              $ref: '#/components/schemas/InvitationResend'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Invitation"
+                $ref: '#/components/schemas/Invitation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/active:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     put:
       operationId: SetActiveOrganisation
       summary: Set Active Organisation
       description: >-
         SetActiveOrganisation sets the active Organisation for the current user and returns said Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Organisation"
+                $ref: '#/components/schemas/Organisation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/billing:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     get:
       operationId: GetBilling
       summary: Get Billing
       description: >-
         GetBilling returns the billing information for the given Organisation.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Billing"
+                $ref: '#/components/schemas/Billing'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     put:
       operationId: UpdateBillingDetails
       summary: Update Billing Details such as billing email
@@ -630,69 +630,69 @@ paths:
                 platformID:
                   type: string
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/billing/invoices:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/from"
-      - $ref: "#/components/parameters/to"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/from'
+      - $ref: '#/components/parameters/to'
     get:
       operationId: GetInvoices
       summary: Get Invoices
       description: >-
-        GetInvoices returns a paginated list of invoices for the given Organisation. The query parameters `from` and `to` can be
-        used to filter the invoices returned. If no query parameters are provided, this endpoint will return the upcoming
-        invoice. If to is not provided, it will default to the current date. If from is not provided, it will default to
-        a calendar month before the current date.
+        GetInvoices returns a paginated list of invoices for the given Organisation. The query parameters `from` and
+        `to` can be used to filter the invoices returned. If no query parameters are provided, this endpoint will return
+        the upcoming invoice. If to is not provided, it will default to the current date. If from is not provided, it
+        will default to a calendar month before the current date.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Invoice"
+                  $ref: '#/components/schemas/Invoice'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/billing/update-subscription:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     put:
       operationId: UpdateSubscription
       summary: Update Subscription
       description: >-
-        UpdateSubscription updates the subscription for the given Organisation. This endpoint can be used to increase the
-        board quota of an organisation. It will update the billing information to reflect the amount of boards that are
-        allowed to be published.
+        UpdateSubscription updates the subscription for the given Organisation. This endpoint can be used to increase
+        the board quota of an organisation. It will update the billing information to reflect the amount of boards that
+        are allowed to be published.
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateSubscriptionRequest"
+              $ref: '#/components/schemas/UpdateSubscriptionRequest'
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /organisations/{organisation_id}/billing/checkout-session:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: CreateCheckoutSession
       summary: Create Checkout Session
@@ -712,7 +712,7 @@ paths:
                   type: string
                   format: uri
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
@@ -726,7 +726,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /slug/{slug}/availability:
     get:
       operationId: GetSlugAvailability
@@ -746,13 +746,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SlugAvailability"
+                $ref: '#/components/schemas/SlugAvailability'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
   /billing-webhooks:
     post:
       operationId: BillingWebhooks
@@ -848,12 +848,12 @@ components:
         permissions:
           type: array
           items:
-            $ref: "#/components/schemas/Permission"
+            $ref: '#/components/schemas/Permission'
         scopes:
           description: >-
-            Scope defines which resources the role can be bound to, i.e. "organisation", "switchboard" etc. Resources 
-            are hierarchical, meaning that if a role is bound to an Organisation, it will be inherited by all resources 
-            owned by that organisation, whereas if it is bound to an individual child resource such as a Switchboard 
+            Scope defines which resources the role can be bound to, i.e. "organisation", "switchboard" etc. Resources
+            are hierarchical, meaning that if a role is bound to an Organisation, it will be inherited by all resources
+            owned by that organisation, whereas if it is bound to an individual child resource such as a Switchboard
             board, it will only apply to that board.
           type: array
           items:
@@ -885,9 +885,9 @@ components:
       type: object
       properties:
         role:
-          $ref: "#/components/schemas/Role"
+          $ref: '#/components/schemas/Role'
         resource:
-          $ref: "#/components/schemas/ResourceReference"
+          $ref: '#/components/schemas/ResourceReference'
     Group:
       description: >-
         Group is a collection of members of an Organisation. Groups can be used to manage access to resources within an
@@ -911,17 +911,17 @@ components:
           description: RoleBindings are the list of roles bindings granted to this Group.
           type: array
           items:
-            $ref: "#/components/schemas/RoleBinding"
+            $ref: '#/components/schemas/RoleBinding'
     GroupsPage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             groups:
               type: array
               items:
-                $ref: "#/components/schemas/Group"
+                $ref: '#/components/schemas/Group'
     GroupCreate:
       type: object
       properties:
@@ -960,8 +960,8 @@ components:
           pattern: ^[a-z][a-z0-9-_.]*$
         email:
           description: >-
-            Email is the email address of the ServiceAccount. This is used to easily identify the ServiceAccount when 
-            viewing in the UI or observing logs. The email address is generated from the name, suffixed with 
+            Email is the email address of the ServiceAccount. This is used to easily identify the ServiceAccount when
+            viewing in the UI or observing logs. The email address is generated from the name, suffixed with
             `@sa.ORG_SLUG.versori.com`.
         clientId:
           type: string
@@ -971,17 +971,17 @@ components:
           description: RoleBindings are the list of roles bindings granted to this ServiceAccount.
           type: array
           items:
-            $ref: "#/components/schemas/RoleBinding"
+            $ref: '#/components/schemas/RoleBinding'
     ServiceAccountsPage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             serviceAccounts:
               type: array
               items:
-                $ref: "#/components/schemas/ServiceAccount"
+                $ref: '#/components/schemas/ServiceAccount'
     ServiceAccountCreate:
       type: object
       properties:
@@ -1061,13 +1061,13 @@ components:
     InvitationsPage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             invitations:
               type: array
               items:
-                $ref: "#/components/schemas/Invitation"
+                $ref: '#/components/schemas/Invitation'
     InvitationCreate:
       type: object
       properties:
@@ -1156,7 +1156,7 @@ components:
           description: RoleBindings are the list of roles bindings granted to this Member.
           type: array
           items:
-            $ref: "#/components/schemas/RoleBinding"
+            $ref: '#/components/schemas/RoleBinding'
       required:
         - id
         - identityType
@@ -1168,13 +1168,13 @@ components:
     MembersPage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             members:
               type: array
               items:
-                $ref: "#/components/schemas/Member"
+                $ref: '#/components/schemas/Member'
     Subscription:
       description: >-
         Subscription contains information of the actual subscription in Versori's internal billing platform.
@@ -1194,7 +1194,7 @@ components:
         rawData:
           description: >-
             RawData is the underlying subscription object from the billing platform. This will typically be a Stripe
-            [Subscription](https://stripe.com/docs/api/subscriptions/object) but is implied from the 
+            [Subscription](https://stripe.com/docs/api/subscriptions/object) but is implied from the
             `Billing#platformType` property.
     Billing:
       description: >-
@@ -1231,12 +1231,12 @@ components:
             subscriptions, if there are more then the GetSubscriptions operation (to be implemented) should be used.
           type: array
           items:
-            $ref: "#/components/schemas/Subscription"
+            $ref: '#/components/schemas/Subscription'
         isSubscriptionActive:
           description: >-
-            IsSubscriptionActive is true if the Organisation has an active subscription, otherwise false.
-            An active subscription is a valid subscription on a free trial or one that has up-to-date payment methods.
-            A value of 1 means the subscription is active.
+            IsSubscriptionActive is true if the Organisation has an active subscription, otherwise false. An active
+            subscription is a valid subscription on a free trial or one that has up-to-date payment methods. A value of
+            1 means the subscription is active.
           type: integer
           x-go-type: int8
         hasMoreSubscriptions:
@@ -1268,15 +1268,15 @@ components:
           type: boolean
         boardQuota:
           description: >-
-            BoardQuota is the maximum number of Switchboard boards (NOT including hub boards) the Organisation is allowed to have. This is
-            determined by the quantity of boards that are on the Organisation's subscription. It is also used to determine
-            the amount of free executions and users that an organisation is allowed.
+            BoardQuota is the maximum number of Switchboard boards (NOT including hub boards) the Organisation is
+            allowed to have. This is determined by the quantity of boards that are on the Organisation's subscription.
+            It is also used to determine the amount of free executions and users that an organisation is allowed.
           type: integer
         hubBoardQuota:
           description: >-
-            HubBoardQuota is the maximum number of Hub boards the Organisation is allowed to have. This is
-            determined by the quantity of hub boards that are on the Organisation's subscription. It is also used to determine
-            the amount of free executions and users that an organisation is allowed.
+            HubBoardQuota is the maximum number of Hub boards the Organisation is allowed to have. This is determined by
+            the quantity of hub boards that are on the Organisation's subscription. It is also used to determine the
+            amount of free executions and users that an organisation is allowed.
           type: integer
       required:
         - platformId
@@ -1302,11 +1302,11 @@ components:
         owner:
           type: string
         billing:
-          $ref: "#/components/schemas/Billing"
+          $ref: '#/components/schemas/Billing'
         systemServiceAccountClientID:
           description: >-
             SystemServiceAccountClientID is the client ID of the system service account for this Organisation. This is
-            automatically created when the Organisation is created and is used by internal services which must 
+            automatically created when the Organisation is created and is used by internal services which must
             authenticate on behalf of the Organisation. It cannot be deleted.
           type: string
         plan:
@@ -1323,13 +1323,13 @@ components:
     OrganisationsPage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             organisations:
               type: array
               items:
-                $ref: "#/components/schemas/Organisation"
+                $ref: '#/components/schemas/Organisation'
     OrganisationCreate:
       type: object
       properties:
@@ -1374,16 +1374,18 @@ components:
         name:
           type: string
           description: Name of the public key.
-          example: "Organisation Public Key 1"
+          example: 'Organisation Public Key 1'
         publicKey:
           type: string
           description: The public key in PEM format.
-          example: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvZgZz...==\n-----END PUBLIC KEY-----"
+          example:
+            "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvZgZz...==\n-----END PUBLIC
+            KEY-----"
         createdAt:
           type: string
           format: date-time
           description: Timestamp when the public key was created.
-          example: "2023-01-01T12:00:00Z"
+          example: '2023-01-01T12:00:00Z'
       required:
         - createdAt
         - publicKey
@@ -1411,7 +1413,7 @@ components:
         name:
           type: string
           description: Name of the public key.
-          example: "Organisation Public Key 1"
+          example: 'Organisation Public Key 1'
         publicKey:
           type: string
           description: The public key in PEM format.
@@ -1422,7 +1424,7 @@ components:
           type: string
           format: date-time
           description: Timestamp when the public key was created.
-          example: "2023-01-01T12:00:00Z"
+          example: '2023-01-01T12:00:00Z'
       required:
         - createdAt
         - privateKey
@@ -1435,7 +1437,7 @@ components:
         keys:
           type: array
           items:
-            $ref: "#/components/schemas/PublicKey"
+            $ref: '#/components/schemas/PublicKey'
       required:
         - keys
     UpdateSubscriptionRequest:
@@ -1443,8 +1445,8 @@ components:
       properties:
         boardQuota:
           description: >-
-            BoardQuota is the maximum number of Switchboard boards the Organisation is allowed to publish.
-            It is also used to determine the amount of free executions and users that an organisation is allowed.
+            BoardQuota is the maximum number of Switchboard boards the Organisation is allowed to publish. It is also
+            used to determine the amount of free executions and users that an organisation is allowed.
           type: integer
         boardType:
           description: >-
@@ -1463,14 +1465,14 @@ components:
           type: string
           format: date
         totalAmount:
-          $ref: "#/components/schemas/MonetaryValue"
+          $ref: '#/components/schemas/MonetaryValue'
         invoiceURL:
           type: string
           format: uri
         productBreakdowns:
           type: array
           items:
-            $ref: "#/components/schemas/ProductBreakdown"
+            $ref: '#/components/schemas/ProductBreakdown'
         usageStatistics:
           type: object
           x-go-type: map[string]int
@@ -1495,7 +1497,7 @@ components:
         quantity:
           type: integer
         total:
-          $ref: "#/components/schemas/MonetaryValue"
+          $ref: '#/components/schemas/MonetaryValue'
       required:
         - productName
         - quantity

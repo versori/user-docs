@@ -18,6 +18,7 @@ This quickstart guuide uses our React SDK to embed a native integration hub into
 
     - There is no pagination support for the integration hub as of now
     - Dynamic Variables are not supported
+
 </Warning>
 
 Before you start, it's expected that you already have a React application. If not, we recommend using
@@ -33,6 +34,7 @@ npm install @versori/embed-react
 ```bash yarn
 yarn add @versori/embed-react
 ```
+
 </CodeGroup>
 
 <Warning>
@@ -64,7 +66,7 @@ export function Component({ orgId, token }: ComponentProps) {
                 endUserAuth: {
                     type: 'jwt',
                     token,
-                }
+                },
             }}
         >
             <VersoriEmbeddedRenderer />
@@ -73,7 +75,10 @@ export function Component({ orgId, token }: ComponentProps) {
 }
 ```
 
-The `token` in the above example is a JWT with the subject claim set to the `externalId` of the End User. The `VersoriEmbeddedProvider` then knows which environments the End User is activated on, and will display the relevant integrations in the UI. You can see the [Security](/v2/embedded/security) section for more information on how to generate this token.
+The `token` in the above example is a JWT with the subject claim set to the `externalId` of the End User. The
+`VersoriEmbeddedProvider` then knows which environments the End User is activated on, and will display the relevant
+integrations in the UI. You can see the [Security](/v2/embedded/security) section for more information on how to
+generate this token.
 
 This example is the most minimal setup required to get started. The `VersoriEmbeddedProvider` component configures an
 `EmbedClient` instance and exposes it over a React context. The `VersoriEmbeddedRenderer` component is a pre-built
@@ -88,5 +93,6 @@ repository.
 
 [sdk-repo]: https://github.com/versori/versori-js-sdk
 
-This repository also contains an example React application with the SDK along with an example client website that uses Cookies to store the JWT token so that it is persisted across page reloads and redirects to the Embedded Integration Hub.
-
+This repository also contains an example React application with the SDK along with an example client website that uses
+Cookies to store the JWT token so that it is persisted across page reloads and redirects to the Embedded Integration
+Hub.

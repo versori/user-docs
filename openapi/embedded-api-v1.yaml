@@ -2343,7 +2343,8 @@ components:
             in:
               $ref: '#/components/schemas/AuthSchemeConfigHMACIn'
             algorithm:
-              description: AuthSchemeConfigHMACAlgorithm defines the hashing algorithm to use when generating the HMAC signature.
+              description:
+                AuthSchemeConfigHMACAlgorithm defines the hashing algorithm to use when generating the HMAC signature.
               type: string
               enum:
                 - sha1
@@ -2687,7 +2688,9 @@ components:
         - type
         - data
     ConnectionCredentialCreate:
-      description: ConnectionCredentialCreate contains an AuthSchemeConfig and either a Credential to create, or a reference to  an existing Credential to define how the connection should authenticate to a Connector.
+      description:
+        ConnectionCredentialCreate contains an AuthSchemeConfig and either a Credential to create, or a reference to  an
+        existing Credential to define how the connection should authenticate to a Connector.
       properties:
         authSchemeConfig:
           $ref: '#/components/schemas/AuthSchemeConfig'
@@ -2898,7 +2901,9 @@ components:
         - name
         - data
     ConnectionCredential:
-      description: ConnectionCredential contains the a Credential and the AuthSchemeConfig to define how the Credential should be used against the Connection's Connector.
+      description:
+        ConnectionCredential contains the a Credential and the AuthSchemeConfig to define how the Credential should be
+        used against the Connection's Connector.
       type: object
       properties:
         id:

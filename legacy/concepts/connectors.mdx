@@ -11,12 +11,12 @@ import AuthenticationMethodsOverview from '/snippets/connectors/authentication-m
 
 Connectors are broken down into smaller pieces:
 
--   Protocol and protocol-specific metadata
--   Authentication Methods
--   Versions
--   Definitions
--   Actions
--   Triggers
+- Protocol and protocol-specific metadata
+- Authentication Methods
+- Versions
+- Definitions
+- Actions
+- Triggers
 
 ## Connector Protocols
 
@@ -46,10 +46,10 @@ Version.
 
 There are three main types of resources which exist within a Connector Version:
 
--   [Action](./connectors/actions) - defines how Versori can perform some operation against an external system, such as
-    making an HTTP request.
--   [Trigger](./connectors/triggers) - defines how an external system can perform a request to Versori, such as an HTTP
-    webhook from an external service.
--   [Definition](./connectors/definitions) - defines the data structures used by the action or trigger. For example,
-    HTTP actions and triggers may contain definitions for each of the request and response bodies. Versori supports
-    definitions in JSON Schema or XSD.
+- [Action](./connectors/actions) - defines how Versori can perform some operation against an external system, such as
+  making an HTTP request.
+- [Trigger](./connectors/triggers) - defines how an external system can perform a request to Versori, such as an HTTP
+  webhook from an external service.
+- [Definition](./connectors/definitions) - defines the data structures used by the action or trigger. For example, HTTP
+  actions and triggers may contain definitions for each of the request and response bodies. Versori supports definitions
+  in JSON Schema or XSD.

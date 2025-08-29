@@ -9,13 +9,13 @@ Connect API allows you to connect to your external systems to the Versori Platfo
 
 The main component of the Connect API are Connectors. Connectors are split into the following components:
 
--   Protocol
--   Authentication Scheme
--   Connections
--   Global Parameters
--   Actions
--   Triggers
--   Definitions
+- Protocol
+- Authentication Scheme
+- Connections
+- Global Parameters
+- Actions
+- Triggers
+- Definitions
 
 ## Protocol
 
@@ -23,7 +23,8 @@ The protocol defines the transport mechanism used to communicate with your exter
 
 <Note>
     Currently, only HTTP/REST APIs are supported within Connect API, however our legacy "Apps" functionality is
-    available on [Switchboard API](/legacy/api-reference/switchboard-api) which supports GraphQL APIs and SOAP web services.
+    available on [Switchboard API](/legacy/api-reference/switchboard-api) which supports GraphQL APIs and SOAP web
+    services.
 </Note>
 
 ## Authentication Scheme
@@ -35,11 +36,11 @@ schemes are applicable to different protocols.
 
 The following authentication schemes are supported for HTTP:
 
--   OAuth 2.0
--   OIDC
--   API Key (in header, query or cookie)
--   Basic
--   Bearer
+- OAuth 2.0
+- OIDC
+- API Key (in header, query or cookie)
+- Basic
+- Bearer
 
 ## Connections
 
@@ -65,9 +66,9 @@ reflect the change, with the ability to choose all, some or none.
 
 For HTTP Connectors, the following parameter types may be set as Global Parameters:
 
--   Path parameters
--   Query parameters
--   Headers
+- Path parameters
+- Query parameters
+- Headers
 
 ## Actions
 
@@ -84,15 +85,15 @@ overridden when used within other Versori products. Default values can be define
 
 The supported HTTP inputs are:
 
--   Path parameters
--   Query parameters
--   Headers
--   Request body Definitions (one per supported media-type)
+- Path parameters
+- Query parameters
+- Headers
+- Request body Definitions (one per supported media-type)
 
 The Action can also define outputs:
 
--   Headers
--   Status Codes, and their associated Response body Definitions (one per supported media-type)
+- Headers
+- Status Codes, and their associated Response body Definitions (one per supported media-type)
 
 ## Triggers
 
@@ -117,9 +118,9 @@ dealing with input/output data between connectors.
 Each definition has a media-type and an associated schema. Which schema implementation is used depends on the
 media-type, we initially support the following:
 
--   `application/json`, defined by JSON Schemas.
--   `text/xml`, defined by XML Schema Definitions (XSDs).
--   `text/csv`, how this is defined isn't known yet, however there are discussions in JIRA about this.
+- `application/json`, defined by JSON Schemas.
+- `text/xml`, defined by XML Schema Definitions (XSDs).
+- `text/csv`, how this is defined isn't known yet, however there are discussions in JIRA about this.
 
 ## Versioning
 

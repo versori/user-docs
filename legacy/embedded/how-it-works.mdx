@@ -4,10 +4,10 @@ title: How It Works
 
 Versori Embedded is broken down into the following key concepts:
 
--   Hubs
--   Integrations
--   End Users
--   Activations
+- Hubs
+- Integrations
+- End Users
+- Activations
 
 ## Hubs
 
@@ -16,12 +16,12 @@ only require a single Hub, however using multiple is possible.
 
 ### Primary Connector
 
-Each Hub is created with a Primary Connector, this is a [Connector](/legacy/concepts/connectors) that represents your own
-application for which the integration hub is built around.
+Each Hub is created with a Primary Connector, this is a [Connector](/legacy/concepts/connectors) that represents your
+own application for which the integration hub is built around.
 
 When defining your Primary Connector, if there are multiple
-[Authentication Methods](/legacy/concepts/connectors/authentication-methods) available, you will also choose which method
-should be used by your End Users.
+[Authentication Methods](/legacy/concepts/connectors/authentication-methods) available, you will also choose which
+method should be used by your End Users.
 
 ### Secondary Connectors
 
@@ -37,11 +37,11 @@ If this functionality is required, please reach out to support to discuss your r
 
 ## Integrations
 
-An Integration is implemented as a [Board](/legacy/concepts/boards) which defines workflows and data transformations between
-your Primary Connector (and if applicable, any Secondary Connectors) and other external Connectors. However, these
-Boards are different to regular boards created through [Versori Integrate](/legacy/integrate) in that Connections do not need
-to be defined before deploying the Integration. Instead these Boards use Connection Templates, which define how an End
-User should connect to the Connector.
+An Integration is implemented as a [Board](/legacy/concepts/boards) which defines workflows and data transformations
+between your Primary Connector (and if applicable, any Secondary Connectors) and other external Connectors. However,
+these Boards are different to regular boards created through [Versori Integrate](/legacy/integrate) in that Connections
+do not need to be defined before deploying the Integration. Instead these Boards use Connection Templates, which define
+how an End User should connect to the Connector.
 
 ### Connection Templates
 
@@ -50,9 +50,9 @@ as a Connection Template. When an End User activates an Integration, they must p
 Connection Template in that Integration.
 
 When a Connection Template is created, if the connector supports multiple
-[Authentication Methods](/legacy/concepts/connectors/authentication-methods), you also must choose which method should be
-used by your End Users. When building your embedded integration hub in your own application, you may choose to override
-this method when creating a Connection for an End User.
+[Authentication Methods](/legacy/concepts/connectors/authentication-methods), you also must choose which method should
+be used by your End Users. When building your embedded integration hub in your own application, you may choose to
+override this method when creating a Connection for an End User.
 
 ## End Users
 
@@ -77,5 +77,5 @@ UI elements of your integration hub before the user actually exists within Verso
 
 An Activation maintains the state that an End User has activated an Integration. In order to create an Activation, the
 End User must provide connection details for each Connection Template in that Integration. This may be achieved by
-referencing an existing [Connection](/legacy/concepts/connectors/connections) which the End User has already created, or by
-creating a new one.
+referencing an existing [Connection](/legacy/concepts/connectors/connections) which the End User has already created, or
+by creating a new one.
