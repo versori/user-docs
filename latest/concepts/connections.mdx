@@ -1,0 +1,22 @@
+---
+title: Connections
+sidebarTitle: Connections
+---
+
+Connections bind environment‑specific credentials and settings to a Connector. They are what Projects use at runtime to call external systems.
+
+Key concepts:
+
+- **Credentials**: API keys, OAuth tokens, or custom secrets. Store securely and rotate regularly.
+- **Environment config**: Sandbox vs production endpoints, feature flags, and rate‑limit policies.
+- **Reusability**: Multiple Projects can use the same Connection when appropriate.
+
+Lifecycle:
+
+1. Create a Connection for a Connector.
+2. Validate auth with a simple read operation.
+3. Attach the Connection to a Project.
+
+Related: [Connectors](../concepts/connectors)
+
+

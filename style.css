@@ -1,0 +1,7 @@
+#content-area.max-w-xl {
+    max-width: 64rem;
+}
+
+.whitespace-pre-line {
+    white-space: unset;
+}

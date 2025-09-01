@@ -1,0 +1,91 @@
+---
+title: Starting your plan
+---
+
+The first step in building an integration is to plan the scope, this includes:
+
+- **Systems and auth**: Identify source/target systems and authentication methods.
+- **Business requirements**: What are you trying to achieve?
+- **Type of integration**: Is this a real-time integration, a batch job, a bidirectional data sync, and/or a
+  multi-tenant integration?
+- **Data model and mappings**: List objects and fields you need, with examples and edge cases.
+
+Users start by providing as much information about their integration as possible and uploading any attachments, this can
+include screenshots, diagrams, PDF/Word documents, or even OpenAPI specifications.
+
+<Frame>
+    <img src="/images/guides/plan/getting-started-001.png" />
+</Frame>
+
+Once the details above are submitted, Versori uses AI to perform in-depth research of the requirements and provides a
+detailed plan of how the integration will be implemented.
+
+## Research stage
+
+<Steps>
+    <Step title="Extract, Analyse & Search">
+        Versori analyses all the information provided by the user, and extracts all relevant information, including
+        scraping any URLs which may be included in the attachments or text provided by the user.
+
+        This data is then analysed to identify any gaps in information which need to be filled.
+
+        Additional web searches are performed to fill in any gaps in information, this may identify additional sources
+        which can be extracted and analysed in a loop until the agent is satisfied that all information has been
+        gathered.
+
+        This produces two documents, an integration summary and technical resources.
+
+        <Frame>
+            <img src="/images/guides/plan/research-agent-001.png" />
+        </Frame>
+    </Step>
+    <Step title="Questions">
+        The user is prompted to answer any outstanding questions which cannot be answered by the information
+        gathered.
+
+        These questions vary in importance, some questions are highly recommended to be answered before continuing,
+        but other questions can be left blank and Versori will make assumptions based on the other information
+        gathered.
+
+        <Frame>
+            <img src="/images/guides/plan/questions-001.png" />
+        </Frame>
+
+        For more information on answering questions, see the [Questions](/latest/guides/getting-started/plan/questions) guide.
+    </Step>
+    <Step title="Next Steps">
+        At this point, the user may choose next steps, either to start building the integration, or to refine the
+        requirements by answering the outstanding questions and/or prompting with more
+
+        <Frame>
+            <img src="/images/guides/plan/next-steps-001.png" />
+        </Frame>
+    </Step>
+
+</Steps>
+
+## Connect
+
+<Note>
+    It's possible the research stage has not identified all the systems which need to be connected, in this case you
+    must prompt the research agent to identify any additional systems, providing more information if necessary.
+</Note>
+
+After the initial research step, you may notice the "Connect" tab has a badge denoting the number of Systems which have
+been identified and requires configuration.
+
+<Frame>
+    <img src="/images/guides/plan/connect-toolbar-001.png" />
+</Frame>
+
+Our [Connect](/latest/guides/getting-started/connect) guide covers how to connect your systems, and how to manage these
+connections over time.
+
+## Generate Workflows
+
+In addition to the Systems which require connecting, there is also a call-to-action to "Generate Workflows", which will
+generate separate requirements prompts for each of the workflows which have been identified for your integration.
+
+These prompts can then be entered into the "Build" tab to start building the actual workflows.
+
+Our [Build](/latest/guides/getting-started/build) guide covers the Build tab and its capabilities.

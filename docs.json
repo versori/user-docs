@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "almond",
   "name": "Versori User Documentation",
   "colors": {
     "primary": "#006089",
@@ -10,6 +10,145 @@
   "favicon": "/logo/versori-logo.svg",
   "navigation": {
     "versions": [
+      {
+        "version": "Latest",
+        "tabs": [
+          {
+            "tab": "Home",
+            "pages": [
+              "latest/home",
+              {
+                "group": "How it works",
+                "pages": [
+                  "latest/how-it-works/plan",
+                  "latest/how-it-works/connect",
+                  "latest/how-it-works/build",
+                  "latest/how-it-works/deploy"
+                ]
+              },
+              {
+                "group": "Concepts",
+                "pages": [
+                  "latest/concepts/connectors",
+                  "latest/concepts/connections",
+                  "latest/concepts/run-sdk",
+                  "latest/concepts/deployment"
+                ]
+              },
+              {
+                "group": "Releases",
+                "pages": [
+                  {
+                    "group": "Release notes",
+                    "pages": ["latest/releases/2025/08/plan-connect-build-deploy"]
+                  },
+                  "latest/changelog"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "User Guide",
+            "anchors": [
+              {
+                "anchor": "Getting Started",
+                "pages": [
+                  {
+                    "group": "Plan",
+                    "pages": ["latest/guides/getting-started/plan", "latest/guides/getting-started/plan/questions"]
+                  },
+                  {
+                    "group": "Connect",
+                    "pages": ["latest/guides/getting-started/connect"]
+                  },
+                  {
+                    "group": "Build",
+                    "pages": ["latest/guides/getting-started/build"]
+                  },
+                  {
+                    "group": "Deploy",
+                    "pages": ["latest/guides/getting-started/deploy"]
+                  }
+                ]
+              },
+              {
+                "anchor": "Use cases",
+                "pages": [
+                  "latest/guides/use-cases/real-time",
+                  "latest/guides/use-cases/batch",
+                  "latest/guides/use-cases/bidirectional",
+                  "latest/guides/use-cases/multi-tenancy"
+                ]
+              },
+              {
+                "anchor": "Authentication Methods",
+                "pages": [
+                  "latest/guides/auth-methods/introduction",
+                  {
+                    "group": "Methods",
+                    "pages": [
+                      "latest/guides/auth-methods/http",
+                      "latest/guides/auth-methods/api-key",
+                      {
+                        "group": "OAuth 2.0",
+                        "pages": [
+                          "latest/guides/auth-methods/oauth2",
+                          "latest/guides/auth-methods/oauth2/authorization-code",
+                          "latest/guides/auth-methods/oauth2/client-credentials"
+                        ]
+                      },
+                      {
+                        "group": "OAuth 1.0",
+                        "pages": ["latest/guides/auth-methods/oauth1"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Run SDK"
+          },
+          {
+            "tab": "API Reference",
+            "anchors": [
+              {
+                "anchor": "Overview",
+                "pages": ["latest/api-reference/getting-started", "latest/api-reference/authentication"]
+              },
+              {
+                "anchor": "Platform API",
+                "icon": "cloud",
+                "pages": [
+                  "latest/api-reference/platform-api/getting-started",
+                  {
+                    "group": "API Reference",
+                    "openapi": {
+                      "source": "openapi/platform-api.yaml",
+                      "directory": "api-reference/platform-api"
+                    }
+                  }
+                ]
+              },
+              {
+                "anchor": "Organisations API",
+                "icon": "users",
+                "pages": [
+                  "latest/api-reference/organisations-api/getting-started",
+                  {
+                    "group": "API Reference",
+                    "openapi": {
+                      "source": "openapi/organisations-api-v1.yaml",
+                      "directory": "api-reference/organisations-api"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
       {
         "version": "Legacy",
         "tabs": [
@@ -654,6 +793,9 @@
       }
     }
   },
+  "interaction": {
+    "drilldown": false
+  },
   "background": {
     "decoration": "gradient",
     "color": {
@@ -666,16 +808,19 @@
   },
   "redirects": [
     {
-      "source": "/v1/*",
-      "destination": "/legacy/*"
+      "source": "/v1/:path*",
+      "destination": "/legacy/:path*",
+      "permanent": true
     },
     {
-      "source": "/v1alpha1/api-reference/*",
-      "destination": "/legacy/api-reference/*"
+      "source": "/v1alpha1/api-reference/:path*",
+      "destination": "/legacy/api-reference/:path*",
+      "permanent": true
     },
     {
-      "source": "/v1alpha1/*",
-      "destination": "/legacy/switchboard/*"
+      "source": "/v1alpha1/:path*",
+      "destination": "/legacy/switchboard/:path*",
+      "permanent": true
     }
   ]
 }
