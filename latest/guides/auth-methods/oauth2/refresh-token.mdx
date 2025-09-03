@@ -1,0 +1,18 @@
+---
+title: Refresh Token
+---
+
+## Refresh Token
+
+The `refresh_token` grant is used to refresh an access token when it expires. This is a standard OAuth 2.0 grant type
+and is supported by most systems.
+
+Users do not typically need to configure this grant type manually, and instead use the
+[`authorization_code`](/latest/guides/auth-methods/oauth2/authorization-code) or
+[`client_credentials`](/latest/guides/auth-methods/oauth2/client-credentials) grant types.
+
+<Info>
+Creating new [Connections](/latest/guides/getting-started/connect) using the `refresh_token` grant type directly is not
+supported via our UI, but can be created manually via the
+[CreateConnection](/api-reference/platform-api/create-connection) using the `oauth2-token` credential type.
+</Info>

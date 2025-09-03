@@ -59,7 +59,7 @@
                   },
                   {
                     "group": "Connect",
-                    "pages": ["latest/guides/getting-started/connect"]
+                    "pages": ["latest/guides/getting-started/connect", "latest/guides/getting-started/connect/bypass-auth"]
                   },
                   {
                     "group": "Build",
@@ -68,6 +68,10 @@
                   {
                     "group": "Deploy",
                     "pages": ["latest/guides/getting-started/deploy"]
+                  },
+                  {
+                    "group": "Miscellaneous",
+                    "pages": ["latest/guides/getting-started/misc/prompting-tips"]
                   }
                 ]
               },
@@ -94,7 +98,9 @@
                         "pages": [
                           "latest/guides/auth-methods/oauth2",
                           "latest/guides/auth-methods/oauth2/authorization-code",
-                          "latest/guides/auth-methods/oauth2/client-credentials"
+                          "latest/guides/auth-methods/oauth2/client-credentials",
+                          "latest/guides/auth-methods/oauth2/password-resource-owner",
+                          "latest/guides/auth-methods/oauth2/refresh-token"
                         ]
                       },
                       {
@@ -104,6 +110,10 @@
                     ]
                   }
                 ]
+              },
+              {
+                "anchor": "Advanced",
+                "pages": ["latest/guides/advanced/ip-allowlist"]
               }
             ]
           },

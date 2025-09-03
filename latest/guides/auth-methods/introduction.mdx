@@ -3,4 +3,55 @@ title: Authentication Methods
 sidebarTitle: Introduction
 ---
 
-TBA
+Versori supports most standard authentication methods as well as partial support for custom methods. Whilst users are
+in full control of the integration code, it's recommended to utlise Versori's [Run SDK](/latest/run-sdk) to interact
+with external systems as this simplifies the integration logic as well as providing a more consistent and secure way
+of managing credentials.
+
+<Note>
+Versori integrations are implemented in TypeScript and powered by [Deno](https://deno.com/), this means that you can
+implement an integration to any system which supports HTTP. However for these edge cases, users are required to 
+implement manual logic to apply authentication to any external requests (either by prompting or manually editing the 
+code). See the [Run SDK](/latest/run-sdk/context/credentials) guide for more details on how to achieve this.
+</Note>
+
+## Supported Methods
+
+### OAuth 2.0
+
+OAuth 2.0 is a standard authentication method for web applications, and is the one most recommended to use where the
+system being integrated supports it. 
+
+Versori supports the following OAuth 2.0 Grant Types:
+
+- [Authorization Code](/latest/guides/auth-methods/oauth2/authorization-code)
+- [Client Credentials](/latest/guides/auth-methods/oauth2/client-credentials)
+- [Password/Resource Owner](/latest/guides/auth-methods/oauth2/password-resource-owner)
+- [Refresh Token](/latest/guides/auth-methods/oauth2/refresh-token)
+
+See our [OAuth 2.0](/latest/guides/auth-methods/oauth2) guide for more details on how to configure each of these grant 
+types.
+
+### API Key
+
+API Key is a standard authentication method for API applications. Versori supports arbitrary API keys which can be set
+in the header, query string or cookie.
+
+### HTTP Authorization
+
+HTTP Authorization is a standard authentication method for HTTP applications where the credential is set in the 
+"Authorization" header. Versori supports the following authorization schemes:
+
+- Bearer
+- Basic
+
+
+### OAuth 1.0
+
+OAuth 1.0 is a legacy authentication standard used in many enterprise, or more legacy, systems. 
+
+<Note>
+Our implementation has been tested against Netsuite's TBA implementation but should work with most other 
+implementations. If you run into any issues with OAuth 1.0 authentication, please reach out to support.
+</Note>
+
