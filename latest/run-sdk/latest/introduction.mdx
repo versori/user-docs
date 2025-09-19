@@ -1,0 +1,109 @@
+---
+title: Run SDK
+sidebarTitle: Introduction
+---
+
+The Versori Run SDK is a TypeScript library that provides entrypoints into the Versori Platform for building and running
+integrations.
+
+<Info>
+    These sections are aimed at non-developer users who are building integrations via AI through the Versori Platform.
+    The information is purposefully simplified for non-developers to understand the structure of the SDK and provide
+    a glimpse into how Versori AI writes integrations.
+
+    For a more developer-focused introduction, see the [Developers](/latest/run-sdk/latest/developers/overview) section.
+</Info>
+
+## Quickstart
+
+There are two ways to trigger an integration, via a webhook sent by the system you are integrating from, or via a
+time-based schedule.
+
+### Webhooks
+
+The below example shows a webhook workflow which validates the request body contains a `question` field (we don't care
+what the question is), and then responds with the answer to the question.
+
+```typescript
+import { webhook, fn } from '@versori/run';
+
+const workflow1 = webhook('workflow1')
+    .then(
+        fn('validate-webhook', (ctx) => {
+            if (typeof ctx.body !== 'object' || !ctx.body.question) {
+                throw new Error('Invalid request body');
+            }
+
+            return;
+        })
+    )
+    .then(
+        fn('respond', () => {
+            return {
+                answer: 'The answer is 42',
+            };
+        })
+    );
+```
+
+### Schedules
+
+The below example shows a schedule workflow which runs every day at 10:00am (UTC), and logs a random number to the 
+console.
+
+<Note>
+    We use [crontab](https://crontab.guru/) expressions to define the time period for the schedule. Versori AI should be
+    capable of building your integrations to whatever schedule you need, however the link above is a useful tool to help
+    define your own expressions.
+</Note>
+
+```typescript
+import { schedule, fn } from '@versori/run';
+
+const workflow2 = schedule('workflow2', '0 10 * * *').then(
+    fn('log-random-number', ({ log }) => {
+        log.info('Generated random number', { number: Math.random() });
+
+        return;
+    })
+);
+```
+
+### Running workflows
+
+On it's own, declaring the workflows as above will not do anything. You need to register the workflows with an
+intepreter exported by the `@versori/run` package like so:
+
+```typescript
+import { webhook, schedule, fn, MemoryInterpreter } from '@versori/run';
+
+// Workflow 1 & 2 declarations...
+// ...
+
+async function main(): Promise<void> {
+    const interpreter = await MemoryInterpreter.newInstance();
+
+    interpreter.register(workflow1);
+    interpreter.register(workflow2);
+
+    await interpreter.start();
+}
+
+main().catch((err) => {
+    console.error('Versori Run SDK Error', err);
+});
+```
+
+The `MemoryInterpreter` is a simple interpreter that has no persistent state and can be horizontally scaled with ease. 
+Other intepreters are documented in the developer documentation, but it should not be a concern for most users, the 
+Versori Platform handles registering and starting workflows for you whenever workflows are added/updated/deleted from a 
+Project.
+
+## Next Steps
+
+Now that you have a basic understanding of how to build and run workflows, you can learn more about the different
+components of the SDK and how to use them to build more complex integrations.
+
+## See Also
+
+- [Run SDK](/latest/run-sdk/latest/developers/overview)

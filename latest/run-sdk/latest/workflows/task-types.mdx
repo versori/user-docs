@@ -1,0 +1,121 @@
+---
+title: Task Types
+---
+
+There are two types of tasks, entrypoint and chained tasks. 
+
+## Entrypoint tasks
+
+Entrypoint tasks can be created by a function call; there are currently two supported entrypoint tasks, `fn()` and 
+`http()`. [Anonymous tasks](#anonymous-tasks) are also a kind of entrypoint task.
+
+- `fn` - We've already explored above, and executes an arbitrary function.
+- `http` - This task takes a connection ID as a parameter, and the context object contains a `fetch` function which can 
+    be used to make authenticated HTTP requests to the external system without manually managing authentication.
+
+## Chained tasks
+
+Chained tasks are created by calling specific methods on an existing task. These are documented further in their own
+pages, but are listed below for convenience.
+
+- `then` - Adds an entrypoint task to run after the current task.
+- `catch` - Adds an entrypoint task to run if any task before this one fails.
+- `background` - Runs this task in the background and continues to run the next step as if it had returned `undefined`.
+- `unpack` - Expects the previous task to have returned an array-like object, and returns an `ArrayTask`. This allows 
+    running subsequent tasks against each element of the array rather than on the array itself, see 
+    [Array tasks](#array-tasks) below.
+
+## Array tasks
+
+Array tasks are different to other tasks in that they expect the previous task to have returned an array-like object, 
+and once completes returns another array to be used as input for the next task.
+
+There are two additional methods available on the `ArrayTask` object compared to other tasks, `parallel()` and 
+`serial()`. Both of these methods accept an entrypoint task to run against each element of the array,
+
+```typescript
+const workflow = schedule('array-task', '0 * * * *')
+    .then(
+        fn('serial', (ctx) => ["one", "two", "three"])
+          .unpack()
+          .serial((ctx) => {
+            ctx.log.info(`Processing ${ctx.data}`);
+
+            return ctx.data.length;
+          })
+    )
+    .then((ctx) => {
+        ctx.log.info(`Total length: ${ctx.data.reduce((acc, curr) => acc + curr, 0)}`);
+    });
+```
+
+In the example above, we're using the `unpack()` method to create an `ArrayTask` which will run the subsequent task 
+against each element of the array. We're then using the `serial()` method to run the task serially, which means the 
+task will be run against each element of the array one at a time in the order they appear in the original array.
+
+The output of the workflow will be (ignoring additional log fields like timestamp and level):
+
+```txt
+Processing one
+Processing two
+Processing three
+Total length: 6
+```
+
+The `parallel()` method is similar to `serial()`, but runs the task in parallel, which means the task will be run 
+against each element of the array at the same time:
+
+```typescript
+const workflow = schedule('array-task', '0 * * * *')
+    .then(
+        fn('parallel', (ctx) => ["one", "two", "three"])
+          .unpack()
+          .parallel((ctx) => {
+            ctx.log.info(`Processing ${ctx.data}`);
+
+            return ctx.data.length;
+          })
+    )
+    .then((ctx) => {
+        ctx.log.info(`Total length: ${ctx.data.reduce((acc, curr) => acc + curr, 0)}`);
+    });
+```
+
+The output of this example will be similar to the previous example, but the "Processing" logs may appear in any
+order.
+
+<Note>
+    Note that in both examples, the final `.then()` task is still executed after the `ArrayTask` has completed. For 
+    cases where this is not desired, you can use the `.background()` method to run the task in the background and 
+    continue to run the next step as if the current task had immediately returned `undefined`.
+    
+    See [Background](/latest/run-sdk/latest/workflows/background) for more information.
+</Note>
+
+## Anonymous tasks
+
+As we've seen, the `fn()` task takes a string parameter which defines a name for the task. It is possible to use 
+anonymous tasks by simply passing a function to the `then()` method, just like the Promise API.
+
+<Info>
+    Anonymous tasks are perfectly valid, and are often used for simple tasks that don't need a name. The benefits of 
+    using named `fn()` tasks are that the details are included in our observability tools which can make troubleshooting
+    easier.
+</Info>
+
+```typescript
+const workflow = webhook('upper-caser')
+    .then((ctx) => {
+        if (typeof ctx.body !== 'string') {
+            throw new Error('Body must be a string');
+        }
+
+        return ctx.body.toUpperCase();
+    });
+```
+
+In the example above, we're using an anonymous task to uppercases the body of the request. This is 
+functionally-identical to the previous example.
+
+Anonymous tasks may also be async functions, the rules on what can be returned are the same as for named `fn()` tasks as
+described by the [Inputs and outputs](/latest/run-sdk/latest/workflows/inputs-outputs) section.

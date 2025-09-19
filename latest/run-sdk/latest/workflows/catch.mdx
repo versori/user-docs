@@ -1,0 +1,33 @@
+---
+title: Catch
+---
+
+The `.catch()` method is used to add a task to the workflow that will run if any previous task fails. If the catch task
+throws an error or returns a rejected promise, workflow execution will skip to the next `.catch()` task in the workflow,
+or terminate with an execution error if no subsequent `.catch()` task is present.
+
+## Usage
+
+```typescript
+import { schedule, fn, ExecutionError } from '@versori/run';
+
+const workflow = schedule('catch-task', '0 * * * *')
+    .then(
+        fn('fail', (ctx) => {
+            throw new Error('Failed');
+        })
+    )
+    .catch(
+        fn('catch', (ctx) => {
+            // Caught error, error="Failed", cause=Error("Failed")
+            ctx.log.info('Caught error', { error: ctx.data.message, cause: ctx.data.cause });
+
+            // (ctx.data instanceof ExecutionError) === true
+        })
+    );
+```
+
+<Info>
+    Similar to other usages of the `fn()` function, the catch task can also be an anonymous function which receives a
+    Context object as it's first parameter, and can be async (or return a Promise directly).
+</Info>

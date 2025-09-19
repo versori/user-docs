@@ -59,7 +59,10 @@
                   },
                   {
                     "group": "Connect",
-                    "pages": ["latest/guides/getting-started/connect", "latest/guides/getting-started/connect/bypass-auth"]
+                    "pages": [
+                      "latest/guides/getting-started/connect",
+                      "latest/guides/getting-started/connect/bypass-auth"
+                    ]
                   },
                   {
                     "group": "Build",
@@ -118,7 +121,42 @@
             ]
           },
           {
-            "tab": "Run SDK"
+            "tab": "Run SDK",
+            "dropdowns": [
+              {
+                "dropdown": "Latest (0.3.x)",
+                "groups": [
+                  {
+                    "group": "Getting Started",
+                    "expanded": true,
+                    "pages": [
+                      "latest/run-sdk/latest/introduction",
+                      "latest/run-sdk/latest/connections",
+                      {
+                        "group": "Workflows, Triggers and Tasks",
+                        "pages": [
+                          "latest/run-sdk/latest/workflows",
+                          "latest/run-sdk/latest/workflows/inputs-outputs",
+                          "latest/run-sdk/latest/workflows/task-types",
+                          "latest/run-sdk/latest/workflows/background",
+                          "latest/run-sdk/latest/workflows/catch"
+                        ]
+                      },
+                      "latest/run-sdk/latest/context",
+                      "latest/run-sdk/latest/durable-workflows"
+                    ]
+                  },
+                  {
+                    "group": "Developers",
+                    "pages": ["latest/run-sdk/latest/developers/overview"]
+                  }
+                ]
+              },
+              {
+                "dropdown": "0.2.x",
+                "pages": ["latest/run-sdk/0.2.x/overview"]
+              }
+            ]
           },
           {
             "tab": "API Reference",

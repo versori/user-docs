@@ -1,0 +1,47 @@
+---
+title: Durable Workflows
+---
+
+Durable Workflows is a feature of the Run SDK that allows you to build long-running workflows that can run 
+asynchronously to the HTTP request or schedule trigger and are not bound by the 30 second timeout limit.
+
+## Usage
+
+Durable Workflows are declared by calling the `workflow` function instead of the `webhook` or `schedule` function. In 
+order to trigger a Durable Workflow, you create a new instance of the workflow from within a regular workflow.
+
+```typescript
+import { workflow, fn, webhook } from '@versori/run';
+
+const durableWorkflow = workflow('durable-workflow')
+    .then(
+        fn('step1', async (ctx) => {
+            return;
+        })
+    );
+
+const trigger = webhook('trigger-workflow')
+    .then(
+        fn('trigger', async (ctx) => {
+            const instance = await ctx.start('durable-workflow');
+            
+            return {
+                instanceId: instance.id,
+            }
+        })
+    );
+```
+
+Finally, integration utilising Durable Workflows are required to use the `DurableInterpreter` instead of the 
+`MemoryInterpreter` when running the integration.
+
+```typescript
+import { durable } from '@versori/run';
+
+const interpreter = await durable.DurableInterpreter.newInstance();
+
+interpreter.register(durableWorkflow);
+interpreter.register(trigger);
+
+await interpreter.start();
+```
