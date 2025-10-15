@@ -62,8 +62,8 @@ Processing three
 Total length: 6
 ```
 
-The `parallel()` method is similar to `serial()`, but runs the task in parallel, which means the task will be run 
-against each element of the array at the same time:
+The `parallel()` method runs the tasks in parallel, which means each element of the array may be processed at the same 
+time:
 
 ```typescript
 const workflow = schedule('array-task', '0 * * * *')

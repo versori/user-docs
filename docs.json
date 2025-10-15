@@ -124,7 +124,7 @@
             "tab": "Run SDK",
             "dropdowns": [
               {
-                "dropdown": "Latest (0.3.x)",
+                "dropdown": "Latest (0.4.x)",
                 "groups": [
                   {
                     "group": "Getting Started",
@@ -151,10 +151,6 @@
                     "pages": ["latest/run-sdk/latest/developers/overview"]
                   }
                 ]
-              },
-              {
-                "dropdown": "0.2.x",
-                "pages": ["latest/run-sdk/0.2.x/overview"]
               }
             ]
           },

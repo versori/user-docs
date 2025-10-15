@@ -6,11 +6,15 @@ sidebarTitle: Introduction
 The Versori Run SDK is a TypeScript library that provides entrypoints into the Versori Platform for building and running
 integrations.
 
-<Info>
-    These sections are aimed at non-developer users who are building integrations via AI through the Versori Platform.
-    The information is purposefully simplified for non-developers to understand the structure of the SDK and provide
-    a glimpse into how Versori AI writes integrations.
+    When building integrations via the Versori Platform, our AI does the majority of the work for you, and should only
+    require developer knowledge when building more complex integrations. If you ever need help, we can offer paid
+    support or refer you to a partner who can help.
 
+<Info>
+    Whilst the Versori Platform is aimed to support non-developer users, it can sometimes help to understand a little 
+    code to help the AI write better integrations. These "Getting Started" sections are aimed at non-developers to 
+    understand the structure of the code written by the AI, and is purposefully simplified to cater for these users.
+    
     For a more developer-focused introduction, see the [Developers](/latest/run-sdk/latest/developers/overview) section.
 </Info>
 
@@ -96,8 +100,8 @@ main().catch((err) => {
 
 The `MemoryInterpreter` is a simple interpreter that has no persistent state and can be horizontally scaled with ease. 
 Other intepreters are documented in the developer documentation, but it should not be a concern for most users, the 
-Versori Platform handles registering and starting workflows for you whenever workflows are added/updated/deleted from a 
-Project.
+Versori Platform's own AI handles registering and starting workflows for you whenever workflows are 
+added/updated/deleted from a Project.
 
 ## Next Steps
 
