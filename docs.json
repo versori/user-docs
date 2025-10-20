@@ -40,7 +40,7 @@
                 "pages": [
                   {
                     "group": "Release notes",
-                    "pages": ["latest/releases/2025/08/plan-connect-build-deploy"]
+                    "pages": []
                   },
                   "latest/changelog"
                 ]
