@@ -3,4 +3,109 @@ title: Authentication
 description: Learn how to authenticate with the Versori Platform.
 ---
 
-TBA
+This section provides an overview of how to authenticate with Versori APIs.
+
+# Signing Keys
+
+The first step is that you should generate a signing key for your organisation. These can be generated in the Signing keys section of the account settings page. To get there you can click on the My Account button and then on View Account. On key creation, you will be able to copy or download your private key as a `.pem` file.
+
+**Note that once you leave this page, you will be unable to view your private key.**  You should keep private keys secret, obviously!
+
+<Frame caption="How to navigate to the signing keys page and creating a key.">
+    <img src="/images/signingkeys.png" />
+</Frame>
+
+The keys are in PKCS #8 format. It is with this private key that your backend should use to sign JWTs for your end users when making requests to Versori APIs.
+
+If you require a long lived JWT to access the Versori platform, for example via curl or Postman, you can generate one by clicking on the "Sign JWT" button. To see how to use this JWT to authenticate API calls, see the [Authenticating API calls](#authenticating-api-calls) section below. This JWT is not suitable for creating or managing end users.
+
+## Signing JWTs on behalf of your users with your signing keys
+
+This section outlines how to programmatically sign JWTs on behalf of your end users using your signing key. This is relevant if your integrations are intended to act on behalf of your users.
+
+When making calls to Versori APIs to create a user, activating users, manage connections etc, you need to sign a JWT with your organisations private key and make the subject your end users external ID. A couple examples of signing a JWT are shown below:
+
+<CodeGroup>
+
+```typescript TypeScript
+import { importPKCS8, SignJWT } from 'jose';
+
+async function signJWT(privateKey: string, signingkeyId: string, externalId: string): Promise<string> {
+  const key = await importPKCS8(privateKey, 'RS256');
+
+  const ISSUER = `https://versori.com/sk/${signingkeyId}`;
+
+  const token = await new SignJWT({ sub: externalId })
+    .setIssuer(ISSUER)
+    .setIssuedAt()
+    .setExpirationTime('1 hour')
+    .setProtectedHeader({ alg: 'RS256' })
+    .sign(key);
+
+  return token;
+}
+```
+
+
+```go Go
+import (
+  "time"
+
+  "github.com/golang-jwt/jwt/v5"
+)
+
+func SignJWT(privateKey []byte, signingKeyId string, externalId string) (string, error) {
+    key, err := jwt.ParseRSAPrivateKeyFromPEM(privateKey)
+    if err != nil {
+        return "", err
+    }
+
+    claims := jwt.MapClaims{
+        "sub": externalId,
+        "iss": "https://versori.com/sk/" + signingKeyId,
+        "iat": time.Now().Unix(),
+        "exp": time.Now().Add(time.Hour).Unix(),
+    }
+
+    token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+
+    signedToken, err := token.SignedString(key)
+    if err != nil {
+        return "", err
+    }
+
+    return signedToken, nil
+}
+```
+
+
+```python Python
+# Using PyJWT library: https://pyjwt.readthedocs.io/en/stable/index.html
+
+import jwt
+import time
+
+def sign_jwt(private_key: str, signing_key_id: str, external_id: str) -> str:
+    current_time = int(time.time())
+    payload = {
+        "sub": external_id,
+        "iss": f"https://versori.com/sk/{signing_key_id}",
+        "iat": current_time,
+        "exp": current_time + 3600,  # 1 hour expiration
+    }
+
+    token = jwt.encode(payload, private_key, algorithm="RS256")
+    return token
+```
+</CodeGroup>
+
+You can find your `signingKeyId` on the signing key page, shown above, to set the issuer claim.
+
+## Authenticating API calls
+
+You can authenticate calls to Versori APIs by setting the `Authorization` header to a value of `JWT {jwt-goes-here}`, for example:
+
+```bash
+curl -X GET https://platform.versori.com/api/v2/o/<orgId>/users/<externalId>
+-H "Authorization: JWT {jwt-goes-here}"
+```
