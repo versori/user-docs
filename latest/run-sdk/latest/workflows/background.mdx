@@ -1,0 +1,27 @@
+---
+title: Background
+---
+
+The `.background()` method returns a clone of the current task which will run in the background. The next step in the 
+workflow will run as if the current task had immediately returned `undefined`.
+
+## Usage
+
+```typescript
+const workflow = schedule('background-task', '0 * * * *')
+    .then(
+        fn('background', (ctx) => {
+            ctx.log.info('Background task starting');
+
+            // Do some long running task (within the 30 second timeout limit)
+
+            return;
+        })
+        .background()
+    )
+    .then((ctx) => {
+        ctx.log.info('Background task running');
+
+        // ctx.data === undefined
+    });
+```

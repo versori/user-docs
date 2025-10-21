@@ -1,0 +1,58 @@
+---
+title: Protocols
+description: Learn about the protocols used by the Versori Platform.
+---
+
+import ProtocolOverview from '/snippets/connectors/protocol-overview.mdx';
+
+<ProtocolOverview />
+
+## HTTP Connectors
+
+These are the most common type of Connector, and are used when the external system exposes an API over HTTP. This is
+most commonly a RESTful API however this is not a requirement and any service serving a HTTP server is supported.
+
+HTTP Connectors are added to the platform by uploading an OpenAPI specification, currently version 3.0 and 3.1 are
+supported. If you have a 2.0 specification (A.K.A a Swagger spec), we recommend using the converter which is available
+at https://editor.swagger.io.
+
+## GraphQL Connectors
+
+<Warning>
+    Currently, GraphQL Connectors are not fully supported via Connectors, but can be onboarded via
+    [Apps](/legacy/switchboard/features/apps). Specific documentation can be found at [Onboard a GraphQL
+    API](/legacy/switchboard/how-to-guides/apps/onboarding-apps/graphql-api).
+</Warning>
+
+GraphQL Connectors are similar to HTTP but designed around interacting with a GraphQL API. Upon onboarding a GraphQL
+Connector we use schema [Introspection](https://graphql.org/learn/introspection/) to identify the structure of the
+graph. [Actions](https://www.notion.so/Actions-60ec97f011804323a7c9c02a9c5da8c5?pvs=21) are then created by defining the
+query or mutation you wish to perform, and the platform identifies the correct response schema and any variables
+required to execute the request.
+
+### SOAP Connectors
+
+<Warning>
+    Currently, SOAP Connectors are not fully supported via Connectors but can be onboarded using our
+    [Apps](/legacy/switchboard/features/apps) functionality.
+</Warning>
+
+SOAP is a recent addition to the platform and is still in beta. We recommend reaching out to support if you require help
+building a SOAP integration. Although the feature is in beta, once the integrations are deployed and tested we provide
+the same SLA as our other connectors.
+
+## Protocol Roadmap
+
+Versori strives to be an any-any integration platform, supporting all major protocols used for transmitting data between
+systems. If you require a protocol not described above, please reach out to support@versori.com. The following is a
+non-exhaustive list of protocols on our roadmap:
+
+- FTP
+- SQL (Postgres, MySQL, SQL Server dialects - if you wish to suggest another dialect we’d be glad to hear them!)
+- gRPC
+- S3/GCS
+- GCP PubSub
+- AWS SNS
+- NATS/JetStream
+- AMQP (including RabbitMQ)
+- MQTT

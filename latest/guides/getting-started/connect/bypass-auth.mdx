@@ -1,0 +1,39 @@
+---
+title: Bypass Authentication
+---
+
+The Bypass Authentication feature enables users to send requests to the Connector, or process webhook traffic from a
+Connector, without authentication.
+
+<Warning>
+    Bypassing authentication for a Connection will allow you send requests to the external system, or process webhook
+    traffic, without authentication. This is not recommended and should only be used in rare cases where you need to
+    connect to an external system without request authentication, such as services using an IP allowlist (see [IP
+    Allowlist](/latest/guides/advanced/ip-allowlist) for more details).
+</Warning>
+
+## Configuring the Authentication Method
+
+To bypass authentication for a Connection, select the "Bypass Auth" option. This creates a new Authentication Method for
+the Connection called "None" with type "No Authentication" and the Connection section updates to allow you to configure
+the base URL for the Connection, and a confirmation button to "Bypass Connection".
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/shopify-bypass-auth-001.png" />
+</Frame>
+
+## Connecting to a Bypassed Connection
+
+Once confirmed, a new Connection will be created and the Connection dropdown will indicate that the Connection is using
+bypassed auth.
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/shopify-bypass-auth-002.png" />
+</Frame>
+
+The Connection will be available to use in your Build, and any requests will be made to the base URL configured.
+
+## Reverting a bypassed Connection
+
+To revert a bypassed Connection, choose a different Authentication Method for the Connection. This should update the
+Connection section to allow you to choose an existing Connection or create a new one.

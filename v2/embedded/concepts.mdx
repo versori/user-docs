@@ -2,24 +2,30 @@
 title: Concepts
 ---
 
-Before we go into the details of setting up your embedded integration hub, let's take a look at a couple of core concepts that will help you understand how the platform works.
+Before we go into the details of setting up your embedded integration hub, let's take a look at a couple of core
+concepts that will help you understand how the platform works.
 
 # Organisation
 
-Your organisation is created when you are signed up to the platform. It is the top level of the hierarchy and all of your users, projects etc belong to it. Your organisation ID is important to set up your embedded integration hub and make any calls to the API. You can find your organisation ID by clikcing on the My Account button at the top right of the screen in the platform. There is a clipboard button where you can copy your organisation ID to the clipboard.
+Your organisation is created when you are signed up to the platform. It is the top level of the hierarchy and all of
+your users, projects etc belong to it. Your organisation ID is important to set up your embedded integration hub and
+make any calls to the API. You can find your organisation ID by clikcing on the My Account button at the top right of
+the screen in the platform. There is a clipboard button where you can copy your organisation ID to the clipboard.
 
 <Frame caption="How to find your organisation ID">
     <img src="/images/orgid_button.png" />
 </Frame>
 
-
 # Projects and Environments
 
-Projects contain your integration code. Projects have environments, although right now we only support creating one environment per project. Environments are deployed and run your integration code hence these could also be called "integrations". If an API call needs either a project or environment ID, it will be noted.
+Projects contain your integration code. Projects have environments, although right now we only support creating one
+environment per project. Environments are deployed and run your integration code hence these could also be called
+"integrations". If an API call needs either a project or environment ID, it will be noted.
 
 # End Users
 
-End users are the users of your embedded integration hub and belong to your organisation. They are the users of your application. Here is what an end user looks like from the API:
+End users are the users of your embedded integration hub and belong to your organisation. They are the users of your
+application. Here is what an end user looks like from the API:
 
 ```json
 // GET https://platform.versori.com/api/v2/o/<orgId>/users/<externalId>
@@ -33,26 +39,41 @@ End users are the users of your embedded integration hub and belong to your orga
 }
 ```
 
-The key field is the `externalId` field. This field MUST be unique across your organisation. This is the ID that you will use to identify your end users in the API and SDK. You are free to pick whatever you want so you can easily map it to your own system. The `id` field is not important to know. The `displayName` field can also be set to whatever you want but it is not used in calls to the API or the SDK.
+The key field is the `externalId` field. This field MUST be unique across your organisation. This is the ID that you
+will use to identify your end users in the API and SDK. You are free to pick whatever you want so you can easily map it
+to your own system. The `id` field is not important to know. The `displayName` field can also be set to whatever you
+want but it is not used in calls to the API or the SDK.
 
-End users can be activated on environments, meaning that the integration code will make calls to API's using your end users connections.
+End users can be activated on environments, meaning that the integration code will make calls to API's using your end
+users connections.
 
 # Activations
 
-Before we talk about activations we should talk about systems. Systems are API's, either your own or external, that are called in the integration code. They are the systems that the integration code is integrating! Systems define aspects of the API such as the base URL, authentication method, and any other relevant details. Systems can be managed in the Platform UI but they are created by the AI when building the integration code. Since systems can be resused across different projects and environments, instead of making a connection to a system directly, connections are made against connection templates. A connection template simply links the system to the environment. In the context of embedded integration hubs, systems can largely be ignored.
+Before we talk about activations we should talk about systems. Systems are API's, either your own or external, that are
+called in the integration code. They are the systems that the integration code is integrating! Systems define aspects of
+the API such as the base URL, authentication method, and any other relevant details. Systems can be managed in the
+Platform UI but they are created by the AI when building the integration code. Since systems can be resused across
+different projects and environments, instead of making a connection to a system directly, connections are made against
+connection templates. A connection template simply links the system to the environment. In the context of embedded
+integration hubs, systems can largely be ignored.
 
-To be activated on an integration, an end user must supply connections to all required connection templates. A connection here means the actual credentials - e.g an API key - and some config describing how the credentials are used. End users can be activated from the Platform UI in the console, using the API or using the SDK. End users can be deactivated to disable the integration for them.
+To be activated on an integration, an end user must supply connections to all required connection templates. A
+connection here means the actual credentials - e.g an API key - and some config describing how the credentials are used.
+End users can be activated from the Platform UI in the console, using the API or using the SDK. End users can be
+deactivated to disable the integration for them.
 
-Note that when your integrations utilise webhooks to trigger workflows, your end users will need the webhook URL to be able to use the integration. This URL takes the form:
+Note that when your integrations utilise webhooks to trigger workflows, your end users will need the webhook URL to be
+able to use the integration. This URL takes the form:
 
 ```
 https://<publicUrl>/<webhookName>/users/<externalId>
 ```
 
-Where `<publicUrl>` is the public URL of your embedded integration hub, `<webhookName>` is the name of the workflow of which the webhook is the trigger, and `<externalId>` is the external ID of the end user. The `<publicUrl>` can be found by clicking on the `+` button on the tabs bar where the `Code`, `Flow` and `Architecture` tabs are and then selecting `Webhooks`, see below:
+Where `<publicUrl>` is the public URL of your embedded integration hub, `<webhookName>` is the name of the workflow of
+which the webhook is the trigger, and `<externalId>` is the external ID of the end user. The `<publicUrl>` can be found
+by clicking on the `+` button on the tabs bar where the `Code`, `Flow` and `Architecture` tabs are and then selecting
+`Webhooks`, see below:
 
 <Frame caption="How to find the public URL for webhooks">
     <img src="/images/webhook_tab.png" />
 </Frame>
-
-

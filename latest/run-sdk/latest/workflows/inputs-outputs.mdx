@@ -1,0 +1,54 @@
+---
+title: Inputs and outputs
+---
+
+Each task is called with a context object which contains some input data on the `data` property. The task is expected to
+return some output data which will be used as the input for the next task.
+
+<Warning>
+    The return value of the task should be a serializable by `JSON.stringify()`, or a Promise which resolves to a 
+    serializable value.
+    
+    Users **should not** return the context object as this will cause the runtime to fail. 
+</Warning>
+
+```typescript
+import { webhook } from '@versori/run';
+
+/**
+ * Send the following payload:
+ *  {
+ *    "items": [
+ *      { "sku": "123", "price": 100 },
+ *      { "sku": "456", "price": 200 },
+ *    ]
+ *  }
+ * 
+ * The workflow will return the following payload:
+ *  {
+ *    "skus": ["123", "456"],
+ *    "total": 300,
+ *  }
+*/
+const workflow = webhook('my-webhook')
+    .then((ctx) => {
+        if (typeof ctx.data !== 'object') {
+            throw new Error('Body must be an object');
+        }
+
+        if (!ctx.data.items) {
+            return [];
+        }
+
+        if (!Array.isArray(ctx.data.items)) {
+            return [ctx.data.items];
+        }
+
+        // the next task's input will be an array of items
+        return ctx.data.items;
+    })
+    .then((ctx) => ({
+        skus: ctx.data.map((item) => item.sku),
+        total: ctx.data.reduce((acc, item) => acc + item.price, 0),
+    }));
+```

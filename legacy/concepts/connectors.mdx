@@ -1,0 +1,55 @@
+---
+title: Overview
+description: Connect your APIs to the Versori Platform.
+---
+
+import ConnectorsOverview from '/snippets/connectors/overview.mdx';
+import ProtocolOverview from '/snippets/connectors/protocol-overview.mdx';
+import AuthenticationMethodsOverview from '/snippets/connectors/authentication-methods-overview.mdx';
+
+<ConnectorsOverview />
+
+Connectors are broken down into smaller pieces:
+
+- Protocol and protocol-specific metadata
+- Authentication Methods
+- Versions
+- Definitions
+- Actions
+- Triggers
+
+## Connector Protocols
+
+<ProtocolOverview />
+
+A detailed breakdown of each supported protocol can be read on our Protocols page.
+
+## Authentication Methods
+
+<AuthenticationMethodsOverview />
+
+See the Authentication Methods page for more info on the standard methods which we support natively.
+
+## Versions
+
+In order to support changes to a Connector without breaking existing integrations, Versori implements versioning against
+particular resources which exist under a Connector.
+
+Versions may exist in two states, either “draft” or “published”. Once published, a version and its resources are
+immutable. Versions may be deleted, but if published is a destructive action and will cause any Boards using said
+version to be un-deployed.
+
+The following section, “Actions, Triggers and Definitions”, all exist within the scope of a particular Connector
+Version.
+
+### Actions, Triggers and Definitions
+
+There are three main types of resources which exist within a Connector Version:
+
+- [Action](./connectors/actions) - defines how Versori can perform some operation against an external system, such as
+  making an HTTP request.
+- [Trigger](./connectors/triggers) - defines how an external system can perform a request to Versori, such as an HTTP
+  webhook from an external service.
+- [Definition](./connectors/definitions) - defines the data structures used by the action or trigger. For example, HTTP
+  actions and triggers may contain definitions for each of the request and response bodies. Versori supports definitions
+  in JSON Schema or XSD.

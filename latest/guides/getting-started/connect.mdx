@@ -1,0 +1,65 @@
+---
+title: Managing Connectors
+---
+
+This guide explores the Connect tab and explains how Connectors and Connections can be managed. To understand more about
+how Connectors and Connections work within the Versori Platform, see the [Connectors](/latest/concepts/connectors) and
+[Connections](/latest/concepts/connections) pages.
+
+<Note>
+    This guide does not dive into specific authentication methods, see [Authentication
+    Methods](/latest/guides/auth-methods/introduction) for more details on the different methods available.
+</Note>
+
+The connect tab shows the user the Connectors which are in use by the Project, including the list of endpoints available
+to each Connector. Here you can also manage authentication by configuring different authentication methods for each
+Connector.
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/connectors-001.png" />
+</Frame>
+
+## Connectors
+
+Connectors are the starting point in how Versori provides integrations to external systems. Unlike other iPaaS's,
+Versori do not rely on “pre-built” connectors, we use AI to generate Connectors either by scraping API documentation or
+from a user-provided OpenAPI specification.
+
+<Note>
+Currently only the AI can create Connectors, which can be prompted via either the Plan or Build tabs. Manual creation
+of Connectors is not yet available via the UI, but can be done manually via our API.
+</Note>
+
+### Managing Connectors
+
+When new Connectors are created via AI, they start off unconfigured without endpoints or authentication methods. If an
+OpenAPI specification is provided, the configuration is automatically populated based on the specification.
+
+For unconfigured Connectors, click the "Setup Connector with AI" button to start the process to automatically configure
+the Connector, this can take a couple of minutes to complete. Once complete, selecting "Manage Authentication" will open
+the Authentication sidebar where you can see what the AI has configured, make any adjustments, and create a Connection
+for the Connector.
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/shopify-auth-sidebar-001.png" />
+</Frame>
+
+If you are happy with the configuration, click the "+ New Connection" button to create a Connection for the Connector. 
+Otherwise, you can select "Manage Connector" to manually edit the Connector configuration.
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/shopify-manage-connector-001.png" />
+</Frame>
+
+Once you are happy with the configuration, click the "Create Connection" button to create a Connection for the
+Connector.
+
+#### Bypass Auth
+
+See the [Bypass Auth](/latest/guides/connect/bypass-auth) guide for more details on how to bypass authentication for a
+Connection.
+
+## Connections
+
+Connections are the way to connect to an external system. Each Connector can have multiple Connections, and each
+Connection can have a different set of credentials and variables.

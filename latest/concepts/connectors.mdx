@@ -1,0 +1,21 @@
+---
+title: Connectors
+sidebarTitle: Connectors
+---
+
+Connectors describe external systems (e.g., Shopify, NetSuite) and how to talk to them: base URLs, operations, and authentication.
+
+Key concepts:
+
+- **Authentication**: API key, OAuth 2.0, Basic, custom schemes. Choose the minimal scope needed.
+- **Operations**: Define common requests (list, get, create, update). Document pagination, rate limits, and error shapes.
+- **Versioning**: Publish new versions when upstream APIs change; keep Projects pinned to a compatible version.
+
+When to create a new Connector:
+
+- A new system or a materially different API variant.
+- A versioned API change that breaks compatibility.
+
+Related: [Connections](../concepts/connections)
+
+

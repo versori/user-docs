@@ -14,7 +14,7 @@ servers:
 paths:
   /o/{organisation_id}/activations:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: ActivateUser
       summary: Activates a User on an Environment.
@@ -26,39 +26,39 @@ paths:
         - end_users
         - environments
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Activation"
+                $ref: '#/components/schemas/Activation'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ActivationCreate"
+              $ref: '#/components/schemas/ActivationCreate'
 
   /o/{organisation_id}/projects:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     get:
       operationId: ListProjects
       summary: List projects for organisation
       tags:
         - projects
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProjectsList"
+                $ref: '#/components/schemas/ProjectsList'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     post:
       operationId: CreateProject
       summary: Create new project
@@ -70,25 +70,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ProjectCreate"
+              $ref: '#/components/schemas/ProjectCreate'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
 
     get:
       operationId: GetProject
@@ -98,18 +98,18 @@ paths:
       tags:
         - projects
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     delete:
       operationId: DeleteProject
@@ -119,14 +119,14 @@ paths:
       tags:
         - projects
       responses:
-        "204":
+        '204':
           description: OK
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     put:
       operationId: UpdateProject
       summary: Update Project
@@ -139,25 +139,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ProjectUpdate"
+              $ref: '#/components/schemas/ProjectUpdate'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/variables:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
     put:
       operationId: SetProjectVariablesSchema
       summary: Set the schema for the project variables
@@ -173,21 +173,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DynamicVariablesSchema"
+              $ref: '#/components/schemas/DynamicVariablesSchema'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DynamicVariablesSchema"
+                $ref: '#/components/schemas/DynamicVariablesSchema'
 
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     patch:
       operationId: PatchProjectVariablesSchema
       summary: Patch the schema for the project's dynamic variables
@@ -202,25 +202,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DynamicVariablesSchemaPatch"
+              $ref: '#/components/schemas/DynamicVariablesSchemaPatch'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DynamicVariablesSchema"
+                $ref: '#/components/schemas/DynamicVariablesSchema'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/files:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
     get:
       operationId: GetFiles
       summary: Get Files
@@ -229,18 +229,18 @@ paths:
       tags:
         - projects
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Files"
+                $ref: '#/components/schemas/Files'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     put:
       operationId: UpdateFiles
       summary: Update Files
@@ -253,27 +253,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Files"
+              $ref: '#/components/schemas/Files'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Files"
+                $ref: '#/components/schemas/Files'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/deploy:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
-      - $ref: "#/components/parameters/project_env"
-      - $ref: "#/components/parameters/env_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
+      - $ref: '#/components/parameters/project_env'
+      - $ref: '#/components/parameters/env_id'
     put:
       operationId: DeployProject
       summary: Deploy Project
@@ -288,26 +288,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Files"
+              $ref: '#/components/schemas/Files'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/logs:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
-      - $ref: "#/components/parameters/project_env"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
+      - $ref: '#/components/parameters/project_env'
       - name: next_token
         in: query
         required: false
@@ -345,24 +345,24 @@ paths:
       tags:
         - projects
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Logs"
+                $ref: '#/components/schemas/Logs'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/traces:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
-      - $ref: "#/components/parameters/project_env"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
+      - $ref: '#/components/parameters/project_env'
     get:
       operationId: ListTraces
       summary: List project traces
@@ -393,9 +393,9 @@ paths:
             type: string
             description: |
               Filter executions by attribute.
-              
+
               Example query: 'http.request.method:POST executionId:01JSPK1SB6S622T6E1P9BBJTWP'
-              
+
               Available attributes are:
               - "taskId"
               - "taskType"
@@ -424,23 +424,23 @@ paths:
             type: string
 
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TraceSearch"
+                $ref: '#/components/schemas/TraceSearch'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/traces/{trace_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
       - name: trace_id
         in: path
         required: true
@@ -455,23 +455,23 @@ paths:
         - projects
 
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Trace"
+                $ref: '#/components/schemas/Trace'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/suspend:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
       - name: environment
         in: query
         required: true
@@ -485,22 +485,22 @@ paths:
       tags:
         - projects
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/connections:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     get:
       operationId: ListConnections
       summary: List Connections
@@ -509,9 +509,9 @@ paths:
       tags:
         - connections
       parameters:
-        - $ref: "#/components/parameters/first"
-        - $ref: "#/components/parameters/after"
-        - $ref: "#/components/parameters/before"
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
         - name: system_id
           in: query
           required: false
@@ -524,18 +524,18 @@ paths:
             type: string
 
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConnectionPage"
+                $ref: '#/components/schemas/ConnectionPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     post:
       operationId: CreateConnection
       summary: Create a new connection.
@@ -547,25 +547,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EnvSystemConnectionCreate"
+              $ref: '#/components/schemas/EnvSystemConnectionCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connection"
+                $ref: '#/components/schemas/Connection'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/connections/{connection_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/connection_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
     get:
       operationId: GetConnection
       summary: Get a Connection by ID
@@ -574,18 +574,18 @@ paths:
       tags:
         - connections
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connection"
+                $ref: '#/components/schemas/Connection'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     put:
       operationId: UpdateConnection
       summary: Update a Connection by ID
@@ -598,26 +598,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ConnectionUpdate"
+              $ref: '#/components/schemas/ConnectionUpdate'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connection"
+                $ref: '#/components/schemas/Connection'
 
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/connections/{connection_id}/link:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/connection_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/connection_id'
     post:
       operationId: LinkConnectionToEnvironment
       summary: Link an existing connection to an environment
@@ -629,20 +629,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LinkConnectionEnvironment"
+              $ref: '#/components/schemas/LinkConnectionEnvironment'
       responses:
-        "201":
+        '201':
           description: Created
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/users:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: CreateEndUser
       summary: Create an End User
@@ -657,20 +657,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/EndUserCreate"
+              $ref: '#/components/schemas/EndUserCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EndUser"
+                $ref: '#/components/schemas/EndUser'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     get:
       operationId: ListEndUsers
@@ -705,24 +705,24 @@ paths:
             type: string
             format: uuid
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EndUserPage"
+                $ref: '#/components/schemas/EndUserPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/environments/{environment_id}/activations:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/environment_id"
-      - $ref: "#/components/parameters/static"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/static'
     get:
       operationId: ListActivations
       summary: List Activations
@@ -731,24 +731,24 @@ paths:
       tags:
         - activations
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Activation"
+                $ref: '#/components/schemas/Activation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/environments/{environment_id}/activations/{activation_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/environment_id"
-      - $ref: "#/components/parameters/activation_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/activation_id'
     get:
       operationId: GetActivation
       summary: Retrieve an Activation by ID
@@ -758,39 +758,39 @@ paths:
         - activations
         - internal
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Activation"
+                $ref: '#/components/schemas/Activation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
       operationId: DeleteActivation
       summary: Delete an Activation
       description: |
-          DeleteActivation deletes the Activation for the given activation ID.
+        DeleteActivation deletes the Activation for the given activation ID.
       tags:
         - activations
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/environments/{environment_id}/variables:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/environment_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/environment_id'
     patch:
       operationId: SetStaticUserVariables
       summary: Set static variables for the static activation
@@ -804,26 +804,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DynamicVariables"
+              $ref: '#/components/schemas/DynamicVariables'
       responses:
-        "200":
+        '200':
           description: Variables updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DynamicVariables"
+                $ref: '#/components/schemas/DynamicVariables'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/environments/{environment_id}/activations/{activation_id}/variables:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/environment_id"
-      - $ref: "#/components/parameters/activation_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/activation_id'
     patch:
       operationId: SetDynamicVariables
       summary: Set dynamic variables for an activation
@@ -837,26 +837,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DynamicVariables"
+              $ref: '#/components/schemas/DynamicVariables'
       responses:
-        "200":
+        '200':
           description: Variables updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DynamicVariables"
+                $ref: '#/components/schemas/DynamicVariables'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
-                
+                $ref: '#/components/schemas/Error'
+
   /o/{organisation_id}/environments/{environment_id}/activations/{activation_id}/variables/{variable_name}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/environment_id"
-      - $ref: "#/components/parameters/activation_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/environment_id'
+      - $ref: '#/components/parameters/activation_id'
       - name: variable_name
         in: path
         required: true
@@ -881,28 +881,28 @@ paths:
               properties:
                 value:
                   description: The new value for the variable (can be any JSON type)
-                  type: ["object", "array", "string", "number", "boolean"]
+                  type: ['object', 'array', 'string', 'number', 'boolean']
                   x-go-type: any
               required:
                 - value
       responses:
-        "200":
+        '200':
           description: Variable updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/DynamicVariables"
+                $ref: '#/components/schemas/DynamicVariables'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/environment/{environment_id}/users/{external_user_id}/activations:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/environment_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/environment_id'
       - name: external_user_id
         in: path
         required: true
@@ -918,24 +918,24 @@ paths:
         - activations
         - end_users
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Activation"
+                  $ref: '#/components/schemas/Activation'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/users/{user_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
       - name: user_id
         in: path
         required: true
@@ -950,18 +950,18 @@ paths:
       tags:
         - end_users
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EndUser"
+                $ref: '#/components/schemas/EndUser'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
     delete:
       operationId: DeleteEndUser
       summary: Delete an End User
@@ -970,19 +970,19 @@ paths:
       tags:
         - end_users
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/environment-systems/{env_system_id}/activations/{activation_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/env_system_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/env_system_id'
       - name: activation_id
         in: path
         required: true
@@ -1001,16 +1001,16 @@ paths:
         - end_users
         - internal
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Connection"
+                $ref: '#/components/schemas/Connection'
 
   /o/{organisation_id}/systems:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
     post:
       operationId: CreateSystem
       summary: Create a new system.
@@ -1020,20 +1020,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SystemCreate"
+              $ref: '#/components/schemas/SystemCreate'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/System"
+                $ref: '#/components/schemas/System'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     get:
       operationId: ListSystems
@@ -1041,21 +1041,21 @@ paths:
       tags:
         - systems
       parameters:
-        - $ref: "#/components/parameters/first"
-        - $ref: "#/components/parameters/after"
-        - $ref: "#/components/parameters/before"
-        - $ref: "#/components/parameters/search"
+        - $ref: '#/components/parameters/first'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/search'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SystemPage"
+                $ref: '#/components/schemas/SystemPage'
 
   /o/{organisation_id}/systems/{system_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
+      - $ref: '#/components/parameters/organisation_id'
       - name: system_id
         in: path
         required: true
@@ -1075,25 +1075,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateSystem"
+              $ref: '#/components/schemas/UpdateSystem'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/System"
+                $ref: '#/components/schemas/System'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/systems/{system_id}/auth-scheme-configs/{auth_scheme_config_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/system_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/system_id'
       - name: auth_scheme_config_id
         in: path
         required: true
@@ -1106,14 +1106,14 @@ paths:
       tags:
         - systems
       responses:
-        "204":
+        '204':
           description: No Content
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     put:
       operationId: UpsertAuthSchemeConfig
@@ -1129,25 +1129,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AuthSchemeConfig"
+              $ref: '#/components/schemas/AuthSchemeConfig'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AuthSchemeConfig"
+                $ref: '#/components/schemas/AuthSchemeConfig'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/connections:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
     get:
       operationId: ListEnvironmentConnections
       summary: List static connections for project environment
@@ -1157,25 +1157,25 @@ paths:
         - connections
         - projects
       parameters:
-        - $ref: "#/components/parameters/env_id"
+        - $ref: '#/components/parameters/env_id'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConnectionPage"
+                $ref: '#/components/schemas/ConnectionPage'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/projects/{project_id}/systems:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
     post:
       operationId: LinkSystem
       summary: Add a system to a project environment
@@ -1185,16 +1185,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LinkSystem"
+              $ref: '#/components/schemas/LinkSystem'
       responses:
-        "204":
+        '204':
           description: OK
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     get:
       operationId: ListProjectSystems
@@ -1202,14 +1202,14 @@ paths:
       tags:
         - systems
       parameters:
-        - $ref: "#/components/parameters/env_id"
+        - $ref: '#/components/parameters/env_id'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EnvironmentSystemPage"
+                $ref: '#/components/schemas/EnvironmentSystemPage'
 
     delete:
       operationId: UnlinkSystem
@@ -1220,15 +1220,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LinkSystem"
+              $ref: '#/components/schemas/LinkSystem'
       responses:
-        "204":
+        '204':
           description: OK
 
   /o/{organisation_id}/projects/{project_id}/connection-templates:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
     post:
       operationId: CreateConnectionTemplate
       summary: Create a new connection template
@@ -1238,20 +1238,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LinkSystem"
+              $ref: '#/components/schemas/LinkSystem'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConnectionTemplate"
+                $ref: '#/components/schemas/ConnectionTemplate'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     get:
       operationId: ListProjectConnectionTemplates
@@ -1259,19 +1259,19 @@ paths:
       tags:
         - systems
       parameters:
-        - $ref: "#/components/parameters/env_id"
+        - $ref: '#/components/parameters/env_id'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/EnvironmentSystemPage"
+                $ref: '#/components/schemas/EnvironmentSystemPage'
 
   /o/{organisation_id}/projects/{project_id}/connection-templates/{template_id}:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/project_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/project_id'
       - name: template_id
         in: path
         required: true
@@ -1289,14 +1289,14 @@ paths:
       tags:
         - systems
       responses:
-        "204":
+        '204':
           description: OK
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
     put:
       operationId: UpdateConnectionTemplate
@@ -1307,25 +1307,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateConnectionTemplate"
+              $ref: '#/components/schemas/UpdateConnectionTemplate'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConnectionTemplate"
+                $ref: '#/components/schemas/ConnectionTemplate'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
   /o/{organisation_id}/systems/{system_id}/oauth2/initialise:
     parameters:
-      - $ref: "#/components/parameters/organisation_id"
-      - $ref: "#/components/parameters/system_id"
+      - $ref: '#/components/parameters/organisation_id'
+      - $ref: '#/components/parameters/system_id'
     post:
       operationId: InitialiseOAuth2Connection
       summary: Initialise OAuth 2.0 Connection
@@ -1358,20 +1358,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/InitialiseOAuth2ConnectionRequest"
+              $ref: '#/components/schemas/InitialiseOAuth2ConnectionRequest'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InitialiseOAuth2ConnectionResponse"
+                $ref: '#/components/schemas/InitialiseOAuth2ConnectionResponse'
         default:
           description: Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Error'
 
 security:
   - bearerToken: []
@@ -1390,15 +1390,15 @@ components:
             path: versori.dev/vergo/ulid
           x-go-name: ID
         user:
-          $ref: "#/components/schemas/EndUser"
+          $ref: '#/components/schemas/EndUser'
         environment:
-          $ref: "#/components/schemas/ProjectEnvironment"
+          $ref: '#/components/schemas/ProjectEnvironment'
         connections:
           type: array
           items:
-            $ref: "#/components/schemas/Connection"
+            $ref: '#/components/schemas/Connection'
         dynamicVariables:
-          $ref: "#/components/schemas/DynamicVariables"
+          $ref: '#/components/schemas/DynamicVariables'
       required:
         - id
         - user
@@ -1426,11 +1426,13 @@ components:
             type: object
             properties:
               connectionTemplateId:
-                $ref: "#/components/schemas/TemplateID"
+                $ref: '#/components/schemas/TemplateID'
               connection:
-                $ref: "#/components/schemas/ConnectionCreate"
+                $ref: '#/components/schemas/ConnectionCreate'
               existingConnectionId:
-                description: The id of an existing connection to be linked to the environment. If 'connection' is provided, this field is ignored.
+                description:
+                  The id of an existing connection to be linked to the environment. If 'connection' is provided, this
+                  field is ignored.
                 type: string
                 format: ulid
                 x-go-type: ulid.ULID
@@ -1440,7 +1442,7 @@ components:
             required:
               - connectionTemplateId
         dynamicVariables:
-          $ref: "#/components/schemas/DynamicVariables"
+          $ref: '#/components/schemas/DynamicVariables'
       required:
         - userId
         - environmentId
@@ -1454,7 +1456,7 @@ components:
           type: string
           description: Name is the name of the Connection.
         credentials:
-          $ref: "#/components/schemas/ConnectionCredentialsCreate"
+          $ref: '#/components/schemas/ConnectionCredentialsCreate'
         baseUrl:
           type: string
           format: uri
@@ -1473,9 +1475,9 @@ components:
       type: object
       properties:
         connectionTemplateId:
-          $ref: "#/components/schemas/TemplateID"
+          $ref: '#/components/schemas/TemplateID'
         connection:
-          $ref: "#/components/schemas/ConnectionCreate"
+          $ref: '#/components/schemas/ConnectionCreate'
       required:
         - connectionTemplateId
         - connection
@@ -1486,7 +1488,7 @@ components:
         LinkConnectionEnvironment is the request payload to link an existing connection to an environment.
       properties:
         connectionTemplateId:
-          $ref: "#/components/schemas/TemplateID"
+          $ref: '#/components/schemas/TemplateID'
       required:
         - connectionTemplateId
 
@@ -1533,7 +1535,7 @@ components:
         projects:
           type: array
           items:
-            $ref: "#/components/schemas/ProjectSummary"
+            $ref: '#/components/schemas/ProjectSummary'
       required:
         - projects
 
@@ -1560,7 +1562,7 @@ components:
           description: |
             List of environments for the project.
           items:
-            $ref: "#/components/schemas/ProjectEnvironment"
+            $ref: '#/components/schemas/ProjectEnvironment'
           x-go-type-skip-optional-pointer: true
       required:
         - id
@@ -1591,7 +1593,7 @@ components:
           description: |
             The path to the field to update. This should be a JSON path to the field to update. For example, if you want
             to update/remove the dynamic variables `newVar` in the following schema:
-            
+
             ```
             {
               "type": "object",
@@ -1602,7 +1604,7 @@ components:
               }
             }
             ```
-            
+
             The path would be `/properties/newVar`.
         value:
           type: object
@@ -1632,16 +1634,16 @@ components:
           description: |
             List of environments for the project.
           items:
-            $ref: "#/components/schemas/ProjectEnvironment"
+            $ref: '#/components/schemas/ProjectEnvironment'
         name:
           type: string
         currentFiles:
-          $ref: "#/components/schemas/Files"
+          $ref: '#/components/schemas/Files'
         createdAt:
           type: string
           format: date-time
         dynamicVariablesSchema:
-          $ref: "#/components/schemas/DynamicVariablesSchema"
+          $ref: '#/components/schemas/DynamicVariablesSchema'
         settings:
           $ref: '#/components/schemas/ProjectSettings'
       required:
@@ -1680,10 +1682,10 @@ components:
           type: array
           description: The files associated with the project.
           items:
-            $ref: "#/components/schemas/File"
+            $ref: '#/components/schemas/File'
           x-go-type-skip-optional-pointer: true
         labels:
-          $ref: "#/components/schemas/Labels"
+          $ref: '#/components/schemas/Labels'
       required:
         - id
         - name
@@ -1713,7 +1715,7 @@ components:
           type: array
           description: The files associated with the project.
           items:
-            $ref: "#/components/schemas/File"
+            $ref: '#/components/schemas/File'
         labels:
           type: object
           description: |
@@ -1753,7 +1755,7 @@ components:
         fields:
           type: array
           items:
-            $ref: "#/components/schemas/ErrorField"
+            $ref: '#/components/schemas/ErrorField'
           x-go-type-skip-optional-pointer: true
         details:
           type: string
@@ -1793,7 +1795,7 @@ components:
         logs:
           type: array
           items:
-            $ref: "#/components/schemas/Log"
+            $ref: '#/components/schemas/Log'
         nextToken:
           type: string
       required:
@@ -1833,7 +1835,7 @@ components:
           type: string
           description: Name is the name of the Connection. This must be unique within the owning Connector.
         credentials:
-          $ref: "#/components/schemas/ConnectionCredentials"
+          $ref: '#/components/schemas/ConnectionCredentials'
         baseUrl:
           description: |
             The baseUrl on the connection allows a dynamic user to override the base URL of the connection. This is useful
@@ -1871,7 +1873,7 @@ components:
           type: string
           description: Name is the name of the Connection. This must be unique within the owning Connector.
         credentials:
-          $ref: "#/components/schemas/ConnectionCredentials"
+          $ref: '#/components/schemas/ConnectionCredentials'
         baseUrl:
           description: |
             The baseUrl on the connection allows a dynamic user to override the base URL of the connection. This is useful
@@ -1902,7 +1904,7 @@ components:
             path: versori.dev/vergo/ulid
           x-go-type-skip-optional-pointer: true
         connectionTemplateId:
-          $ref: "#/components/schemas/TemplateID"
+          $ref: '#/components/schemas/TemplateID'
       required:
         - id
         - name
@@ -1917,20 +1919,20 @@ components:
         enable Connectors which require both a user session token and an API key to be provided in the request.
       type: array
       items:
-        $ref: "#/components/schemas/ConnectionCredential"
+        $ref: '#/components/schemas/ConnectionCredential'
       x-go-type-skip-optional-pointer: true
 
     ConnectionPage:
       description: ConnectionPage defines a page of Connection summaries.
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             items:
               type: array
               items:
-                $ref: "#/components/schemas/Connection"
+                $ref: '#/components/schemas/Connection'
           required:
             - items
 
@@ -1948,9 +1950,9 @@ components:
           x-go-type-import:
             path: versori.dev/vergo/ulid
         authSchemeConfig:
-          $ref: "#/components/schemas/AuthSchemeConfig"
+          $ref: '#/components/schemas/AuthSchemeConfig'
         credential:
-          $ref: "#/components/schemas/Credential"
+          $ref: '#/components/schemas/Credential'
       required:
         - id
 
@@ -1977,7 +1979,7 @@ components:
           x-go-type-import:
             path: versori.dev/vergo/ulid
         type:
-          $ref: "#/components/schemas/CredentialType"
+          $ref: '#/components/schemas/CredentialType'
         name:
           type: string
           description: Name is the name of the Credential.
@@ -1991,7 +1993,7 @@ components:
             type: string
           x-go-type-skip-optional-pointer: true
         data:
-          $ref: "#/components/schemas/CredentialData"
+          $ref: '#/components/schemas/CredentialData'
         expiresAt:
           type: string
           format: date-time
@@ -2007,25 +2009,25 @@ components:
       type: object
       properties:
         binary:
-          $ref: "#/components/schemas/CredentialDataBinary"
+          $ref: '#/components/schemas/CredentialDataBinary'
         none:
-          $ref: "#/components/schemas/CredentialDataNone"
+          $ref: '#/components/schemas/CredentialDataNone'
         string:
-          $ref: "#/components/schemas/CredentialDataString"
+          $ref: '#/components/schemas/CredentialDataString'
         basicAuth:
-          $ref: "#/components/schemas/CredentialDataBasicAuth"
+          $ref: '#/components/schemas/CredentialDataBasicAuth'
         oauth2Client:
-          $ref: "#/components/schemas/CredentialDataOAuth2Client"
+          $ref: '#/components/schemas/CredentialDataOAuth2Client'
         oauth2Token:
-          $ref: "#/components/schemas/CredentialDataOAuth2Token"
+          $ref: '#/components/schemas/CredentialDataOAuth2Token'
         oauth2Code:
-          $ref: "#/components/schemas/CredentialDataOAuth2Code"
+          $ref: '#/components/schemas/CredentialDataOAuth2Code'
         oauth2Password:
-          $ref: "#/components/schemas/CredentialDataOAuth2Password"
+          $ref: '#/components/schemas/CredentialDataOAuth2Password'
         certificate:
-          $ref: "#/components/schemas/CredentialDataCertificate"
+          $ref: '#/components/schemas/CredentialDataCertificate'
         oauth1:
-          $ref: "#/components/schemas/CredentialDataOAuth1"
+          $ref: '#/components/schemas/CredentialDataOAuth1'
 
     CredentialType:
       description: |
@@ -2339,21 +2341,21 @@ components:
       type: object
       properties:
         type:
-          $ref: "#/components/schemas/AuthSchemeType"
+          $ref: '#/components/schemas/AuthSchemeType'
         none:
-          $ref: "#/components/schemas/AuthSchemeConfigNone"
+          $ref: '#/components/schemas/AuthSchemeConfigNone'
         apiKey:
-          $ref: "#/components/schemas/AuthSchemeConfigAPIKey"
+          $ref: '#/components/schemas/AuthSchemeConfigAPIKey'
         basicAuth:
-          $ref: "#/components/schemas/AuthSchemeConfigBasicAuth"
+          $ref: '#/components/schemas/AuthSchemeConfigBasicAuth'
         oauth2:
-          $ref: "#/components/schemas/AuthSchemeConfigOAuth2"
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2'
         oauth1:
-          $ref: "#/components/schemas/AuthSchemeConfigOAuth1"
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth1'
         hmac:
-          $ref: "#/components/schemas/AuthSchemeConfigHMAC"
+          $ref: '#/components/schemas/AuthSchemeConfigHMAC'
         certificate:
-          $ref: "#/components/schemas/AuthSchemeConfigCertificate"
+          $ref: '#/components/schemas/AuthSchemeConfigCertificate'
       required:
         - id
         - type
@@ -2364,14 +2366,14 @@ components:
         AuthSchemeConfigAPIKey defines how a Connector uses an API key credential to authenticate with the system.
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
         - type: object
           properties:
             name:
               type: string
               description: Name is the query parameter/header/cookie name which will be used to send the API key.
             in:
-              $ref: "#/components/schemas/AuthSchemeConfigAPIKeyIn"
+              $ref: '#/components/schemas/AuthSchemeConfigAPIKeyIn'
           required:
             - name
             - in
@@ -2442,7 +2444,7 @@ components:
             This field will be ignored if sent to the API.
           type: array
           items:
-            $ref: "#/components/schemas/Message"
+            $ref: '#/components/schemas/Message'
           x-go-type-skip-optional-pointer: true
       required:
         - id
@@ -2561,13 +2563,13 @@ components:
       type: object
       properties:
         authorizationCode:
-          $ref: "#/components/schemas/AuthSchemeConfigOAuth2GrantAuthorizationCode"
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantAuthorizationCode'
         clientCredentials:
-          $ref: "#/components/schemas/AuthSchemeConfigOAuth2GrantClientCredentials"
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantClientCredentials'
         password:
-          $ref: "#/components/schemas/AuthSchemeConfigOAuth2GrantPassword"
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantPassword'
         type:
-          $ref: "#/components/schemas/AuthSchemeConfigOAuth2GrantType"
+          $ref: '#/components/schemas/AuthSchemeConfigOAuth2GrantType'
       required:
         - type
 
@@ -2578,7 +2580,7 @@ components:
         required.
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
 
     AuthSchemeConfigBasicAuth:
       title: Basic Auth
@@ -2587,7 +2589,7 @@ components:
         configuration required.
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
 
     AuthSchemeConfigCertificate:
       title: TLS Certificate
@@ -2596,7 +2598,7 @@ components:
         There is no other config required
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
 
     AuthSchemeConfigOAuth2:
       title: OAuth 2.0
@@ -2609,7 +2611,7 @@ components:
         instead.
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
         - type: object
           properties:
             authorizeUrl:
@@ -2632,7 +2634,7 @@ components:
                 will be allowed to choose which scopes to request when configuring the Connection.
               type: array
               items:
-                $ref: "#/components/schemas/OAuth2Scope"
+                $ref: '#/components/schemas/OAuth2Scope'
             defaultScopes:
               description: |
                 DefaultScopes is the list of scopes which will be requested by default when the user
@@ -2680,7 +2682,7 @@ components:
               type: boolean
               x-go-type-skip-optional-pointer: true
             grant:
-              $ref: "#/components/schemas/AuthSchemeConfigOAuth2Grant"
+              $ref: '#/components/schemas/AuthSchemeConfigOAuth2Grant'
           required:
             - tokenUrl
             - scopes
@@ -2691,7 +2693,7 @@ components:
       title: OAuth 2.0
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
         - type: object
           properties:
             consumerKey:
@@ -2699,11 +2701,11 @@ components:
             consumerSecret:
               type: string
             tempCredentialEndpoint:
-              $ref: "#/components/schemas/Endpoint"
+              $ref: '#/components/schemas/Endpoint'
             resourceOwnerAuthorizationEndpoint:
-              $ref: "#/components/schemas/Endpoint"
+              $ref: '#/components/schemas/Endpoint'
             tokenEndpoint:
-              $ref: "#/components/schemas/Endpoint"
+              $ref: '#/components/schemas/Endpoint'
             signatureMethod:
               type: string
             credentialId:
@@ -2731,7 +2733,7 @@ components:
         additionalParamConfigs:
           type: array
           items:
-            $ref: "#/components/schemas/ParameterConfig"
+            $ref: '#/components/schemas/ParameterConfig'
           x-go-type-skip-optional-pointer: true
         parameterTransmission:
           type: string
@@ -2796,16 +2798,17 @@ components:
         requests (i.e. from Webhook Triggers) to verify the sender of the request is allowed to invoke the Trigger.
       type: object
       allOf:
-        - $ref: "#/components/schemas/AuthSchemeConfigBase"
+        - $ref: '#/components/schemas/AuthSchemeConfigBase'
         - type: object
           properties:
             name:
               type: string
               description: Name is the query parameter/header/cookie name which will be used to send the signature.
             in:
-              $ref: "#/components/schemas/AuthSchemeConfigHMACIn"
+              $ref: '#/components/schemas/AuthSchemeConfigHMACIn'
             algorithm:
-              description: AuthSchemeConfigHMACAlgorithm defines the hashing algorithm to use when generating the HMAC signature.
+              description:
+                AuthSchemeConfigHMACAlgorithm defines the hashing algorithm to use when generating the HMAC signature.
               type: string
               enum:
                 - sha1
@@ -2838,7 +2841,7 @@ components:
           description: Text contains the text of the message.
           type: string
         severity:
-          $ref: "#/components/schemas/MessageSeverity"
+          $ref: '#/components/schemas/MessageSeverity'
         detail:
           description: |
             Details contains additional information about the message. This is intended to be used
@@ -3007,7 +3010,7 @@ components:
     ConnectionCredentialsCreate:
       type: array
       items:
-        $ref: "#/components/schemas/ConnectionCredential"
+        $ref: '#/components/schemas/ConnectionCredential'
       x-go-type-skip-optional-pointer: true
 
     EndUser:
@@ -3080,13 +3083,13 @@ components:
     EndUserPage:
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             users:
               type: array
               items:
-                $ref: "#/components/schemas/EndUser"
+                $ref: '#/components/schemas/EndUser'
           required:
             - users
 
@@ -3112,9 +3115,9 @@ components:
         authSchemeConfigs:
           type: array
           items:
-            $ref: "#/components/schemas/AuthSchemeConfig"
+            $ref: '#/components/schemas/AuthSchemeConfig'
         labels:
-          $ref: "#/components/schemas/Labels"
+          $ref: '#/components/schemas/Labels'
       required:
         - name
         - authSchemeConfigs
@@ -3175,7 +3178,7 @@ components:
         authSchemeConfigs:
           type: array
           items:
-            $ref: "#/components/schemas/AuthSchemeConfig"
+            $ref: '#/components/schemas/AuthSchemeConfig'
         templateBaseUrl:
           type: string
       required:
@@ -3224,7 +3227,7 @@ components:
         authSchemeConfigs:
           type: array
           items:
-            $ref: "#/components/schemas/AuthSchemeConfig"
+            $ref: '#/components/schemas/AuthSchemeConfig'
         templateBaseUrl:
           type: string
       required:
@@ -3240,13 +3243,13 @@ components:
       description: TriggerPage defines a paginated list of Triggers.
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             items:
               type: array
               items:
-                $ref: "#/components/schemas/ConnectionTemplate"
+                $ref: '#/components/schemas/ConnectionTemplate'
             next:
               type: string
             prev:
@@ -3258,13 +3261,13 @@ components:
       description: TriggerPage defines a paginated list of Triggers.
       type: object
       allOf:
-        - $ref: "#/components/schemas/PageInfo"
+        - $ref: '#/components/schemas/PageInfo'
         - type: object
           properties:
             items:
               type: array
               items:
-                $ref: "#/components/schemas/System"
+                $ref: '#/components/schemas/System'
           required:
             - items
 
@@ -3283,7 +3286,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/SpanSummary"
+            $ref: '#/components/schemas/SpanSummary'
         nextToken:
           type: string
           x-go-type-skip-optional-pointer: true
@@ -3399,7 +3402,7 @@ components:
       type: object
       x-go-type-skip-optional-pointer: true
       x-go-type: map[string]any
-    
+
     CreateRecordingResponse:
       type: object
       properties:
@@ -3438,7 +3441,7 @@ components:
       required:
         - fileName
         - contentType
-        
+
     SignedURLResponse:
       type: object
       properties:

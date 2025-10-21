@@ -17,7 +17,8 @@ server-side logic to facilitate the integration hub, in which case the hybrid ap
 
 #### Authentication
 
-When using the fully client-side approach, you will need to authenticate your users against Versori APIs using [Signing-Key](/v2/embedded/security) tokens.
+When using the fully client-side approach, you will need to authenticate your users against Versori APIs using
+[Signing-Key](/v2/embedded/security) tokens.
 
 <Warning>
     You should not expose your Signing Key to your users. This key should be kept secure and only used in your
@@ -44,15 +45,13 @@ application's requirements.
 
 Before building your integration hub, you will need to have the following:
 
--   Your organisation ID, obtaining this is covered in the [concepts](/v2/embedded/concepts) section.
--   At least one deployed Integration created in the Versori platform.
--   Chosen an implementation method covered [above](#choosing-your-embedded-implementation).
+- Your organisation ID, obtaining this is covered in the [concepts](/v2/embedded/concepts) section.
+- At least one deployed Integration created in the Versori platform.
+- Chosen an implementation method covered [above](#choosing-your-embedded-implementation).
 
-
-
-{/**
-TODO: The below section needs work because we also need API's to support this. It follows in much the same way as hubs
- in the old world. But we need an equivalent of ListEndUserIntegrations that lists environments from a users perspective.
+[comment]: <> (TODO: The below section needs work because we also need API's to support this. It follows in much the
+same way as hubs in the old world. But we need an equivalent of ListEndUserIntegrations that lists environments from a
+users perspective.)
 
 ## Build
 
@@ -70,7 +69,10 @@ This section provides step-by-step instructions for activating an integration fo
     The diagram below outlines the process of activating an integration for one of your end users:
 
     <Frame>
-        <img src="./activation-activity-diagram.svg" alt="activity diagram for activating an integration"/>
+        <img
+            src="/legacy/embedded/developer/activation-activity-diagram.svg"
+            alt="activity diagram for activating an integration"
+        />
     </Frame>
 
 </Accordion>

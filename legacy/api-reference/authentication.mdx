@@ -1,0 +1,73 @@
+---
+title: Authentication
+description: Learn how to authenticate with the Versori Platform.
+---
+
+<Note>This documentation is a work in progress. If you have any questions, please contact us.</Note>
+
+## API Keys
+
+To create an API key, see the "API Keys" page from the account settings menu.
+
+API Keys are provided in the `Authorization` header, using the `Bearer` prefix, i.e.
+
+```
+Authorization: Bearer <API_KEY>
+```
+
+## Signing Keys
+
+Signing Keys allows an Organisation to issue short-lived tokens which can represent itself, or for an End User of the
+Organisation.
+
+Signing Keys consist of a RS256 key pair, Versori do not store the private key and once shared with the user, are
+unrecoverable. A signing key token is a JWT which has been signed by the keypair. These tokens are provided on requests
+to Versori APIs via the `Authorization` header using the `JWT` prefix.
+
+### Key Generation
+
+You can generate a new signing key pair through the Versori Platform. The private key will be returned to you along with
+a `<KEY_ID>`. You will need them to create and sign the JWT.
+
+### JWT Creation and Submission
+
+Versori uses the [JSON Web Token](https://datatracker.ietf.org/doc/html/rfc7519) standard to sign and verify tokens. You
+can use any JWT library to create the token, like [PyJWT](https://pyjwt.readthedocs.io/en/latest/) for Python or
+[node-jwt](https://github.com/auth0/node-jsonwebtoken) for Node.js.
+
+You need to create a JSON object containing the following claims:
+
+```
+// end-user JWT
+{
+  "sub": "<END_USER_ID>",
+  "iss": "https://versori.com/sk/<KEY_ID>"
+}
+```
+
+`<END_USER_ID>` is the ID of the End User you want to authenticate. `<KEY_ID>` is the ID of the keypair you want to use
+to sign the token.
+
+We will also validate the `exp` (Expiration Time) and `nbf` (Not Before) Claims, if present.
+
+An example JWT for an end user would look like this:
+
+```
+{
+// end-user JWT
+{
+  "sub": "<END_USER_ID>",
+  "iss": "https://versori.com/sk/<KEY_ID>",
+  "exp": 1234567890,
+  "nbf": 1234567890
+}
+```
+
+Sign the token with the private key and encode it as a base64 string. The signing algorithm needs to be RS256.
+
+After you have created the token, you can authenticate request by submitting it in the `Authorization` header, using the
+`JWT` prefix, i.e.
+
+```
+Authorization: JWT <YOUR_TOKEN>
+```

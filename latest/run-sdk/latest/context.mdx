@@ -1,0 +1,107 @@
+---
+title: The Context Object
+---
+
+The Context object is a core concept in the Run SDK. It is passed to each step in a workflow and provides the step with
+the data it needs to perform its function.
+
+## Example
+
+The following example demonstrates the various properties and methods available on the context object, see the SDK 
+documentation for the [`Context`](https://jsr.io/@versori/run@0.4.4/doc/~/Context) object for more details.
+
+```typescript
+import { fn } from '@versori/run';
+
+const myTask = fn('my-task', async (ctx) => {
+    // Use `ctx.log` for a fully featured logging system which outputs JSON logs for use in our observability tools,
+    // here we're adding the input data and the task name to the log.
+    ctx.log.info('Hello, world!', { task: 'my-task', data: ctx.data });
+
+    // Use `ctx.executionId` to get the ID of the current execution
+    ctx.log.debug('Printing execution ID', { executionId: ctx.executionId });
+
+    // Use `ctx.startTime` to get the time at which the execution started
+    ctx.log.debug('Printing start time', { startTime: ctx.startTime });
+
+    // These additional properties are available on the context object
+    const { activation, openKv, createIssue } = ctx;
+
+    ctx.log.debug('Printing activation info', { activationId: activation.id, user: activation.user, variables: activation.dynamicVariables });
+
+    // You can also get and set variables using the `getVariable` and `setVariable` methods on the activation object
+    const myVariable = await activation.getVariable('my-variable');
+    ctx.log.debug('Printing my variable', { myVariable });
+    
+    await activation.setVariable('my-variable', 'my-value');
+    ctx.log.debug('Printing my variable', { myVariable: await activation.getVariable('my-variable') });
+
+    // Activation variables are designed to be rarely updated, and are used to configure the integration for a 
+    // specific Activation; use the KV Store for more frequently updated variables.
+
+    const kv = openKv();
+
+    const myKvVariable = await kv.get('my-kv-variable');
+    ctx.log.debug('Printing my KV variable', { myKvVariable });
+
+    await kv.set('my-kv-variable', 'my-kv-value');
+    ctx.log.debug('Printing my KV variable', { myKvVariable: await kv.get('my-kv-variable') });
+
+    await kv.delete('my-kv-variable');
+
+    // When you require an integration to an API which requires an authentication method not supported natively by 
+    // Versori, you can use the `credentials` object to interact with our credentials store directly and manually 
+    // perform authenticated requests using the global 
+    // [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+    const credentials = ctx.credentials();
+
+    // For systems configured with HTTP or OAuth 2.0 authentication, you can use the `getAccessToken` method to get the
+    // access token for the given system.
+    const token = await credentials.getAccessToken('system-id');
+
+    // The token object returned by the `getAccessToken` method will have the following properties:
+    // - accessToken: the access token to use in the request
+    // - expiry: the expiry time of the token
+    // - tokenType: the type of token (e.g. "Bearer")
+    //
+    // See the [`CredentialProvider`](https://jsr.io/@versori/run@0.4.4/doc/~/CredentialsProvider) SDK documentation
+    // for more details on interacting with the credentials store.
+
+    if (token.expiry && token.expiry < Date.now()) {
+        ctx.log.error('Token expired', { token });
+        
+        throw new Error('Token expired');
+    }
+
+    const _response = await fetch('https://api.example.com', {
+        headers: {
+            'x-custom-header': `Custom-Prefix ${token.accessToken}`, // Custom-Prefix can be anything you want
+        },
+    });
+
+    // The `createIssue` method can be used to create a new issue in the owner's Organisation, this can be useful for 
+    // alerting on errors or other specific edge cases where human intervention is required.
+    await createIssue({
+        severity: 'high', // 'low' | 'medium' | 'high'
+        title: 'My Issue',
+        message: 'This is a message to display to the user',
+        annotations: {
+            key: 'value',
+        },
+    });
+    
+    // Finally, the `request` method can be used to interact with the underlying HTTP request, this is currently backed
+    // by Express.
+    const request = ctx.request();
+
+    ctx.log.debug('Printing request', { path: request.path, method: request.method, body: request.body });
+
+    // You can return any JSON-serializable value which will be used as the input to the next task.
+    //
+    // NOTE: any JavaScript object can currently be returned, but this is not a supported feature and may change in the 
+    // future.
+    return {
+        done: true,
+    }
+});
+```

@@ -1,0 +1,53 @@
+---
+title: Workflows, Triggers and Tasks
+sidebarTitle: Overview
+---
+
+<Note>
+    Workflows should not be confused with Durable Workflows, which are covered in the 
+    [Durable Workflows](/latest/run-sdk/latest/durable-workflows) page. Workflows in this context are not a public
+    aspect of the SDK, but are created implicitly when using Triggers and Tasks.
+</Note>
+
+A workflow defines a single flow of data through your integration between one or more systems. It is made up of a single
+trigger followed by one or more tasks/steps. A project may contain multiple workflows to support complex integrations.
+
+As covered in the [Introduction](/latest/run-sdk/latest/introduction), a workflow is declared by calling the `webhook`
+or `schedule` function, followed by one or more steps. This page goes into more detail to explain how to build a 
+multi-step workflow.
+
+## Triggers
+
+A trigger is created by calling the `webhook` or `schedule` function. On it's own, a trigger is not useful, but it is
+the starting point for a workflow as this is what will start the execution of the workflow.
+
+## Tasks
+
+A Trigger exposes a single method, `then()`, which is used to add a task to the trigger and become a new workflow.
+
+<Info>
+    Although this is a non-developer facing guide, it's worth noting here that the `then()` signature is similar to 
+    that of the JavaScript Promise API. In the examples here we always pass a value to the `then()` method, such as the 
+    return value of a call to `fn()`, however you can pass an arbitrary function where the first parameter is a 
+    [Context](/latest/run-sdk/latest/context) object just like the Promise API.
+
+    More information about the `then()` and `catch()` methods can be found in the developer guide.
+</Info>
+
+```typescript
+import { webhook, fn } from '@versori/run';
+
+const workflow = webhook('upper-caser')
+    .then(
+        fn('upper-case', (ctx) => {
+            if (typeof ctx.body !== 'string') {
+                throw new Error('Body must be a string');
+            }
+
+            return ctx.body.toUpperCase();
+        })
+    );
+```
+
+In the example above, we're using the `fn()` task to validate the body of the request is a string, and then uppercases 
+it. There are various types of tasks which will be covered later.
