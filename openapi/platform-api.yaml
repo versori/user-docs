@@ -613,6 +613,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteConnection
+      summary: Delete a Connection by ID
+      description: |
+        Delete a Connection by ID. This action will fail if the connections is one that is dynamic and is currently
+        in use by an end user. This action will NOT fail if the connection is a static connection that is in use.
+      tags:
+        - connections
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /o/{organisation_id}/connections/{connection_id}/link:
     parameters:
@@ -1089,6 +1106,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      operationId: DeleteSystem
+      summary: Delete a system by ID.
+      description: |
+        Deletes the system for the given system ID. This endpoint will not allow you to delete a system which
+        is in use by a project. You can check if a system is in use by a project, by listing the project connection templates.
+      tags:
+        - systems
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 
   /o/{organisation_id}/systems/{system_id}/auth-scheme-configs/{auth_scheme_config_id}:
     parameters:
@@ -3628,7 +3662,8 @@ components:
       name: cookie
     bearerToken:
       description: |
-        Bearer token authentication used by the Versori Platform. External consumers must provide an API key, however
-        internal consumers must provide a JWT id_token issued by our IdP.
+        Bearer token authentication used by the Versori Platform. You must provide a signed JWT provided by our IdP.
       type: http
       scheme: bearer
+      bearerFormat: JWT
+      x-token-prefix: TWAT
