@@ -3666,4 +3666,3 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      x-token-prefix: TWAT
