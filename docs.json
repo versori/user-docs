@@ -66,7 +66,11 @@
                   },
                   {
                     "group": "Build",
-                    "pages": ["latest/guides/getting-started/build"]
+                    "pages": [
+                      "latest/guides/getting-started/build",
+                      "latest/guides/getting-started/build/flow",
+                      "latest/guides/getting-started/build/test"
+                    ]
                   },
                   {
                     "group": "Deploy",
