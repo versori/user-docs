@@ -1,4 +1,83 @@
 ---
-title: Build
-tag: 'coming soon'
+title: Prompting and writing Code
+sidebarTitle: Building your Integration
 ---
+
+This guide explores how to prompt and build your integration code to run on the Versori platform.
+
+A full integration can encompass one or more workflows, consider the business case of syncing orders and products
+between two systems. Each workflow, orders and products, would likely be contained in it's own workflow running in the
+same integration.
+
+This is not to say that both could not be achieved in the same workflow although best practice would be to have business
+cases separated by workflow.
+
+### Before We Begin
+
+There are two ways to drive the start of the build of your integration:
+
+-   Self prompting from your own build requirements
+-   Workflow driven prompting as a follow on from previous planning and workflow generation in the [plan tab](./plan)
+
+#### Self prompting Integration Build
+
+Before you begin building you will want to have a clear understanding of your integration requirements and what you
+intend to achieve.
+
+-   **Systems and auth**: Identify source/target systems and authentication methods.
+-   **Business requirements**: What you are trying to achieve.
+-   **Workflow Trigger** How you intend the workflow to be triggered - webhook or scheduled.
+-   **Type of integration**: Is this a real-time integration, a batch job, a bidirectional data sync, and/or a
+    multi-tenant integration?
+-   **Data model and mappings**: List objects and fields you need, with examples and edge cases.
+
+When you are satisfied the necessary details of your integration are understood you can begin prompting Versori.
+
+#### Prompting Best Practices
+
+-   Keep prompts clear, detailed but concise.
+-   If prompting to edit a specific part of the integration ensure that it is clear which workflow and what part of the
+    code you want changed is specified. This can be achieved by:
+    -   Using the edit step function in Flow mode
+    -   Using the @ button to select a specific file in the chat textbox
+    -   Manually writing in the prompt which workflow and step to edit
+-   Adding additional attachments, will help with context for the Agent
+-   Utilising 'New chats' can help when addressing new issues / parts of the code
+-   If any error logs are relevant to what you need to solve then building up a prompt with these will help with
+    debugging.
+-   Making use of the Question mode when you only want to query the agent will prevent any unwarranted code changes
+
+#### Workflow driven Integration Build
+
+If you have done prior planning in the [plan tab](./plan) and generated workflows you will have access to these
+workflows in the Build chat.
+
+<Note>
+    Workflows in the Build chat window will only be available if workflows have been generated in the plan tab after
+    carrying out some research.
+</Note>
+
+In these workflows, the following information is provided:
+
+-   **Workflow story** An overview of what the workflow will achieve
+-   **User Stories** Individual criteria that highlight specific logical requirements
+-   **Description** A summary of the workflow
+-   **Prompt** The prompt that will be used when selecting the workflow
+-   **Acceptance Criteria** What capabilities the workflow must achieve
+-   **Systems Deep Dive** System and authentication details
+-   **Trigger** The type of trigger that will initiate the workflow
+-   **API Endpoints** The API endpoints that will be used in the Integration
+-   **Data Flow Architecture** The sequential steps in how data will be passed through the workflow
+-   **Transformations** Table of data mappings between systems
+
+<Columns cols={2}>
+    <Card title="Build Workflows">
+        <img src="/images/guides/build/build-workflows.png" />
+    </Card>
+    <Card title="Workflow Information">
+        <img src="/images/guides/build/workflow-detail.png" />
+    </Card>
+</Columns>
+
+From this point after the intital workflow prompt, you are now ready to test, debug and continue development of the
+workflow.
