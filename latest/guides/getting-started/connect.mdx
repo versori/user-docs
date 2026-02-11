@@ -11,55 +11,61 @@ how Connectors and Connections work within the Versori Platform, see the [Connec
     Methods](/latest/guides/auth-methods/introduction) for more details on the different methods available.
 </Note>
 
-The connect tab shows the user the Connectors which are in use by the Project, including the list of endpoints available
-to each Connector. Here you can also manage authentication by configuring different authentication methods for each
-Connector.
+The Connect tab displays all information pertaining to the connectors used in the integration, the connections and
+authentication methods available for each connector, and any endpoints relevant for the connector for the purpose of the
+integration.
 
 <Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/connectors-001.png" />
+    <img src="/images/guides/connect/connect-tab.png" />
 </Frame>
 
 ## Connectors
 
-Connectors are the starting point in how Versori provides integrations to external systems. Unlike other iPaaS's,
-Versori do not rely on “pre-built” connectors, we use AI to generate Connectors either by scraping API documentation or
-from a user-provided OpenAPI specification.
+Connectors are the starting point in how Versori provides integrations to external systems. Unlike other iPaaS‘s,
+Versori does not rely on “pre-built” connectors, we use AI to generate Connectors driven by the context of the users
+requirements given in either Plan or Build.
 
-<Note>
-Currently only the AI can create Connectors, which can be prompted via either the Plan or Build tabs. Manual creation
-of Connectors is not yet available via the UI, but can be done manually via our API.
-</Note>
+### How Connectors Work
+
+When you use a connector for the first time, Versori creates a central version of it behind the scenes. This acts as the
+main connector.
+
+Each time you use that connector in an integration, a linked version is created specifically for that integration. We
+call this a connection template.
+
+This setup allows you to reuse the same connector across multiple integrations without having to recreate it each time.
+
+### Connecting Once, Using Everywhere
+
+When you connect to a connector, your connection is linked to the main (central) version.
+
+This means you only need to enter your credentials once — even if you use the same connector in many different
+integrations.
+
+For example, if you use the same connector in 100 integrations, you won’t need to authenticate 100 times.
+
+### Authentication Made Simple
+
+Each connector supports specific authentication methods (such as OAuth or API keys). Versori supports the most common
+industry-standard authentication types by default.
+
+Authentication options are managed centrally, so they’re available wherever the connector is used.
+
+When you create a connection, your chosen authentication details are securely saved with that connection. Even if
+authentication settings are later updated or changed, your existing connections will continue to work as expected.
 
 ### Managing Connectors
 
-When new Connectors are created via AI, they start off unconfigured without endpoints or authentication methods. If an
-OpenAPI specification is provided, the configuration is automatically populated based on the specification.
+Connectors can be created two ways, through AI chat or manually via the Connector sidebar.
 
-For unconfigured Connectors, click the "Setup Connector with AI" button to start the process to automatically configure
-the Connector, this can take a couple of minutes to complete. Once complete, selecting "Manage Authentication" will open
-the Authentication sidebar where you can see what the AI has configured, make any adjustments, and create a Connection
-for the Connector.
+<Note>
+    If Connectors are created through Plan then the associated endpoints the Plan agent has detected as necessary for
+    the integration will be a part of the Connector and will be accseible, in the Connect tab, to test.
+</Note>
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-auth-sidebar-001.png" />
-</Frame>
-
-If you are happy with the configuration, click the "+ New Connection" button to create a Connection for the Connector. 
-Otherwise, you can select "Manage Connector" to manually edit the Connector configuration.
+When selecting a Connector, it‘s overview page will present information on its active connection, or in the case of an
+Embedded Connector, its configuration, the connector‘s base url, and any existing connections for that connector.
 
 <Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-manage-connector-001.png" />
+    <img src="/images/guides/connect/connector-overview.png" />
 </Frame>
-
-Once you are happy with the configuration, click the "Create Connection" button to create a Connection for the
-Connector.
-
-#### Bypass Auth
-
-See the [Bypass Auth](/latest/guides/connect/bypass-auth) guide for more details on how to bypass authentication for a
-Connection.
-
-## Connections
-
-Connections are the way to connect to an external system. Each Connector can have multiple Connections, and each
-Connection can have a different set of credentials and variables.

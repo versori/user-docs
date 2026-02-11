@@ -61,6 +61,8 @@
                     "group": "Connect",
                     "pages": [
                       "latest/guides/getting-started/connect",
+                      "latest/guides/getting-started/connect/connecting",
+                      "latest/guides/getting-started/connect/embedded-connectors",
                       "latest/guides/getting-started/connect/bypass-auth"
                     ]
                   },
