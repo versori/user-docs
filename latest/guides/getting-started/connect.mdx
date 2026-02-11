@@ -11,23 +11,52 @@ how Connectors and Connections work within the Versori Platform, see the [Connec
     Methods](/latest/guides/auth-methods/introduction) for more details on the different methods available.
 </Note>
 
-The connect tab shows the user the Connectors which are in use by the Project, including the list of endpoints available
-to each Connector. Here you can also manage authentication by configuring different authentication methods for each
-Connector.
+The Connect tab displays all information pertaining to the connectors used in the integration, the connections and
+authentication methods available for each connector, and any endpoints relevant for the connector for the purpose of the
+integration.
 
 <Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/connectors-001.png" />
+    <img src="/images/guides/connect/connect-tab.png" />
 </Frame>
 
 ## Connectors
 
-Connectors are the starting point in how Versori provides integrations to external systems. Unlike other iPaaS's,
-Versori do not rely on “pre-built” connectors, we use AI to generate Connectors either by scraping API documentation or
-from a user-provided OpenAPI specification.
+Connectors are the starting point in how Versori provides integrations to external systems. Unlike other iPaaS‘s,
+Versori does not rely on “pre-built” connectors, we use AI to generate Connectors driven by the context of the users
+requirements given in either Plan or Build.
+
+### How Connectors Work
+
+When you use a connector for the first time, Versori creates a central version of it behind the scenes. This acts as the
+main connector.
+
+Each time you use that connector in an integration, a linked version is created specifically for that integration. We
+call this a connection template.
+
+This setup allows you to reuse the same connector across multiple integrations without having to recreate it each time.
+
+### Connecting Once, Using Everywhere
+
+When you connect to a connector, your connection is linked to the main (central) version.
+
+This means you only need to enter your credentials once — even if you use the same connector in many different
+integrations.
+
+For example, if you use the same connector in 100 integrations, you won’t need to authenticate 100 times.
+
+### Authentication Made Simple
+
+Each connector supports specific authentication methods (such as OAuth or API keys). Versori supports the most common
+industry-standard authentication types by default.
+
+Authentication options are managed centrally, so they’re available wherever the connector is used.
+
+When you create a connection, your chosen authentication details are securely saved with that connection. Even if
+authentication settings are later updated or changed, your existing connections will continue to work as expected.
 
 ### Managing Connectors
 
-Connectors can be created 2 ways, through AI chat or manually via the Connector sidebar.
+Connectors can be created two ways, through AI chat or manually via the Connector sidebar.
 
 <Note>
     If Connectors are created through Plan then the associated endpoints the Plan agent has detected as necessary for
@@ -40,43 +69,3 @@ Embedded Connector, its configuration, the connector‘s base url, and any exist
 <Frame className="max-w-2xl mx-auto">
     <img src="/images/guides/connect/connector-overview.png" />
 </Frame>
-
-## Connecting
-
-To create a connection, click 'Connect'. In order to connect an authorisation method must fist be selected matching the
-authentication method needed by the connector, or should a new authentication method be required, one can be newly
-created. The corresponding credential form will then display allowing the connection to be finalised.
-
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/connector-authorisation.png" />
-</Frame>
-
-## Embedded Connector
-
-An embedded connector enables multi tenanted integrations that external user‘s of an integration can use their own
-credentials to connect to a connector with.
-
-To enable an embedded connector, the authentication method required must be selected.
-
-<Columns cols={2}>
-    <Card title="Build Workflows">
-        <img src="/images/guides/connect/embedded-connector.png" />
-    </Card>
-    <Card title="Workflow Information">
-        <img src="/images/guides/connect/embedded-auth-selection.png" />
-    </Card>
-</Columns>
-
-#### Bypass Auth
-
-In order to bypass authentication for a given connector; an authentication of type 'None' should be selected, and then
-the connection can be finalised by clicking 'Bypass Authentication'
-
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/bypass-authentication.png" />
-</Frame>
-
-## Connections
-
-Connections are the way to connect to an external system. Each Connector can have multiple Connections, and each
-Connection can have a different set of credentials and variables.

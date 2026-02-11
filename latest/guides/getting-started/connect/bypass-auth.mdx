@@ -12,28 +12,15 @@ Connector, without authentication.
     Allowlist](/latest/guides/advanced/ip-allowlist) for more details).
 </Warning>
 
-## Configuring the Authentication Method
+## Configuring the bypass connection
 
-To bypass authentication for a Connection, select the "Bypass Auth" option. This creates a new Authentication Method for
-the Connection called "None" with type "No Authentication" and the Connection section updates to allow you to configure
-the base URL for the Connection, and a confirmation button to "Bypass Connection".
-
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-bypass-auth-001.png" />
-</Frame>
-
-## Connecting to a Bypassed Connection
-
-Once confirmed, a new Connection will be created and the Connection dropdown will indicate that the Connection is using
-bypassed auth.
+In order to bypass authentication for a given connector; an authentication of type 'None' should be selected, the
+connection can then be finalised by clicking 'Bypass Authentication'
 
 <Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-bypass-auth-002.png" />
+    <img src="/images/guides/connect/bypass-authentication.png" />
 </Frame>
-
-The Connection will be available to use in your Build, and any requests will be made to the base URL configured.
 
 ## Reverting a bypassed Connection
 
-To revert a bypassed Connection, choose a different Authentication Method for the Connection. This should update the
-Connection section to allow you to choose an existing Connection or create a new one.
+To revert a bypassed Connection, set up a new connection or link an existing connection.
