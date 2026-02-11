@@ -25,39 +25,56 @@ Connectors are the starting point in how Versori provides integrations to extern
 Versori do not rely on “pre-built” connectors, we use AI to generate Connectors either by scraping API documentation or
 from a user-provided OpenAPI specification.
 
-<Note>
-Currently only the AI can create Connectors, which can be prompted via either the Plan or Build tabs. Manual creation
-of Connectors is not yet available via the UI, but can be done manually via our API.
-</Note>
-
 ### Managing Connectors
 
-When new Connectors are created via AI, they start off unconfigured without endpoints or authentication methods. If an
-OpenAPI specification is provided, the configuration is automatically populated based on the specification.
+Connectors can be created 2 ways, through AI chat or manually via the Connector sidebar.
 
-For unconfigured Connectors, click the "Setup Connector with AI" button to start the process to automatically configure
-the Connector, this can take a couple of minutes to complete. Once complete, selecting "Manage Authentication" will open
-the Authentication sidebar where you can see what the AI has configured, make any adjustments, and create a Connection
-for the Connector.
+<Note>
+    If Connectors are created through Plan then the associated endpoints the Plan agent has detected as necessary for
+    the integration will be a part of the Connector and will be accseible, in the Connect tab, to test.
+</Note>
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-auth-sidebar-001.png" />
-</Frame>
-
-If you are happy with the configuration, click the "+ New Connection" button to create a Connection for the Connector. 
-Otherwise, you can select "Manage Connector" to manually edit the Connector configuration.
+When selecting a Connector, it‘s overview page will present information on its active connection, or in the case of an
+Embedded Connector, its configuration, the connector‘s base url, and any existing connections for that connector.
 
 <Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-manage-connector-001.png" />
+    <img src="/images/guides/connect/connector-overview.png" />
 </Frame>
 
-Once you are happy with the configuration, click the "Create Connection" button to create a Connection for the
-Connector.
+## Connecting
+
+To create a connection, click 'Connect'. In order to connect an authorisation method must fist be selected matching the
+authentication method needed by the connector, or should a new authentication method be required, one can be newly
+created. The corresponding credential form will then display allowing the connection to be finalised.
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/connector-authorisation.png" />
+</Frame>
+
+## Embedded Connector
+
+An embedded connector enables multi tenanted integrations that external user‘s of an integration can use their own
+credentials to connect to a connector with.
+
+To enable an embedded connector, the authentication method required must be selected.
+
+<Columns cols={2}>
+    <Card title="Build Workflows">
+        <img src="/images/guides/connect/embedded-connector.png" />
+    </Card>
+    <Card title="Workflow Information">
+        <img src="/images/guides/connect/embedded-auth-selection.png" />
+    </Card>
+</Columns>
 
 #### Bypass Auth
 
-See the [Bypass Auth](/latest/guides/connect/bypass-auth) guide for more details on how to bypass authentication for a
-Connection.
+In order to bypass authentication for a given connector; an authentication of type 'None' should be selected, and then
+the connection can be finalised by clicking 'Bypass Authentication'
+
+<Frame className="max-w-2xl mx-auto">
+    <img src="/images/guides/connect/bypass-authentication.png" />
+</Frame>
 
 ## Connections
 
