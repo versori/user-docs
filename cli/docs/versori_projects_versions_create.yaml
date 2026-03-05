@@ -1,0 +1,38 @@
+name: versori projects versions create
+synopsis: |
+    Creates a new version for a project with the files from --directory
+usage: versori projects versions create [--project <project-id>] [--directory <source_directory> [--name <version-name>] [--description <version-description>] [--dry-run] [flags]
+options:
+    - name: description
+      usage: Description of the new version.
+    - name: directory
+      shorthand: d
+      default_value: .
+      usage: Directory containing the new version.
+    - name: dry-run
+      default_value: "false"
+      usage: Print files that would be uploaded without actually pushing.
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for create
+    - name: name
+      shorthand: "n"
+      usage: Name of the new version.
+    - name: project
+      usage: ID of the project to push the version to.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects versions - Manage versions within a project.

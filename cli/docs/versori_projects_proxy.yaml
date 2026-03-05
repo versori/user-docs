@@ -1,0 +1,52 @@
+name: versori projects proxy
+synopsis: Send an HTTP request to a project's deployed environment
+description: |-
+    Proxy sends an HTTP request to a project's deployed environment and returns
+    the response. This allows triggering a project remotely via an HTTP call.
+
+    The --body flag accepts a raw string or @filename to read the body from a file.
+    When using @filename, the Content-Type header is automatically inferred from
+    the file extension unless explicitly provided via --header.
+usage: versori projects proxy --path <path> [flags]
+options:
+    - name: body
+      shorthand: b
+      usage: Request body (string or @filename to read from file)
+    - name: environment
+      usage: Project environment name (e.g. production, staging)
+    - name: header
+      shorthand: H
+      default_value: '[]'
+      usage: HTTP headers as key:value pairs (repeatable)
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for proxy
+    - name: method
+      shorthand: m
+      default_value: POST
+      usage: HTTP method (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+    - name: path
+      usage: URL path to call on the integration (required)
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+    - name: query
+      shorthand: q
+      default_value: '[]'
+      usage: Query parameters as key:value pairs (repeatable)
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context

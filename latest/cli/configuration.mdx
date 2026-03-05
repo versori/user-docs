@@ -1,0 +1,39 @@
+---
+title: "Configuration"
+description: "Configure the Versori CLI with contexts and global settings."
+---
+
+## Config file
+
+The CLI stores its configuration at `~/.versori/config.yaml` by default. You can override this with the `--config` flag or the `VERSORI_CONFIG` environment variable.
+
+The config file holds your contexts (name, organisation ID, JWT) and tracks which context is currently active.
+
+## Contexts
+
+A context groups together an organisation ID and a JWT token under a name. The active context is used by default for all commands. You can switch contexts with `versori context select` or override per-invocation with the `--context` flag.
+
+```sh
+versori context add \
+  --name production \
+  --organisation <organisation-id> \
+  --jwt <jwt-token>
+
+versori context select --name production
+```
+
+See the [context commands reference](/latest/cli/commands/context) for all available operations.
+
+## Project-level configuration
+
+When you run `versori projects sync`, a `.versori` file is created in the target directory containing the project ID and context name. This allows subsequent commands like `save` and `deploy` to infer the project and context automatically when run from that directory.
+
+## Global flags
+
+These flags are available on every command.
+
+| Flag | Short | Default | Description |
+|---|---|---|---|
+| `--config` | `-c` | `~/.versori/config.yaml` | Path to the config file |
+| `--context` | `-x` | *(active context)* | Use a specific context for this invocation |
+| `--output` | `-o` | `table` | Output format: `table`, `json`, or `yaml` |

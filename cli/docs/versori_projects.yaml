@@ -1,0 +1,39 @@
+name: versori projects
+synopsis: Manage the CLI context
+description: |-
+    Context sets the configuration for your CLI session.
+    It allows you to manage your authentication tokens and organisations.
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for projects
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori - versori CLI
+    - versori projects asset - Manage assets within a project
+    - versori projects create - Create a new project in the current organisation
+    - versori projects deploy - Deploy the project to versori
+    - versori projects details - Get details for a project. Pass in - to read the project id from stdin
+    - versori projects edit - Edit project environment configuration (resource limits and requests)
+    - versori projects environments - Manage project environments
+    - versori projects list - Lists all projects in the current context
+    - versori projects logs - Check the project logs
+    - versori projects proxy - Send an HTTP request to a project's deployed environment
+    - versori projects save - Save the project files to versori (no deploy)
+    - 'versori projects sync - Sync pulls the project files to the local directory. WARNING: This will overwrite any local changes'
+    - versori projects systems - Manage systems within a project
+    - versori projects users - Manage users (activations) within a project
+    - versori projects versions - Manage versions within a project.

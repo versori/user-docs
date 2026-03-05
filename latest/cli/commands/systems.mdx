@@ -1,0 +1,42 @@
+---
+title: "systems"
+description: "Manage systems in your organisation."
+---
+
+The `systems` command (alias: `system`) manages systems at the organisation level.
+
+<Note>
+To manage systems linked to a specific project, use [`projects systems`](/latest/cli/commands/projects#versori-projects-systems) instead.
+</Note>
+
+## Subcommands
+
+| Subcommand | Description |
+|---|---|
+| `list` | Lists systems for the current organisation context |
+| `create` | Create a new system in the current organisation |
+
+---
+
+### `versori systems list`
+
+Lists all systems in the current organisation context.
+
+```sh
+versori systems list
+```
+
+---
+
+### `versori systems create`
+
+Create a new system in the current organisation.
+
+```sh
+versori systems create --name <name> --domain <domain> --template-base-url <url> [flags]
+```
+
+**Flags:**
+* `--name`: Name of the system
+* `--domain`: Domain of the system
+* `--template-base-url`: Template base URL for the system

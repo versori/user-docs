@@ -1,0 +1,77 @@
+---
+title: "projects versions"
+description: "Manage versioned snapshots of project files."
+---
+
+The `versions` subcommand (alias: `version`) manages versioned snapshots of project files.
+
+## Subcommands
+
+| Subcommand | Description |
+|---|---|
+| `create` | Creates a new version for a project with the files from `--directory` |
+| `deploy` | Deploys a specific version to an environment |
+| `list` | Lists most recent versions |
+| `pull` | Pull files from a version into the target directory |
+
+---
+
+### `versori projects versions list`
+
+Lists most recent versions.
+
+```sh
+versori projects versions list [flags]
+```
+
+**Flags:**
+* `--limit`: How many versions to list (default 20)
+* `--project`: The ID of the project to list versions for.
+
+---
+
+### `versori projects versions create`
+
+Creates a new version for a project with the files from `--directory`. Alias: `push`.
+
+```sh
+versori projects versions create [--project <project-id>] [--directory <source_directory>] [flags]
+```
+
+**Flags:**
+* `--description`: Description of the new version.
+* `-d`, `--directory`: Directory containing the new version. (default ".")
+* `--dry-run`: Print files that would be uploaded without actually pushing.
+* `-n`, `--name`: Name of the new version.
+* `--project`: ID of the project to push the version to.
+
+---
+
+### `versori projects versions deploy`
+
+Deploys a specific version to an environment. Alias: `push`.
+
+```sh
+versori projects versions deploy --project <project-id> --version <version-id> --environment <environment-name> [flags]
+```
+
+**Flags:**
+* `--environment`: The name of the environment to deploy to.
+* `--project`: The ID of the project to deploy the version to.
+* `--version-id`: The ID of the version to deploy.
+
+---
+
+### `versori projects versions pull`
+
+Pull files from a version into the target directory.
+
+```sh
+versori projects versions pull [--directory <target-directory>] [--project <project-id>] [--version <version-id>] [flags]
+```
+
+**Flags:**
+* `-d`, `--directory`: Directory containing the versions to be downloaded (default ".")
+* `--dry-run`: Print files that would be downloaded without actually pulling.
+* `--project`: ID of the project to pull the version from.
+* `--version`: ID of the version. If not given, you will be prompted to select one.

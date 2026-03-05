@@ -1,0 +1,31 @@
+name: versori context add
+synopsis: |
+    Add a new context to your config and selects it as the default. It requires you generate a JWT token from the Versori console. You can generate the JWT here https://ai.versori.com/account?content=keys
+usage: versori context add --name <name> --organisation <organisation-id> --jwt <jwt> [flags]
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for add
+    - name: jwt
+      usage: |
+        JWT token to use with the context. If the value is -, it will be read from stdin.
+    - name: name
+      usage: Name of the context
+    - name: organisation
+      usage: Organisation ID to use with the context
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori context - Manages the authentications to the Versori platform

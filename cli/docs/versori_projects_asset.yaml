@@ -1,0 +1,25 @@
+name: versori projects asset
+synopsis: Manage assets within a project
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for asset
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context
+    - versori projects asset download - Download an asset from the Versori platform
+    - versori projects asset list - List assets for a project
+    - versori projects asset upload - Upload an asset file to the Versori platform

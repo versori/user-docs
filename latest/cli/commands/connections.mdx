@@ -1,0 +1,33 @@
+---
+title: "connections"
+description: "Manage connections in your organisation."
+---
+
+The `connections` command (alias: `connection`) manages connections at the organisation level.
+
+## Subcommands
+
+| Subcommand | Description |
+|---|---|
+| `list` | Lists connections for the current organisation context |
+
+---
+
+### `versori connections list`
+
+Lists connections for the current organisation context.
+
+```sh
+versori connections list [flags]
+```
+
+**Flags:**
+* `--end-user`: Filter by end user ID
+* `--system`: Filter by system ID
+
+**Global Flags:**
+* `-o`, `--output`: Output format (`yaml`, `json`, `table`)
+
+```sh
+versori connections list --output json
+```

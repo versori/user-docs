@@ -1,0 +1,31 @@
+name: versori projects asset upload
+synopsis: Upload an asset file to the Versori platform
+description: |
+    Upload uploads a file as an asset to the Versori platform. Assets can be used as context by Versori AI agents.
+usage: versori projects asset upload --file <path> [flags]
+options:
+    - name: file
+      shorthand: f
+      usage: Path to the file to upload (required)
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for upload
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects asset - Manage assets within a project

@@ -1,0 +1,45 @@
+name: versori projects deploy
+synopsis: Deploy the project to versori
+usage: versori projects deploy [--project <project-id>] --environment <env> [--directory <directory>] [flags]
+options:
+    - name: assets
+      default_value: "false"
+      usage: Also upload assets from the versori-research directory
+    - name: description
+      usage: Description of the new version.
+    - name: directory
+      shorthand: d
+      default_value: .
+      usage: The directory containing the project files
+    - name: dry-run
+      default_value: "false"
+      usage: |
+        Print files that would be uploaded without actually deploying
+    - name: environment
+      usage: |
+        The project environment to deploy to (e.g. production, staging)
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for deploy
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+    - name: version
+      usage: |
+        Name of the version to create (default: current time in UTC, e.g. 2006-01-02-15-04-05)
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context

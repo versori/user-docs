@@ -1,0 +1,64 @@
+---
+title: "context"
+description: "Manage authentication contexts for the Versori CLI."
+---
+
+Contexts store your authentication credentials (organisation ID and JWT token). The active context is used by default for all CLI operations.
+
+## Subcommands
+
+| Subcommand | Description |
+|---|---|
+| `add` | Add a new context to your config and selects it as the default. |
+| `list` | List currently configured contexts. `*` denotes the active context. |
+| `rm` | Remove a configured context. |
+| `select` | Changes the active context. |
+
+---
+
+### `versori context add`
+
+Add a new context to your config and selects it as the default. It requires you generate a JWT token from the Versori console. You can generate the JWT here [https://ai.versori.com/account?content=keys](https://ai.versori.com/account?content=keys)
+
+```sh
+versori context add --name <name> --organisation <organisation-id> --jwt <jwt> [flags]
+```
+
+**Flags:**
+* `--jwt`: JWT token to use with the context. If the value is `-`, it will be read from stdin.
+* `--name`: Name of the context
+* `--organisation`: Organisation ID to use with the context
+
+<Tip>
+If you omit flags, the CLI prompts you interactively.
+</Tip>
+
+---
+
+### `versori context list`
+
+List currently configured contexts. `*` denotes the active context.
+
+```sh
+versori context list
+```
+
+---
+
+### `versori context select`
+
+Changes the active context.
+
+```sh
+versori context select <context-name>
+```
+
+---
+
+### `versori context rm`
+
+Remove a configured context.
+
+```sh
+versori context rm
+```

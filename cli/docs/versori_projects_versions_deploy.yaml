@@ -1,0 +1,30 @@
+name: versori projects versions deploy
+synopsis: |
+    Creates a new version for a project with the files from --directory
+usage: versori projects versions deploy --project <project-id> --version <version-id> --environment <environment-name> [flags]
+options:
+    - name: environment
+      usage: The name of the environment to deploy to.
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for deploy
+    - name: project
+      usage: The ID of the project to deploy the version to.
+    - name: version-id
+      usage: The ID of the version to deploy.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects versions - Manage versions within a project.

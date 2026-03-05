@@ -1,0 +1,28 @@
+name: versori
+synopsis: versori CLI
+description: versori CLI
+options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for versori
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori connections - Manage connections
+    - versori context - Manages the authentications to the Versori platform
+    - versori execution-pools - Manage execution pools
+    - versori projects - Manage the CLI context
+    - versori systems - Manage systems
+    - versori users - Manage users
+    - versori version - Show versori version
