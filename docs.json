@@ -165,11 +165,7 @@
             "groups": [
               {
                 "group": "Getting Started",
-                "pages": [
-                  "latest/cli/introduction",
-                  "latest/cli/installation",
-                  "latest/cli/quickstart"
-                ]
+                "pages": ["latest/cli/introduction", "latest/cli/installation", "latest/cli/quickstart"]
               },
               {
                 "group": "Commands",
@@ -179,7 +175,7 @@
                     "group": "Projects",
                     "pages": [
                       "latest/cli/commands/projects",
-                      "latest/cli/commands/projects/assets",
+                      "latest/cli/commands/projects/asset",
                       "latest/cli/commands/projects/environments",
                       "latest/cli/commands/projects/systems",
                       "latest/cli/commands/projects/users",
@@ -194,10 +190,7 @@
               },
               {
                 "group": "Guides",
-                "pages": [
-                  "latest/cli/configuration",
-                  "latest/cli/workflow"
-                ]
+                "pages": ["latest/cli/configuration", "latest/cli/workflow"]
               }
             ]
           },
