@@ -1,74 +1,59 @@
 ---
-title: Prompting and writing Code
-sidebarTitle: Building your Integration
+title: Building your integration
+sidebarTitle: Building your integration
 ---
 
-This guide explores how to prompt and build your integration code to run on the Versori platform.
+The Build tab is where you prompt, write, and iterate on your integration code. A full integration can encompass one or
+more workflows — for example, syncing orders and products between two systems might use a separate workflow for each.
+Keeping business cases in dedicated workflows is recommended, though combining them in a single workflow is possible.
 
-A full integration can encompass one or more workflows, consider the business case of syncing orders and products
-between two systems. Each workflow, orders and products, would likely be contained in it's own workflow running in the
-same integration.
+## Before you begin
 
-This is not to say that both could not be achieved in the same workflow although best practice would be to have business
-cases separated by workflow.
+There are two ways to start building your integration:
 
-### Before We Begin
+- **Self-prompting**: You define the integration requirements and prompt the agent directly.
+- **Workflow-driven prompting**: You follow on from planning and workflow generation carried out in the
+  [Plan tab](./plan).
 
-There are two ways to drive the start of the build of your integration:
+Choose whichever approach suits your current stage. If you have already generated workflows in the Plan tab, the
+workflow-driven approach gives you a structured starting point. Otherwise, self-prompting lets you begin from your own
+requirements.
 
--   Self prompting from your own build requirements
--   Workflow driven prompting as a follow on from previous planning and workflow generation in the [plan tab](./plan)
+## Building from your own requirements
 
-#### Self prompting Integration Build
+Before you start prompting, ensure you have a clear understanding of what the integration needs to achieve. Gather the
+following details:
 
-Before you begin building you will want to have a clear understanding of your integration requirements and what you
-intend to achieve.
+- **Systems and authentication**: Identify the source and target systems and the authentication methods each requires.
+- **Business requirements**: Define what the integration must accomplish.
+- **Workflow trigger**: Decide how the workflow will be triggered — via webhook or on a schedule.
+- **Integration type**: Determine whether this is a real-time integration, a batch job, a bidirectional data sync, or a
+  multi-tenant integration.
+- **Data model and mappings**: List the objects and fields you need, including examples and edge cases.
 
--   **Systems and auth**: Identify source/target systems and authentication methods.
--   **Business requirements**: What you are trying to achieve.
--   **Workflow Trigger** How you intend the workflow to be triggered - webhook or scheduled.
--   **Type of integration**: Is this a real-time integration, a batch job, a bidirectional data sync, and/or a
-    multi-tenant integration?
--   **Data model and mappings**: List objects and fields you need, with examples and edge cases.
+Once you have these details in hand, you can begin prompting the agent to build your integration.
 
-When you are satisfied the necessary details of your integration are understood you can begin prompting Versori.
+## Building from planned workflows
 
-#### Prompting Best Practices
-
--   Keep prompts clear, detailed but concise.
--   If prompting to edit a specific part of the integration ensure that it is clear which workflow and what part of the
-    code you want changed is specified. This can be achieved by:
-    -   Using the edit step function in Flow mode
-    -   Using the @ button to select a specific file in the chat textbox
-    -   Manually writing in the prompt which workflow and step to edit
--   Adding additional attachments, will help with context for the Agent
--   Utilising 'New chats' can help when addressing new issues / parts of the code
--   If any error logs are relevant to what you need to solve then building up a prompt with these will help with
-    debugging.
--   Making use of the Question mode when you only want to query the agent will prevent any unwarranted code changes
-
-#### Workflow driven Integration Build
-
-If you have done prior planning in the [plan tab](./plan) and generated workflows you will have access to these
-workflows in the Build chat.
+If you have carried out research and generated workflows in the [Plan tab](./plan), those workflows are available
+directly in the Build chat.
 
 <Note>
-    Workflows in the Build chat window will only be available if workflows have been generated in the plan tab after
-    carrying out some research.
+Workflows only appear in the Build chat if they have been generated in the Plan tab after carrying out research.
 </Note>
 
-In these workflows, the following information is provided:
+Each workflow provides the following context for the agent:
 
--   **Workflow story** An overview of what the workflow will achieve
--   **User Stories** Individual criteria that highlight specific logical requirements
--   **Description** A summary of the workflow
--   **Prompt** The prompt that will be used when selecting the workflow
--   **Acceptance Criteria** What capabilities the workflow must achieve
--   **Systems Deep Dive** System and authentication details
--   **Trigger** The type of trigger that will initiate the workflow
--   **API Endpoints** The API endpoints that will be used in the Integration
--   **Data Flow Architecture** The sequential steps in how data will be passed through the workflow
--   **Transformations** Table of data mappings between systems
+- **Workflow story** — an overview of what the workflow achieves
+- **User stories** — individual criteria highlighting specific logical requirements
+- **Description** — a summary of the workflow
+- **Prompt** — the prompt used when selecting the workflow
+- **Acceptance criteria** — the capabilities the workflow must deliver
+- **Systems deep dive** — system and authentication details
+- **Trigger** — the trigger type that initiates the workflow
+- **API endpoints** — the endpoints used in the integration
+- **Data flow architecture** — the sequential steps describing how data passes through the workflow
+- **Transformations** — a table of data mappings between systems
 
 <Columns cols={2}>
     <Card title="Build Workflows">
@@ -79,5 +64,58 @@ In these workflows, the following information is provided:
     </Card>
 </Columns>
 
-From this point after the intital workflow prompt, you are now ready to test, debug and continue development of the
-workflow.
+After the initial workflow prompt, you can continue to test, debug, and iterate on the workflow.
+
+## Prompting best practices
+
+Effective prompting helps the agent produce accurate, well-structured integration code. Follow these guidelines to get
+the best results.
+
+- **Be clear and concise**: Provide detailed requirements without unnecessary noise.
+- **Be specific about scope**: When editing part of an integration, specify the exact workflow and step. You can do this
+  by:
+  - Using the edit step function in Flow mode
+  - Using the **@** button to select a specific file in the chat textbox
+  - Manually naming the workflow and step in your prompt
+- **Attach supporting context**: Additional attachments such as API documentation or example payloads give the agent
+  more context to work with.
+- **Start new chats for new topics**: Opening a new chat when switching to a different issue or area of the code keeps
+  the conversation focused. See [Managing multiple chats](#managing-multiple-chats) below.
+- **Include error logs**: If you are debugging, include relevant error logs in your prompt to help the agent diagnose
+  the issue.
+- **Use Question mode for queries**: When you only want to ask the agent about your code without making changes, use
+  Question mode to prevent unintended edits.
+
+<Tip>
+Treat each prompt like a well-written ticket — state what you want to change, where it applies, and what the expected
+outcome is. The more precise the prompt, the more accurate the result.
+</Tip>
+
+## Managing multiple chats
+
+When working with AI-assisted tools, keeping separate chats for separate tasks is one of the most effective habits you
+can develop. The Build tab lets you create and switch between multiple chat sessions using the **+** button and the chat
+history panel.
+
+<Frame caption="Use the + button to start a new chat and the history panel to switch between existing sessions">
+<img src="/images/guides/build/multiple-chats-001.png" alt="Build tab showing multiple chat sessions in the history panel" />
+</Frame>
+
+Each chat session maintains its own context window — the set of messages and code the agent uses to understand your
+intent. As a conversation grows longer, the context becomes increasingly loaded with previous instructions, code
+changes, and debugging history. This can lead to several problems:
+
+- **Context dilution**: The agent may lose sight of your current goal when earlier, unrelated instructions compete for
+  attention in a long conversation.
+- **Conflicting instructions**: Fixes or changes from an earlier part of the chat can contradict what you need now,
+  causing the agent to produce inconsistent results.
+- **Slower responses**: Larger context windows require more processing, which can increase response times.
+
+By starting a fresh chat each time you move to a new task — such as switching from building a webhook handler to
+debugging a data mapping issue — you give the agent a clean slate with focused context. This leads to more accurate
+responses and faster iterations.
+
+<Tip>
+A good rule of thumb: if you find yourself saying "ignore what I said earlier" or "going back to the original
+approach," it is time to open a new chat.
+</Tip>

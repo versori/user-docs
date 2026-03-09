@@ -1,65 +1,180 @@
 ---
-title: Managing Connectors
+title: Connecting
+sidebarTitle: Connecting
 ---
 
-This guide explores the Connect tab and explains how Connectors and Connections can be managed. To understand more about
-how Connectors and Connections work within the Versori Platform, see the [Connectors](/latest/concepts/connectors) and
-[Connections](/latest/concepts/connections) pages.
+Connections link your integration to external systems by providing the credentials and configuration needed to
+authenticate API requests. Each connector in your project can have one or more connections, allowing you to target
+different environments or users with separate credentials while sharing the same integration logic.
 
 <Note>
-    This guide does not dive into specific authentication methods, see [Authentication
-    Methods](/latest/guides/auth-methods/introduction) for more details on the different methods available.
+This guide covers how to create and manage connections in the Connect tab. For details on specific authentication
+methods, see [Authentication Methods](/latest/guides/auth-methods/introduction). For a deeper understanding of how
+connectors and connections work within the platform, see [Connectors](/latest/concepts/connectors) and
+[Connections](/latest/concepts/connections).
 </Note>
 
-The connect tab shows the user the Connectors which are in use by the Project, including the list of endpoints available
-to each Connector. Here you can also manage authentication by configuring different authentication methods for each
-Connector.
+## Connections vs embedded connections
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/connectors-001.png" />
+Before creating a connection, it is important to understand the two types available.
+
+A **connection** stores credentials that you provide directly — such as an API key or OAuth2 tokens. The credentials
+belong to your organisation and are used when the integration runs on your behalf. This is the standard approach when
+you control the target system.
+
+An **embedded connection** does not store credentials itself. Instead, it defines the authentication method and allows
+external users of your integration to connect with their own credentials. Users can be activated via the Users tab or
+through an external web app configured to use Versori APIs. Use embedded connections when you are building an
+integration that other people or organisations will authenticate individually.
+
+| | Connection | Embedded connection |
+| --- | --- | --- |
+| **Credentials** | Stored directly by you | Provided by each external user |
+| **Use case** | Internal integrations, single-tenant | Multi-tenant, customer-facing integrations |
+| **Activation** | Immediate — ready once created | Users activate via the Users tab or Versori APIs |
+
+<Tip>
+If you are building an integration for your own use, start with a standard connection. Switch to an embedded connection
+when you need external users to authenticate with their own credentials.
+</Tip>
+
+## Selecting an authentication type
+
+When creating a new connection, you first choose an authentication type that matches how the target API expects
+requests to be authenticated. The platform supports the following types:
+
+<Frame caption="The authentication type selector lists all supported methods">
+<img src="/images/guides/connect/auth-type-selector-001.png" alt="Authentication type dropdown showing API Key, Basic Auth, OAuth2, OAuth1, HMAC (Webhook Only), and None (Bypass Authentication) options" />
 </Frame>
 
-## Connectors
-
-Connectors are the starting point in how Versori provides integrations to external systems. Unlike other iPaaS's,
-Versori do not rely on “pre-built” connectors, we use AI to generate Connectors either by scraping API documentation or
-from a user-provided OpenAPI specification.
+| Type | When to use |
+| --- | --- |
+| **API Key** | The API authenticates via a key sent in a header, query parameter, or cookie. |
+| **Basic Auth** | The API requires a username and password sent as a Base64-encoded header. |
+| **OAuth2** | The API uses OAuth 2.0 flows (authorization code, client credentials, etc.). |
+| **OAuth1** | The API uses the older OAuth 1.0a signing protocol. |
+| **HMAC (Webhook Only)** | Incoming webhooks that are verified using an HMAC signature. |
+| **None (Bypass Authentication)** | The API requires no authentication, or you handle it yourself within the integration logic. |
 
 <Note>
-Currently only the AI can create Connectors, which can be prompted via either the Plan or Build tabs. Manual creation
-of Connectors is not yet available via the UI, but can be done manually via our API.
+If the connector was generated from an OpenAPI specification, the authentication type may already be pre-configured.
+You can adjust it when creating a new connection if needed.
 </Note>
 
-### Managing Connectors
+## Creating a new connection
 
-When new Connectors are created via AI, they start off unconfigured without endpoints or authentication methods. If an
-OpenAPI specification is provided, the configuration is automatically populated based on the specification.
+A connection requires an authentication method, a name, and the credentials for the target API. If an authentication
+method already exists on the connector, you can reuse it; otherwise, you create one inline during the connection setup.
 
-For unconfigured Connectors, click the "Setup Connector with AI" button to start the process to automatically configure
-the Connector, this can take a couple of minutes to complete. Once complete, selecting "Manage Authentication" will open
-the Authentication sidebar where you can see what the AI has configured, make any adjustments, and create a Connection
-for the Connector.
+<Steps>
+<Step title="Open the connector">
+Navigate to the **Connect** tab and select the connector you want to configure. The connector detail view shows
+existing connections and the base URL.
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-auth-sidebar-001.png" />
+<Frame caption="The connector detail view displays existing connections and the base URL for the selected connector">
+<img src="/images/guides/connect/connector-overview-001.png" alt="Connector overview showing Github and Slack connectors, an empty Existing Connections list, and a Base URL field set to https://api.github.com/" />
+</Frame>
+</Step>
+
+<Step title="Start a new connection">
+Click **+ New Connection**. The new connection form opens with two sections: **Auth Method** at the top and
+**Connection** details below.
+
+<Frame caption="The new connection form lets you configure an auth method and provide connection credentials in one step">
+<img src="/images/guides/connect/new-connection-form-001.png" alt="New Connection form with Auth Method section showing API Key fields for name, description, header name, and insert-in, and a Connection section with fields for connection name, base URL, and API key" />
+</Frame>
+</Step>
+
+<Step title="Configure the auth method">
+Select an authentication type from the **Auth Method** dropdown. If this is a new auth method, fill in the required
+fields — for example, for API Key authentication you provide a name, header name, and where the key is inserted
+(header, query, or cookie). Click **Create** to save the auth method.
+</Step>
+
+<Step title="Fill in connection details">
+Enter a **Connection Name**, verify the **Base URL**, and provide the required credentials (e.g. your API key). If you
+want external users to authenticate with their own credentials instead, enable the **Embedded Connection** toggle.
+</Step>
+
+<Step title="Save the connection">
+Click **Connect** to create the connection. The connector now shows the active connection with its authentication
+details.
+
+<Frame caption="An active connection displays the connection name, authentication type, base URL, and creation date">
+<img src="/images/guides/connect/active-connection-001.png" alt="Active connection card showing Test Connection with API Key authentication, base URL https://api.github.com, and creation date" />
+</Frame>
+</Step>
+</Steps>
+
+<Tip>
+Give connections descriptive names that reflect their purpose or environment — for example, "Production - GitHub" or
+"Staging - Slack". This makes it easier to identify the correct connection when configuring environments.
+</Tip>
+
+## Setting up an embedded connection
+
+An embedded connection delegates authentication to the external users of your integration. Rather than storing
+credentials directly, it defines the authentication method and waits for users to provide their own.
+
+<Steps>
+<Step title="Start a new connection">
+Open the connector and click **+ New Connection** as you would for a standard connection.
+</Step>
+
+<Step title="Enable embedded mode">
+In the **Connection** section of the form, toggle **Embedded Connection** on. The credential fields (e.g. API Key)
+are removed because the platform expects each user to supply their own.
+</Step>
+
+<Step title="Save the embedded connection">
+Click **Connect**. The connector now shows an embedded connection indicator instead of stored credentials.
+
+<Frame caption="An embedded connection shows the authentication method without stored credentials, and explains how external users connect">
+<img src="/images/guides/connect/embedded-connection-001.png" alt="Embedded Connection view showing Authentication Method Name Apikey, Authentication Type API Key, and an info banner explaining that external users connect with their own credentials via the Users tab or Versori APIs" />
+</Frame>
+</Step>
+</Steps>
+
+<Warning>
+An embedded connection does not function until at least one external user has been activated. Activate users via the
+**Users** tab or through an external web app configured to use Versori APIs.
+</Warning>
+
+## Reusing existing connections
+
+Once a connection has been created, it appears in the **Existing Connections** list on the connector detail view. You
+can reuse an existing connection across multiple environments without recreating it.
+
+<Frame caption="Existing connections show the linked environments, authentication configuration, and whether the connection is currently in use">
+<img src="/images/guides/connect/existing-connections-001.png" alt="Existing Connections list showing Test Connection linked to 1 environment, marked as Connection In Use, with authentication method configuration details including name, type, authorisation header, insert-in, and description" />
 </Frame>
 
-If you are happy with the configuration, click the "+ New Connection" button to create a Connection for the Connector. 
-Otherwise, you can select "Manage Connector" to manually edit the Connector configuration.
+Each connection card displays:
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-manage-connector-001.png" />
-</Frame>
+- **Linked environments**: The number of environments using this connection.
+- **Connection status**: Whether the connection is currently in use by a deployed environment.
+- **Authentication method configuration**: The full auth method details including type, header name, and insertion
+  point.
 
-Once you are happy with the configuration, click the "Create Connection" button to create a Connection for the
-Connector.
+<Note>
+When you deploy an integration to an environment, you assign connections to each connector for that environment. A
+single connection can be shared across environments, or you can create separate connections with different credentials
+per environment.
+</Note>
 
-#### Bypass Auth
+## Bypassing authentication
 
-See the [Bypass Auth](/latest/guides/connect/bypass-auth) guide for more details on how to bypass authentication for a
-Connection.
+Some APIs — such as public endpoints or internal services behind a VPN — do not require authentication. For these
+cases, select **None (Bypass Authentication)** as the authentication type when creating a connection.
 
-## Connections
+Bypassing authentication skips all credential handling for the connector. Requests are sent without any authentication
+headers, tokens, or signatures. This is useful when:
 
-Connections are the way to connect to an external system. Each Connector can have multiple Connections, and each
-Connection can have a different set of credentials and variables.
+- The target API is publicly accessible and requires no credentials.
+- Authentication is handled externally (e.g. through a network-level gateway or VPN).
+- You are testing an integration against a local or mock API that does not enforce authentication.
+
+<Warning>
+Only bypass authentication when you are certain the target API does not require credentials. Using bypass on an
+authenticated API will result in failed requests.
+</Warning>

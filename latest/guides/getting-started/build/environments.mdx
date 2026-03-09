@@ -1,0 +1,85 @@
+---
+title: Environments
+sidebarTitle: Environments
+---
+
+Environments allow you to deploy and run integrations across isolated contexts such as development, staging, and
+production. By separating configuration and credentials per environment, you can safely test changes before promoting
+them to live systems.
+
+## Why use environments
+
+When building an integration, you are working with live systems, real credentials, and production data. Without
+environments, every change carries the risk of impacting your end users.
+
+Environments solve this by giving you isolated spaces to:
+
+- **Test safely**: Validate integration logic, data mappings, and error handling against sandbox or staging APIs without
+  affecting production data.
+- **Iterate faster**: Debug issues and refine workflows in a development environment where mistakes have no downstream
+  consequences.
+- **Control promotion**: Move changes through a structured path — for example, development to staging to production —
+  so each release is verified before it reaches live systems.
+- **Manage credentials independently**: Each environment maintains its own connections and credentials, ensuring that
+  development API keys never collide with production secrets.
+- **Support multi-tenant workflows**: Serve different customers or regions with environment-specific configuration while
+  sharing the same integration code.
+
+<Tip>
+Start with at least two environments — one for development and one for production. This gives you a safe space to build
+and test before going live.
+</Tip>
+
+## Creating environments
+
+You can create environments from the **Environments** tab within the Build section of your project.
+
+<Steps>
+<Step title="Open the Environments tab">
+  Navigate to your project and select the **Environments** tab in the Build view.
+</Step>
+
+<Step title="Create a new environment">
+  Click **Create Environment** and provide a name that reflects its purpose (e.g. `development`, `staging`,
+  `production`).
+</Step>
+
+<Step title="Configure connections">
+  Each environment requires its own set of connections. After creating the environment, link the appropriate systems and
+  configure credentials specific to that environment's target APIs.
+</Step>
+</Steps>
+
+<Note>
+A maximum of **5 environments** can be created per project. Plan your environment strategy to make the most of this
+limit — a common setup is development, QA, staging, pre-production, and production.
+</Note>
+
+## Syncing environments
+
+Once you have verified your integration in a lower environment, you can sync changes to a higher environment to promote
+your work through the pipeline.
+
+Syncing copies the integration version from one environment to another. This ensures the exact code and workflow
+configuration you tested is what gets deployed — no manual re-entry or drift between environments.
+
+<Steps>
+<Step title="Verify in the source environment">
+  Run your integration in the source environment (e.g. development) and confirm that all workflows execute as expected.
+  Use the Flow view to inspect data at each step.
+</Step>
+
+<Step title="Initiate a sync">
+  From the Environments tab, select the target environment you want to sync to and choose the version to promote.
+</Step>
+
+<Step title="Review and confirm">
+  Confirm the sync to apply the integration version to the target environment. The target environment's connections and
+  credentials remain unchanged — only the integration code and workflow configuration are synced.
+</Step>
+</Steps>
+
+<Warning>
+Syncing does not copy connections or credentials between environments. Each environment retains its own connection
+configuration. Make sure the target environment has valid connections configured before activating a synced version.
+</Warning>

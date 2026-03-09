@@ -1,39 +1,72 @@
 ---
-title: Bypass Authentication
+title: Bypass authentication
+sidebarTitle: Bypass authentication
 ---
 
-The Bypass Authentication feature enables users to send requests to the Connector, or process webhook traffic from a
-Connector, without authentication.
+Bypassing authentication allows you to create a connection to an external system without providing credentials. This is
+useful when the target API does not require authentication — for example, public endpoints or services that rely on
+network-level security such as IP allowlists.
 
 <Warning>
-    Bypassing authentication for a Connection will allow you to send requests to the external system, or process webhook
-    traffic, without authentication. This is not recommended and should only be used in rare cases where you need to
-    connect to an external system without request authentication, such as services using an IP allowlist (see [IP
-    Allowlist](/latest/guides/advanced/ip-allowlist) for more details).
+    Bypassing authentication means requests to the external system and incoming webhook traffic will not include any
+    credentials. Only use this option when you are confident the target system does not require request-level
+    authentication. For IP-based security, see [IP Allowlist](/latest/guides/advanced/ip-allowlist).
 </Warning>
 
-## Configuring the Authentication Method
+## When to bypass authentication
 
-To bypass authentication for a Connection, select the "Bypass Auth" option. This creates a new Authentication Method for
-the Connection called "None" with type "No Authentication" and the Connection section updates to allow you to configure
-the base URL for the Connection, and a confirmation button to "Bypass Connection".
+Most connections require credentials — API keys, OAuth tokens, or other authentication methods — to communicate with
+external systems. However, there are scenarios where authentication is unnecessary or handled outside the platform:
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-bypass-auth-001.png" />
-</Frame>
+- **Public APIs**: The external system exposes endpoints that do not require authentication.
+- **IP allowlisting**: The target system uses network-level restrictions instead of request-level credentials, allowing
+  traffic from known IP addresses without further authentication.
+- **Internal services**: You are connecting to an internal service within your own infrastructure that does not enforce
+  authentication.
 
-## Connecting to a Bypassed Connection
+<Tip>
+    If you are unsure whether the target system requires authentication, check with the API provider first. Bypassing
+    authentication when credentials are required will result in failed requests.
+</Tip>
 
-Once confirmed, a new Connection will be created and the Connection dropdown will indicate that the Connection is using
-bypassed auth.
+## Creating a bypassed connection
 
-<Frame className="max-w-2xl mx-auto">
-    <img src="/images/guides/connect/shopify-bypass-auth-002.png" />
-</Frame>
+You can bypass authentication when creating a new connection for a connector. This creates an authentication method
+called "No Auth" with the type set to "None - Authentication Bypassed".
 
-The Connection will be available to use in your Build, and any requests will be made to the base URL configured.
+<Steps>
+<Step title="Open the New Connection form">
+  Navigate to your connector and select **New Connection**. Choose the **No Auth** option under Auth Method to indicate
+  that no credentials are required.
+</Step>
 
-## Reverting a bypassed Connection
+<Step title="Configure the connection">
+  Provide a **Name** and optional **Description** for the authentication method, then enter the **API Base URL** for
+  the target system. This is the root URL that all requests will be sent to.
 
-To revert a bypassed Connection, choose a different Authentication Method for the Connection. This should update the
-Connection section to allow you to choose an existing Connection or create a new one.
+  <Frame caption="The New Connection form with No Auth selected and the API Base URL configured">
+  <img src="/images/guides/connect/bypass-auth-001.png" alt="New Connection form showing No Auth selected as the authentication method with fields for name, description, and API Base URL" />
+  </Frame>
+</Step>
+
+<Step title="Confirm the bypass">
+  Click **Bypass Authentication** to create the connection. The connection is now available to use in your integration,
+  and all requests will be sent to the configured base URL without credentials.
+</Step>
+</Steps>
+
+<Note>
+    The connection will appear in your list of available connections with its authentication status clearly marked as
+    bypassed. You can use it in your workflows just like any other connection.
+</Note>
+
+## Reverting a bypassed connection
+
+If you later need to add authentication to a bypassed connection, select a different authentication method for the
+connector. This updates the connection form to allow you to choose an existing authenticated connection or create a
+new one with credentials.
+
+<Tip>
+    Reverting a bypassed connection does not delete it. The existing bypassed connection remains available until you
+    replace it with an authenticated one.
+</Tip>

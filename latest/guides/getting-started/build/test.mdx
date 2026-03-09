@@ -1,4 +1,157 @@
 ---
-title: Testing Integration
-sidebarTitle: Testing Integration
+title: Testing
+sidebarTitle: Testing
 ---
+
+Testing lets you execute your integration end-to-end and inspect the data flowing through every step and every HTTP
+request your workflows make. By running test executions before deploying, you can validate logic, data mappings, and
+error handling in a safe environment.
+
+## How test executions work
+
+A test execution runs your integration exactly as it would in a live environment — triggering workflows, executing each
+step in sequence, and making real HTTP requests to connected systems. The difference is that you initiate the execution
+manually and can observe the results in real time through the Flow view.
+
+After an execution completes, the Flow view displays:
+
+- **Step-level data**: The input and output for each step in your workflow, so you can verify that data is transformed
+  and passed correctly between steps.
+- **Request-level data**: The full details of every HTTP request your integration makes, including the request URL,
+  headers, body, response status, and response body. This gives you visibility into exactly what your integration sends
+  to and receives from external systems.
+
+<Tip>
+Use test executions iteratively. Run an execution, inspect the results, adjust your code, and run again. This cycle is
+the fastest way to refine data mappings and catch edge cases.
+</Tip>
+
+## Triggering a test execution
+
+There are two ways to trigger a test execution, depending on how your workflow is configured to start.
+
+<Tabs>
+<Tab title="Webhook trigger">
+
+Webhook-triggered workflows start when an external system sends a payload to your integration's webhook URL. During
+testing, you simulate this by providing a payload directly in the platform — no external system needs to send a real
+request.
+
+<Steps>
+<Step title="Open the Flow view">
+  Navigate to your project and select the **Flow** tab in the Build view. Choose the workflow you want to test.
+</Step>
+
+<Step title="Trigger the execution">
+  Click the **Test** button on the webhook trigger node. This opens a panel where you can provide the webhook payload.
+</Step>
+
+<Step title="Provide a payload">
+  Enter a JSON payload that represents the data your webhook would receive from the external system. Use realistic data
+  that covers the scenarios you want to validate.
+
+```json Example webhook payload
+{
+  "event": "order.created",
+  "data": {
+    "order_id": "ORD-12345",
+    "customer": {
+      "id": "CUST-789",
+      "email": "jane@example.com"
+    },
+    "items": [
+      {
+        "sku": "PROD-001",
+        "quantity": 2,
+        "price": 29.99
+      }
+    ],
+    "total": 59.98,
+    "currency": "USD"
+  }
+}
+```
+</Step>
+
+<Step title="Run the execution">
+  Submit the payload to trigger the execution. The workflow runs through each step using the provided data, and results
+  appear in the Flow view as each step completes.
+</Step>
+</Steps>
+
+</Tab>
+<Tab title="Schedule trigger">
+
+Schedule-triggered workflows run on a defined interval (e.g. every 15 minutes, hourly, daily). During testing, you
+mimic a scheduled run by manually triggering the workflow as if the schedule had fired — without waiting for the next
+scheduled interval.
+
+<Steps>
+<Step title="Open the Flow view">
+  Navigate to your project and select the **Flow** tab in the Build view. Choose the workflow you want to test.
+</Step>
+
+<Step title="Trigger the execution">
+  Click the **Test** button on the schedule trigger node. This immediately starts the workflow as though the schedule
+  had just fired.
+</Step>
+
+<Step title="Monitor the execution">
+  The workflow begins executing from the first step. Since scheduled workflows typically fetch data from a source system
+  as their first action, the execution proceeds by making those requests and processing the responses through
+  subsequent steps.
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Inspecting execution results
+
+Once an execution completes, the Flow view highlights each step with its execution status. Select any step or request
+node to inspect its data.
+
+### Step data
+
+Selecting a step reveals the data that flowed through it during the execution:
+
+- **Input**: The data the step received from the previous step or trigger.
+- **Output**: The data the step produced after applying its logic, transformations, or mappings.
+
+Comparing input and output for each step lets you verify that your transformations are correct and that data is shaped
+as expected before reaching the next step.
+
+### Request data
+
+Selecting a request node shows the full HTTP transaction:
+
+- **Request URL**: The endpoint your integration called.
+- **Request headers**: The headers sent with the request, including authentication tokens.
+- **Request body**: The payload sent to the external system.
+- **Response status**: The HTTP status code returned.
+- **Response headers**: The headers returned by the external system.
+- **Response body**: The data returned by the external system.
+
+<Note>
+Request data is particularly useful for debugging authentication failures, unexpected response formats, and issues with
+pagination or rate limiting.
+</Note>
+
+## What to validate
+
+Use test executions to confirm the following before deploying your integration:
+
+- **Data mappings**: Fields are correctly transformed and mapped between source and target systems.
+- **Authentication**: Requests include valid credentials and receive successful responses.
+- **Error handling**: Your workflow handles error responses (4xx, 5xx) gracefully without failing silently.
+- **Pagination**: If your integration pages through results, verify that all pages are retrieved and processed.
+- **Edge cases**: Test with empty arrays, null values, missing fields, and large payloads to ensure your integration
+  handles them correctly.
+- **Idempotency**: Running the same execution twice does not create duplicate records in the target system.
+
+<Warning>
+Test executions make real HTTP requests to your connected systems. Ensure you are testing against development or sandbox
+environments to avoid modifying production data. Use
+[environments](/latest/guides/getting-started/build/environments) to manage separate credentials for testing and
+production.
+</Warning>

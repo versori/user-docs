@@ -68,7 +68,8 @@
                     "group": "Build",
                     "pages": [
                       "latest/guides/getting-started/build",
-                      "latest/guides/getting-started/build/flow",
+                      "latest/guides/getting-started/build/versions",
+                      "latest/guides/getting-started/build/environments",
                       "latest/guides/getting-started/build/test"
                     ]
                   },
