@@ -1,0 +1,34 @@
+name: versori projects systems add
+synopsis: Link a system to a project (create a connection template)
+usage: versori projects systems add --project <project-id> --system <system-id> --name <name> --environment <environment-name> [--dynamic] [flags]
+options:
+    - name: dynamic
+      default_value: "false"
+      usage: Whether the connection template is dynamic
+    - name: environment
+      usage: The environment name within the project
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for add
+    - name: name
+      usage: A name for the connection template
+    - name: project
+      usage: The project ID to link the system to
+    - name: system
+      usage: The system ID to link to the project
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects systems - Manage systems within a project

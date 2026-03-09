@@ -1,0 +1,24 @@
+name: versori projects users
+synopsis: Manage users (activations) within a project
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for users
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context
+    - versori projects users details - Get the details for an individual end user of a project
+    - versori projects users list - List users (activations) linked to a project environment

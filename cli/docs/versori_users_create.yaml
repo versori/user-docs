@@ -1,0 +1,29 @@
+name: versori users create
+synopsis: Create a new user in the current organisation
+usage: versori users create --display-name <name> --external-id <id> [flags]
+options:
+    - name: display-name
+      shorthand: "n"
+      usage: Display name of the user
+    - name: external-id
+      shorthand: e
+      usage: External ID of the user
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for create
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori users - Manage users

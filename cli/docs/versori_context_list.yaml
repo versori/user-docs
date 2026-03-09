@@ -1,0 +1,24 @@
+name: versori context list
+synopsis: |
+    List currently configured contexts. * denotes the active context.
+usage: versori context list [flags]
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for list
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori context - Manages the authentications to the Versori platform

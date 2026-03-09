@@ -1,0 +1,35 @@
+name: versori projects asset download
+synopsis: Download an asset from the Versori platform
+description: |
+    Download retrieves an asset by name from the Versori platform and saves it to the specified directory.
+usage: versori projects asset download --project <id> --asset <name> [flags]
+options:
+    - name: asset
+      shorthand: a
+      usage: Name of the asset to download (required)
+    - name: directory
+      shorthand: d
+      default_value: versori-research
+      usage: Directory to save the downloaded asset
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for download
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects asset - Manage assets within a project

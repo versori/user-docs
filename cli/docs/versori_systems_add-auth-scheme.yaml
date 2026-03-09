@@ -1,0 +1,77 @@
+name: versori systems add-auth-scheme
+synopsis: Add or update an auth scheme config for a system
+description: |-
+    Adds or updates an auth scheme config for the given system.
+    If the auth scheme name already exists on the system it will be updated, otherwise it will be created.
+
+    Supported types: none, api-key, basic-auth, oauth2, hmac, certificate
+usage: versori systems add-auth-scheme --system-id <system-id> --type <type> --name <name> [flags]
+options:
+    - name: api-key.in
+      usage: |
+        Where to send the API key: header, query or cookie (required when type=api-key)
+    - name: api-key.name
+      usage: |
+        Header/query/cookie name for API key (required when type=api-key)
+    - name: description
+      usage: Human-readable description for this auth scheme config
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for add-auth-scheme
+    - name: hmac.algorithm
+      usage: |
+        HMAC algorithm: sha1, sha256, sha512 (required when type=hmac)
+    - name: hmac.digest-input
+      default_value: '[]'
+      usage: 'HMAC digest input: body, url (repeatable)'
+    - name: hmac.encoding
+      default_value: hex
+      usage: 'HMAC encoding: hex, base64, base64url'
+    - name: hmac.in
+      usage: |
+        Where to send the HMAC signature: header, query or cookie (required when type=hmac)
+    - name: hmac.name
+      usage: |
+        Header/query/cookie name for HMAC signature (required when type=hmac)
+    - name: name
+      usage: Name of the auth scheme config
+    - name: oauth2.authorize-url
+      usage: OAuth2 authorization URL
+    - name: oauth2.client-id
+      usage: OAuth2 client ID
+    - name: oauth2.client-secret
+      usage: OAuth2 client secret
+    - name: oauth2.default-scope
+      default_value: '[]'
+      usage: OAuth2 default scope in name=description format (repeatable)
+    - name: oauth2.grant-type
+      default_value: authorizationCode
+      usage: |
+        OAuth2 grant type: authorizationCode, clientCredentials, password
+    - name: oauth2.scope
+      default_value: '[]'
+      usage: |
+        OAuth2 scope in name=description format, e.g. read=Read access (repeatable)
+    - name: oauth2.token-url
+      usage: OAuth2 token URL (required when type=oauth2)
+    - name: system-id
+      usage: ID of the system to add the auth scheme to (required)
+    - name: type
+      usage: |
+        Auth scheme type (none, api-key, basic-auth, oauth2, hmac, certificate)
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori systems - Manage systems

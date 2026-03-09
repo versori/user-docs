@@ -1,0 +1,26 @@
+name: versori projects versions
+synopsis: Manage versions within a project.
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for versions
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context
+    - versori projects versions create - Creates a new version for a project with the files from --directory
+    - versori projects versions deploy - Creates a new version for a project with the files from --directory
+    - versori projects versions list - Lists most recent versions
+    - versori projects versions pull - Pull files from a version into the target directory

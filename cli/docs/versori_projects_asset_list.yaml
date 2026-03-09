@@ -1,0 +1,28 @@
+name: versori projects asset list
+synopsis: List assets for a project
+description: |
+    List retrieves all assets for a project from the Versori platform.
+usage: versori projects asset list [flags]
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for list
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects asset - Manage assets within a project

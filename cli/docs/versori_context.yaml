@@ -1,0 +1,29 @@
+name: versori context
+synopsis: Manages the authentications to the Versori platform
+description: |-
+    Context sets the configuration for your CLI session.
+    It allows you to manage your authentication tokens and organisations.
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for context
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori - versori CLI
+    - versori context add - Add a new context to your config and selects it as the default. It requires you generate a JWT token from the Versori console. You can generate the JWT here https://ai.versori.com/account?content=keys
+    - versori context list - List currently configured contexts. * denotes the active context.
+    - versori context rm - Remove a configured context.
+    - versori context select - Changes the active context.

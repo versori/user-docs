@@ -1,0 +1,29 @@
+name: versori projects users details
+synopsis: Get the details for an individual end user of a project
+usage: versori projects users details --project <project-id> --environment <environment-name> --external-id <user-id> [flags]
+options:
+    - name: environment
+      usage: The environment name within the project
+    - name: external-id
+      usage: The external ID of the user
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for details
+    - name: project
+      usage: The project ID to list users for
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects users - Manage users (activations) within a project

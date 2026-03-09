@@ -1,0 +1,41 @@
+name: versori projects environments update-execution-pool
+synopsis: Update the execution pool of an environment
+description: |-
+    Update the execution pool used to deploy an environment.
+
+    WARNING: Changing the execution pool will result in a new public URL being created for the environment.
+    If the environment is running, it will be suspended first.
+
+    Example:
+      versori projects environments update-execution-pool --environment 01ABC123 --execution-pool gcp
+usage: versori projects environments update-execution-pool --environment <environment-id> --execution-pool <execution-pool-name> [flags]
+options:
+    - name: environment
+      usage: The name of the environment to update
+    - name: execution-pool
+      usage: The name of the new execution pool
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for update-execution-pool
+    - name: project
+      usage: The ID of the project
+    - name: "yes"
+      shorthand: "y"
+      default_value: "false"
+      usage: Skip confirmation prompt
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects environments - Manage project environments

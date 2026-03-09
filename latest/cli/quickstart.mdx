@@ -1,0 +1,56 @@
+---
+title: "Quickstart"
+description: "Set up authentication and run your first CLI command."
+---
+
+After [installing](/latest/cli/installation) the Versori CLI, follow these steps to authenticate and start managing your resources.
+
+<Steps>
+  <Step title="Generate a JWT for the CLI">
+    Generate a JWT token from the [Versori console](https://ai.versori.com/account?content=keys) for the organisation you want to manage.
+
+    <Frame caption="Generating a JWT for the CLI">
+    <img src="/images/cli/generate-jwt-for-cli.png" />
+</Frame>
+  </Step>
+
+  <Step title="Add a context">
+    A context stores your authentication credentials for an organisation. You need a JWT token generated from the [Versori console](https://ai.versori.com/account?content=keys) for the organisation you want to manage.
+
+    ```sh
+    versori context add \
+      --name my-context \
+      --organisation <organisation-id> \
+      --jwt <jwt-token>
+    ```
+
+    <Tip>
+    Pass in `--jwt -` to read the JWT from stdin.
+    </Tip>
+  </Step>
+  <Step title="Verify your context">
+    Confirm the context was created and is active:
+
+    ```sh
+    versori context list
+    ```
+  </Step>
+  <Step title="Run your first command">
+    List the projects in your organisation:
+
+    ```sh
+    versori projects list
+    ```
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Project Workflow" icon="arrows-spin" href="/latest/cli/workflow">
+    Follow a complete project lifecycle from creation to deployment.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/latest/cli/configuration">
+    Learn about the config file, contexts, and global flags.
+  </Card>
+</CardGroup>

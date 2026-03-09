@@ -1,0 +1,45 @@
+name: versori projects environments create
+synopsis: |
+    Create a new environment by cloning an existing environment in the same project
+description: |-
+    Create a new environment by cloning an existing environment within a project.
+    This command creates a new environment by copying the details of an existing environment.
+    You can optionally clone systems and copy static user variables from the source environment.
+usage: versori projects environments create --project <project-id> --old-env <source-env> --new-env <new-env> [flags]
+options:
+    - name: clone-systems
+      default_value: "false"
+      usage: |
+        If true, copies systems from the source environment to the new environment
+    - name: copy-static-user-variables
+      default_value: "false"
+      usage: |
+        If true, copies static user variables from the source environment to the new environment
+    - name: execution-pool
+      usage: |
+        Optional override execution pool for the new environment (defaults to source environment's execution pool)
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for create
+    - name: new-env
+      usage: The name of the new environment to create
+    - name: old-env
+      usage: The name of the source environment to clone from
+    - name: project
+      usage: The ID of the project
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects environments - Manage project environments

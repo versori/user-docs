@@ -1,0 +1,42 @@
+name: versori projects sync
+synopsis: |
+    Sync pulls the project files to the local directory. WARNING: This will overwrite any local changes
+description: |-
+    Sync pulls the project files to the local directory. The --project flag is only required the first time you sync a project.
+    WARNING: This will overwrite any local changes
+usage: versori projects sync [--project <project-id>] [--directory <directory>]
+options:
+    - name: assets
+      default_value: "false"
+      usage: |
+        Also sync project assets, removing any that are no longer part of the project from the versori-research directory
+    - name: directory
+      shorthand: d
+      default_value: .
+      usage: The directory to download the project files into
+    - name: dry-run
+      default_value: "false"
+      usage: |
+        Print files that would be created/updated/deleted without actually syncing
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for sync
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context

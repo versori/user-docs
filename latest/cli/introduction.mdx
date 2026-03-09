@@ -1,0 +1,47 @@
+---
+title: "Introduction"
+description: "A command-line interface for managing resources on the Versori platform."
+---
+
+The Versori CLI lets you manage projects, systems, connections, users, and more directly from your terminal. It supports the full project lifecycle — from creation and local development through deployment and monitoring.
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/latest/cli/installation">
+    Install the CLI on macOS, Linux, or Windows.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/latest/cli/quickstart">
+    Set up authentication and run your first command.
+  </Card>
+  <Card title="Commands" icon="terminal" href="/latest/cli/commands/context">
+    Full reference for all available commands.
+  </Card>
+  <Card title="Project Workflow" icon="arrows-spin" href="/latest/cli/workflow">
+    Learn the typical workflow for managing projects.
+  </Card>
+</CardGroup>
+
+## Overview
+
+| Command | Alias | Description |
+|---|---|---|
+| `version` | | Show the CLI version |
+| `context` | | Manage authentication contexts |
+| `projects` | `project` | Manage projects |
+| `systems` | `system` | Manage systems |
+| `connections` | `connection` | Manage connections |
+| `users` | `user` | Manage users |
+| `execution-pools` | `ep` | Manage execution pools |
+
+## Global flags
+
+These flags are available on every command.
+
+| Flag | Short | Default | Description |
+|---|---|---|---|
+| `--config` | `-c` | `~/.versori/config.yaml` | Path to the config file |
+| `--context` | `-x` | *(active context)* | Use a specific context for this invocation |
+| `--output` | `-o` | `table` | Output format: `table`, `json`, or `yaml` |
+
+<Tip>
+Run `versori <command> --help` for detailed usage of any command.
+</Tip>

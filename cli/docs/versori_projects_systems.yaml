@@ -1,0 +1,29 @@
+name: versori projects systems
+synopsis: Manage systems within a project
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for systems
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context
+    - versori projects systems add - Link a system to a project (create a connection template)
+    - versori projects systems bootstrap - Create systems from research context
+    - versori projects systems delete-connection-template - Delete a connection template from a project
+    - versori projects systems list - List systems linked to a project
+    - versori projects systems list-connections - List static connections for a project environment
+    - versori projects systems remove - Remove a system (connection template) from a project
+    - versori projects systems update-connection-template - Update a connection template in a project

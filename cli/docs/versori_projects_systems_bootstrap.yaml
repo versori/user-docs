@@ -1,0 +1,29 @@
+name: versori projects systems bootstrap
+synopsis: Create systems from research context
+usage: versori projects systems bootstrap --file <path> [flags]
+options:
+    - name: file
+      shorthand: f
+      usage: Path to a file containing research context (required)
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for bootstrap
+    - name: project
+      usage: |
+        Project ID; defaults from .versori when inside a synced project directory.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects systems - Manage systems within a project

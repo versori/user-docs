@@ -1,0 +1,48 @@
+name: versori projects edit
+synopsis: |
+    Edit project environment configuration (resource limits and requests)
+usage: versori projects edit --project <project-id> --environment <environment-name> [flags]
+options:
+    - name: environment
+      usage: The environment name
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for edit
+    - name: max-replicas
+      default_value: "0"
+      usage: |
+        Maximum number of replicas. Setting this option enables autoscaling on the project
+    - name: project
+      usage: The project ID
+    - name: replicas
+      default_value: "0"
+      usage: Number of replicas
+    - name: resource.cpu.limits
+      usage: CPU limits (e.g., 500m)
+    - name: resource.cpu.requests
+      usage: CPU requests (e.g., 100m)
+    - name: resource.memory.limits
+      usage: Memory limits (e.g., 500Mi)
+    - name: resource.memory.requests
+      usage: Memory requests (e.g., 200Mi)
+    - name: service-account
+      usage: |
+        Service account to use for the environment. Pass an empty string to remove the service account
+    - name: static-ip
+      usage: Enable or disable static IP (enabled/disabled)
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context

@@ -1,0 +1,23 @@
+name: versori projects list
+synopsis: Lists all projects in the current context
+usage: versori projects list [flags]
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for list
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context

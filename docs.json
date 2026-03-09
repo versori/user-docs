@@ -161,6 +161,40 @@
             ]
           },
           {
+            "tab": "CLI",
+            "groups": [
+              {
+                "group": "Getting Started",
+                "pages": ["latest/cli/introduction", "latest/cli/installation", "latest/cli/quickstart"]
+              },
+              {
+                "group": "Commands",
+                "pages": [
+                  "latest/cli/commands/context",
+                  {
+                    "group": "Projects",
+                    "pages": [
+                      "latest/cli/commands/projects",
+                      "latest/cli/commands/projects/asset",
+                      "latest/cli/commands/projects/environments",
+                      "latest/cli/commands/projects/systems",
+                      "latest/cli/commands/projects/users",
+                      "latest/cli/commands/projects/versions"
+                    ]
+                  },
+                  "latest/cli/commands/systems",
+                  "latest/cli/commands/connections",
+                  "latest/cli/commands/users",
+                  "latest/cli/commands/execution-pools"
+                ]
+              },
+              {
+                "group": "Guides",
+                "pages": ["latest/cli/configuration", "latest/cli/workflow"]
+              }
+            ]
+          },
+          {
             "tab": "API Reference",
             "anchors": [
               {

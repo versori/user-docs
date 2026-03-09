@@ -1,0 +1,28 @@
+name: versori projects versions list
+synopsis: Lists most recent versions
+usage: versori projects versions list [flags]
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for list
+    - name: limit
+      default_value: "20"
+      usage: How many versions to list
+    - name: project
+      usage: The ID of the project to list versions for.
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects versions - Manage versions within a project.

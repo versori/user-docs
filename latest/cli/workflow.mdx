@@ -1,0 +1,73 @@
+---
+title: "Project Workflow"
+description: "A typical workflow for managing Versori projects with the CLI."
+---
+
+This guide walks through a complete project lifecycle using the Versori CLI — from creation through deployment and monitoring.
+
+## Create and sync a project
+
+<Steps>
+  <Step title="Create a new project">
+    ```sh
+    versori projects create --name my-project
+    ```
+  </Step>
+  <Step title="Pull project files locally">
+    ```sh
+    versori projects sync --project <project-id>
+    ```
+
+    This creates a `.versori` file in the target directory so that subsequent commands can infer the project and context automatically.
+  </Step>
+</Steps>
+
+## Develop and deploy
+
+<Steps>
+  <Step title="Edit files locally">
+    Make your changes to the project files in the synced directory.
+  </Step>
+  <Step title="Push changes">
+    Save your local changes to the project without deploying:
+
+    ```sh
+    versori projects save
+    ```
+  </Step>
+  <Step title="Deploy to an environment">
+    ```sh
+    versori projects deploy --environment production
+    ```
+  </Step>
+  <Step title="Check logs">
+    ```sh
+    versori projects logs --environment production --since 1h
+    ```
+  </Step>
+</Steps>
+
+## Version and promote
+
+For more controlled releases, use versioned snapshots:
+
+```sh
+versori projects versions create --project <project-id> --name v1.0
+
+versori projects versions deploy \
+  --project <project-id> \
+  --version-id <id> \
+  --environment production
+```
+
+## Test with proxy
+
+Send an HTTP request directly to a deployed project environment:
+
+```sh
+versori projects proxy \
+  --project <project-id> \
+  --environment production \
+  --path /my-endpoint \
+  --method POST
+```

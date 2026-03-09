@@ -1,0 +1,25 @@
+name: versori projects environments
+synopsis: Manage project environments
+options:
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for environments
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects - Manage the CLI context
+    - versori projects environments create - Create a new environment by cloning an existing environment in the same project
+    - versori projects environments promote - Promote one environment to another by syncing deployment configuration
+    - versori projects environments update-execution-pool - Update the execution pool of an environment

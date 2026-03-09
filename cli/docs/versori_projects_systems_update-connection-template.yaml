@@ -1,0 +1,35 @@
+name: versori projects systems update-connection-template
+synopsis: Update a connection template in a project
+usage: versori projects systems update-connection-template --project <project-id> --template <template-id> [--name <name>] [--dynamic] [--auth-scheme-config-id <name>] [flags]
+options:
+    - name: auth-scheme-config-id
+      usage: |
+        Auth scheme config ID to associate with the connection template
+    - name: dynamic
+      default_value: "false"
+      usage: Whether the connection template is dynamic
+    - name: help
+      shorthand: h
+      default_value: "false"
+      usage: help for update-connection-template
+    - name: name
+      usage: New name for the connection template
+    - name: project
+      usage: The project ID containing the connection template
+    - name: template
+      usage: The connection template ID to update
+inherited_options:
+    - name: config
+      shorthand: c
+      default_value: /Users/teodor/.versori/config.yaml
+      usage: Config file (default is $HOME/.versori/config.yaml)
+    - name: context
+      shorthand: x
+      usage: |
+        Load a specific context. If not set will use the default active one.
+    - name: output
+      shorthand: o
+      default_value: table
+      usage: Output format (yaml, json, table)
+see_also:
+    - versori projects systems - Manage systems within a project
