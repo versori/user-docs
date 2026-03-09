@@ -7,6 +7,8 @@ Environments allow you to deploy and run integrations across isolated contexts s
 production. By separating configuration and credentials per environment, you can safely test changes before promoting
 them to live systems.
 
+<Note>Envrironments is in beta. If you would like environments activated for your organisation contact support.</Note>
+
 ## Why use environments
 
 When building an integration, you are working with live systems, real credentials, and production data. Without
@@ -18,16 +20,16 @@ Environments solve this by giving you isolated spaces to:
   affecting production data.
 - **Iterate faster**: Debug issues and refine workflows in a development environment where mistakes have no downstream
   consequences.
-- **Control promotion**: Move changes through a structured path — for example, development to staging to production —
-  so each release is verified before it reaches live systems.
+- **Control promotion**: Move changes through a structured path — for example, development to staging to production — so
+  each release is verified before it reaches live systems.
 - **Manage credentials independently**: Each environment maintains its own connections and credentials, ensuring that
   development API keys never collide with production secrets.
 - **Support multi-tenant workflows**: Serve different customers or regions with environment-specific configuration while
   sharing the same integration code.
 
 <Tip>
-Start with at least two environments — one for development and one for production. This gives you a safe space to build
-and test before going live.
+    Start with at least two environments — one for development and one for production. This gives you a safe space to
+    build and test before going live.
 </Tip>
 
 ## Creating environments
@@ -40,8 +42,8 @@ You can create environments from the **Environments** tab within the Build secti
 </Step>
 
 <Step title="Create a new environment">
-  Click **Create Environment** and provide a name that reflects its purpose (e.g. `development`, `staging`,
-  `production`).
+    Click **Create Environment** and provide a name that reflects its purpose (e.g. `development`, `staging`,
+    `production`).
 </Step>
 
 <Step title="Configure connections">
@@ -51,8 +53,8 @@ You can create environments from the **Environments** tab within the Build secti
 </Steps>
 
 <Note>
-A maximum of **5 environments** can be created per project. Plan your environment strategy to make the most of this
-limit — a common setup is development, QA, staging, pre-production, and production.
+    A maximum of **5 environments** can be created per project. Plan your environment strategy to make the most of this
+    limit — a common setup is development, QA, staging, pre-production, and production.
 </Note>
 
 ## Syncing environments
@@ -70,7 +72,7 @@ configuration you tested is what gets deployed — no manual re-entry or drift b
 </Step>
 
 <Step title="Initiate a sync">
-  From the Environments tab, select the target environment you want to sync to and choose the version to promote.
+    From the Environments tab, select the target environment you want to sync to and choose the version to promote.
 </Step>
 
 <Step title="Review and confirm">
@@ -80,6 +82,6 @@ configuration you tested is what gets deployed — no manual re-entry or drift b
 </Steps>
 
 <Warning>
-Syncing does not copy connections or credentials between environments. Each environment retains its own connection
-configuration. Make sure the target environment has valid connections configured before activating a synced version.
+    Syncing does not copy connections or credentials between environments. Each environment retains its own connection
+    configuration. Make sure the target environment has valid connections configured before activating a synced version.
 </Warning>
