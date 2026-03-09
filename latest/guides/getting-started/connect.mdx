@@ -8,10 +8,10 @@ authenticate API requests. Each connector in your project can have one or more c
 different environments or users with separate credentials while sharing the same integration logic.
 
 <Note>
-This guide covers how to create and manage connections in the Connect tab. For details on specific authentication
-methods, see [Authentication Methods](/latest/guides/auth-methods/introduction). For a deeper understanding of how
-connectors and connections work within the platform, see [Connectors](/latest/concepts/connectors) and
-[Connections](/latest/concepts/connections).
+    This guide covers how to create and manage connections in the Connect tab. For details on specific authentication
+    methods, see [Authentication Methods](/latest/guides/auth-methods/introduction). For a deeper understanding of how
+    connectors and connections work within the platform, see [Connectors](/latest/concepts/connectors) and
+    [Connections](/latest/concepts/connections).
 </Note>
 
 ## Connections vs embedded connections
@@ -27,38 +27,41 @@ external users of your integration to connect with their own credentials. Users 
 through an external web app configured to use Versori APIs. Use embedded connections when you are building an
 integration that other people or organisations will authenticate individually.
 
-| | Connection | Embedded connection |
-| --- | --- | --- |
-| **Credentials** | Stored directly by you | Provided by each external user |
-| **Use case** | Internal integrations, single-tenant | Multi-tenant, customer-facing integrations |
-| **Activation** | Immediate — ready once created | Users activate via the Users tab or Versori APIs |
+|                 | Connection                           | Embedded connection                              |
+| --------------- | ------------------------------------ | ------------------------------------------------ |
+| **Credentials** | Stored directly by you               | Provided by each external user                   |
+| **Use case**    | Internal integrations, single-tenant | Multi-tenant, customer-facing integrations       |
+| **Activation**  | Immediate — ready once created       | Users activate via the Users tab or Versori APIs |
 
 <Tip>
-If you are building an integration for your own use, start with a standard connection. Switch to an embedded connection
-when you need external users to authenticate with their own credentials.
+    If you are building an integration for your own use, start with a standard connection. Switch to an embedded
+    connection when you need external users to authenticate with their own credentials.
 </Tip>
 
 ## Selecting an authentication type
 
-When creating a new connection, you first choose an authentication type that matches how the target API expects
-requests to be authenticated. The platform supports the following types:
+When creating a new connection, you first choose an authentication type that matches how the target API expects requests
+to be authenticated. The platform supports the following types:
 
 <Frame caption="The authentication type selector lists all supported methods">
-<img src="/images/guides/connect/auth-type-selector-001.png" alt="Authentication type dropdown showing API Key, Basic Auth, OAuth2, OAuth1, HMAC (Webhook Only), and None (Bypass Authentication) options" />
+    <img
+        src="/images/guides/connect/auth-type-selector-001.png"
+        alt="Authentication type dropdown showing API Key, Basic Auth, OAuth2, OAuth1, HMAC (Webhook Only), and None (Bypass Authentication) options"
+    />
 </Frame>
 
-| Type | When to use |
-| --- | --- |
-| **API Key** | The API authenticates via a key sent in a header, query parameter, or cookie. |
-| **Basic Auth** | The API requires a username and password sent as a Base64-encoded header. |
-| **OAuth2** | The API uses OAuth 2.0 flows (authorization code, client credentials, etc.). |
-| **OAuth1** | The API uses the older OAuth 1.0a signing protocol. |
-| **HMAC (Webhook Only)** | Incoming webhooks that are verified using an HMAC signature. |
+| Type                             | When to use                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------------- |
+| **API Key**                      | The API authenticates via a key sent in a header, query parameter, or cookie.               |
+| **Basic Auth**                   | The API requires a username and password sent as a Base64-encoded header.                   |
+| **OAuth2**                       | The API uses OAuth 2.0 flows (authorization code, client credentials, etc.).                |
+| **OAuth1**                       | The API uses the older OAuth 1.0a signing protocol.                                         |
+| **HMAC (Webhook Only)**          | Incoming webhooks that are verified using an HMAC signature.                                |
 | **None (Bypass Authentication)** | The API requires no authentication, or you handle it yourself within the integration logic. |
 
 <Note>
-If the connector was generated from an OpenAPI specification, the authentication type may already be pre-configured.
-You can adjust it when creating a new connection if needed.
+    If the connector was generated from an OpenAPI specification, the authentication type may already be pre-configured.
+    You can adjust it when creating a new connection if needed.
 </Note>
 
 ## Creating a new connection
@@ -86,14 +89,15 @@ Click **+ New Connection**. The new connection form opens with two sections: **A
 </Step>
 
 <Step title="Configure the auth method">
-Select an authentication type from the **Auth Method** dropdown. If this is a new auth method, fill in the required
-fields — for example, for API Key authentication you provide a name, header name, and where the key is inserted
-(header, query, or cookie). Click **Create** to save the auth method.
+    Select an authentication type from the **Auth Method** dropdown. If this is a new auth method, fill in the required
+    fields — for example, for API Key authentication you provide a name, header name, and where the key is inserted
+    (header, query, or cookie). Click **Create** to save the auth method.
 </Step>
 
 <Step title="Fill in connection details">
-Enter a **Connection Name**, verify the **Base URL**, and provide the required credentials (e.g. your API key). If you
-want external users to authenticate with their own credentials instead, enable the **Embedded Connection** toggle.
+    Enter a **Connection Name**, verify the **Base URL**, and provide the required credentials (e.g. your API key). If
+    you want external users to authenticate with their own credentials instead, enable the **Embedded Connection**
+    toggle.
 </Step>
 
 <Step title="Save the connection">
@@ -107,8 +111,8 @@ details.
 </Steps>
 
 <Tip>
-Give connections descriptive names that reflect their purpose or environment — for example, "Production - GitHub" or
-"Staging - Slack". This makes it easier to identify the correct connection when configuring environments.
+    Give connections descriptive names that reflect their purpose or environment — for example, "Production - GitHub" or
+    "Staging - Slack". This makes it easier to identify the correct connection when configuring environments.
 </Tip>
 
 ## Setting up an embedded connection
@@ -122,8 +126,8 @@ Open the connector and click **+ New Connection** as you would for a standard co
 </Step>
 
 <Step title="Enable embedded mode">
-In the **Connection** section of the form, toggle **Embedded Connection** on. The credential fields (e.g. API Key)
-are removed because the platform expects each user to supply their own.
+    In the **Connection** section of the form, toggle **Embedded Connection** on. The credential fields (e.g. API Key)
+    are removed because the platform expects each user to supply their own.
 </Step>
 
 <Step title="Save the embedded connection">
@@ -136,8 +140,8 @@ Click **Connect**. The connector now shows an embedded connection indicator inst
 </Steps>
 
 <Warning>
-An embedded connection does not function until at least one external user has been activated. Activate users via the
-**Users** tab or through an external web app configured to use Versori APIs.
+    An embedded connection does not function until at least one external user has been activated. Activate users via the
+    **Users** tab or through an external web app configured to use Versori APIs.
 </Warning>
 
 ## Reusing existing connections
@@ -146,7 +150,10 @@ Once a connection has been created, it appears in the **Existing Connections** l
 can reuse an existing connection across multiple environments without recreating it.
 
 <Frame caption="Existing connections show the linked environments, authentication configuration, and whether the connection is currently in use">
-<img src="/images/guides/connect/existing-connections-001.png" alt="Existing Connections list showing Test Connection linked to 1 environment, marked as Connection In Use, with authentication method configuration details including name, type, authorisation header, insert-in, and description" />
+    <img
+        src="/images/guides/connect/existing-connections-001.png"
+        alt="Existing Connections list showing Test Connection linked to 1 environment, marked as Connection In Use, with authentication method configuration details including name, type, authorisation header, insert-in, and description"
+    />
 </Frame>
 
 Each connection card displays:
@@ -157,15 +164,15 @@ Each connection card displays:
   point.
 
 <Note>
-When you deploy an integration to an environment, you assign connections to each connector for that environment. A
-single connection can be shared across environments, or you can create separate connections with different credentials
-per environment.
+    When you deploy an integration to an environment, you assign connections to each connector for that environment. A
+    single connection can be shared across environments, or you can create separate connections with different
+    credentials per environment.
 </Note>
 
 ## Bypassing authentication
 
-Some APIs — such as public endpoints or internal services behind a VPN — do not require authentication. For these
-cases, select **None (Bypass Authentication)** as the authentication type when creating a connection.
+Some APIs — such as public endpoints or internal services behind a VPN — do not require authentication. For these cases,
+select **None (Bypass Authentication)** as the authentication type when creating a connection.
 
 Bypassing authentication skips all credential handling for the connector. Requests are sent without any authentication
 headers, tokens, or signatures. This is useful when:
@@ -175,6 +182,6 @@ headers, tokens, or signatures. This is useful when:
 - You are testing an integration against a local or mock API that does not enforce authentication.
 
 <Warning>
-Only bypass authentication when you are certain the target API does not require credentials. Using bypass on an
-authenticated API will result in failed requests.
+    Only bypass authentication when you are certain the target API does not require credentials. Using bypass on an
+    authenticated API will result in failed requests.
 </Warning>

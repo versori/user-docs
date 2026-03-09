@@ -1,30 +1,39 @@
 ---
-title: Home
-sidebarTitle: Home
+title: "Start Integrating with Versori"
+sidebarTitle: "Getting Started with Versori"
 ---
 
-Build integrations, workflows, and agents on Versori. This site helps you plan your solution, connect systems, build workflows, and deploy to production.
+Build integrations, workflows, and agents on Versori. In this documentation you'll learn how to plan, connect, build and deploy custom integrations in days, not months.
 
-![Hero illustration showing an agentic workflow orchestrating systems](../images/hero-dark.svg)
+<img
+  className="hidden dark:block"
+  src="/images/versori-1.png"
+  alt="Versori UI hovering on a light blue gradient background."
+/>
+<img
+  className="dark:hidden"
+  src="/images/versori.png"
+  alt="Versori UI hovering on a light blue gradient background."
+/>
 
 ---
 
-## How it works
+## How It Works: The Integration Lifecycle
 
-Follow the steps:
-1. [Plan](./how-it-works/plan): Define scope, objects/fields, auth, and success criteria.
+Building integrations on Versori follows a simple structure. You define what the integration should do, connect the systems involved, build the workflow logic, and deploy it to production.
+
+1. [Plan](./how-it-works/plan): Define your integration scope, objects/fields, authentication, and success criteria.
 2. [Connect](./how-it-works/connect): Create or reuse Connectors and configure Connections.
 3. [Build](./how-it-works/build): Implement workflows and transformations in a Project.
 4. [Deploy](./how-it-works/deploy): Promote to production and enable monitoring.
 
 ---
 
-## Concepts
+## Key Concepts: The Versori Building Blocks
 
-Core building blocks you’ll use throughout the platform:
+Versori integrations are built from a small set of core components. Understanding these building blocks will help you design, build, and run integrations more effectively.
 
 - [Connectors](./concepts/connectors): Define systems, auth schemes, and operations.
 - [Connections](./concepts/connections): Bind credentials and environment settings to a Connector.
 - [Run SDK](./concepts/run-sdk): Execute and test Projects locally and in CI.
 - [Deployment](./concepts/deployment): Promote Projects safely to production and operate them reliably.
-
