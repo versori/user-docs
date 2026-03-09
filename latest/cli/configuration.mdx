@@ -26,7 +26,7 @@ See the [context commands reference](/latest/cli/commands/context) for all avail
 
 ## Project-level configuration
 
-When you run `versori projects sync`, a `.versori` file is created in the target directory containing the project ID and context name. This allows subsequent commands like `save` and `deploy` to infer the project and context automatically when run from that directory.
+When you run `versori projects sync`, a `.versori` file is created in the target directory containing the project ID and context name. This allows subsequent commands like `save` and `deploy` to infer the project automatically when run from that directory. If the context int he file doesn't match the active context the CLI will exit with an error.
 
 ## Global flags
 
@@ -36,4 +36,4 @@ These flags are available on every command.
 |---|---|---|---|
 | `--config` | `-c` | `~/.versori/config.yaml` | Path to the config file |
 | `--context` | `-x` | *(active context)* | Use a specific context for this invocation |
-| `--output` | `-o` | `table` | Output format: `table`, `json`, or `yaml` |
+| `--output` | `-o` | `table` | Output format: `table`(default), `json`, or `yaml` |

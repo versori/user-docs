@@ -1,6 +1,6 @@
 # Versori Documentation
 
-This repository is the source for https://docs.versori.com.
+This repository is the source for <https://docs.versori.com>.
 
 The site is powered by [Mintlify][mintlify], and updates to the `main` branch will be automatically deployed.
 
@@ -38,6 +38,10 @@ within their respective repositories.
 > External contributors should consult the
 > [Contributing OpenAPI specification changes](CONTRIBUTING.md#contributing-openapi-specification-changes) section of
 > the CONTRIBUTING.md guidelines for more information for contributing to the API Reference pages.
+
+### CLI command docs
+
+The docs for individual commands in ./latest/cli/commands are outogenerated from the cli repo using the Makefile.
 
 ### 🙋 Need more help?
 
