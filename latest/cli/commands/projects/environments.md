@@ -17,7 +17,6 @@ description: "Manage project environments"
 
 ### `versori projects environments create`
 
-
 Create a new environment by cloning an existing environment within a project.
 This command creates a new environment by copying the details of an existing environment.
 You can optionally clone systems and copy static user variables from the source environment.
@@ -26,8 +25,8 @@ You can optionally clone systems and copy static user variables from the source 
 versori projects environments create --project <project-id> --old-env <source-env> --new-env <new-env> [flags]
 ```
 
-
 **Flags:**
+
 * `--clone-systems`: If true, copies systems from the source environment to the new environment
 
 * `--copy-static-user-variables`: If true, copies static user variables from the source environment to the new environment
@@ -39,37 +38,31 @@ versori projects environments create --project <project-id> --old-env <source-en
 * `--old-env`: The name of the source environment to clone from
 * `--project`: The ID of the project
 
-
-
 ---
 
 ### `versori projects environments promote`
 
-
 Promote one environment to another within a project.
-This command copies the deployment configuration (currently the deployed docker image/version) 
+This command copies the deployment configuration (currently the deployed docker image/version)
 from the source environment to the target environment.
 
 For example, to promote staging to production:
-`versori projects environments promote --project <id> --source staging --target production`
+  `versori projects environments promote --project <id> --source staging --target production`
 
 ```sh
 versori projects environments promote --project <project-id> --source <source-env> --target <target-env> [flags]
 ```
 
-
 **Flags:**
+
 * `-h`, `--help`: help for promote
 * `--project`: The ID of the project
 * `--source`: The name of the source environment to promote from
 * `--target`: The name of the target environment to promote to
 
-
-
 ---
 
 ### `versori projects environments update-execution-pool`
-
 
 Update the execution pool used to deploy an environment.
 
@@ -83,14 +76,12 @@ Example:
 versori projects environments update-execution-pool --environment <environment-id> --execution-pool <execution-pool-name> [flags]
 ```
 
-
 **Flags:**
+
 * `--environment`: The name of the environment to update
 * `--execution-pool`: The name of the new execution pool
 * `-h`, `--help`: help for update-execution-pool
 * `--project`: The ID of the project
 * `-y`, `--yes`: Skip confirmation prompt
-
-
 
 ---

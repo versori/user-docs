@@ -6,6 +6,14 @@ description: "Set up authentication and run your first CLI command."
 After [installing](/latest/cli/installation) the Versori CLI, follow these steps to authenticate and start managing your resources.
 
 <Steps>
+  <Step title="Generate a JWT for the CLI">
+    Generate a JWT token from the [Versori console](https://ai.versori.com/account?content=keys) for the organisation you want to manage.
+
+    <Frame caption="Generating a JWT for the CLI">
+    <img src="/images/cli/generate-jwt-for-cli.png" />
+</Frame>
+  </Step>
+
   <Step title="Add a context">
     A context stores your authentication credentials for an organisation. You need a JWT token generated from the [Versori console](https://ai.versori.com/account?content=keys) for the organisation you want to manage.
 
@@ -17,7 +25,7 @@ After [installing](/latest/cli/installation) the Versori CLI, follow these steps
     ```
 
     <Tip>
-    Pass in --jwt - to read the JWT from stdin.
+    Pass in `--jwt -` to read the JWT from stdin.
     </Tip>
   </Step>
   <Step title="Verify your context">

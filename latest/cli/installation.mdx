@@ -37,27 +37,6 @@ Pre-built binaries for Linux, macOS, and Windows (`amd64` and `arm64`) are avail
   </Step>
 </Steps>
 
-## Build from source
-
-Building from source requires [Go](https://go.dev/dl/) 1.26 or later.
-
-<Tabs>
-  <Tab title="Install to GOPATH">
-    ```sh
-    make cli
-    ```
-
-    This builds the `versori` binary and copies it to `/usr/local/bin/` or your `GOPATH` if its set. Make sure that directory is in your `PATH`.
-  </Tab>
-  <Tab title="Build without installing">
-    ```sh
-    make build
-    ```
-
-    The binary is placed in `./bin/`.
-  </Tab>
-</Tabs>
-
 ## Verify the installation
 
 After installing, verify the CLI is available:
