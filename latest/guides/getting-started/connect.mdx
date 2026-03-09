@@ -27,6 +27,9 @@ external users of your integration to connect with their own credentials. Users 
 through an external web app configured to use Versori APIs. Use embedded connections when you are building an
 integration that other people or organisations will authenticate individually.
 
+For a deeper look at the concept and common use cases, see
+[Embedded connectors](/latest/guides/getting-started/connect/embedded-connectors).
+
 |                 | Connection                           | Embedded connection                              |
 | --------------- | ------------------------------------ | ------------------------------------------------ |
 | **Credentials** | Stored directly by you               | Provided by each external user                   |
@@ -50,14 +53,14 @@ to be authenticated. The platform supports the following types:
     />
 </Frame>
 
-| Type                             | When to use                                                                                 |
-| -------------------------------- | ------------------------------------------------------------------------------------------- |
-| **API Key**                      | The API authenticates via a key sent in a header, query parameter, or cookie.               |
-| **Basic Auth**                   | The API requires a username and password sent as a Base64-encoded header.                   |
-| **OAuth2**                       | The API uses OAuth 2.0 flows (authorization code, client credentials, etc.).                |
-| **OAuth1**                       | The API uses the older OAuth 1.0a signing protocol.                                         |
-| **HMAC (Webhook Only)**          | Incoming webhooks that are verified using an HMAC signature.                                |
-| **None (Bypass Authentication)** | The API requires no authentication, or you handle it yourself within the integration logic. |
+| Type                             | When to use                                                                   |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| **API Key**                      | The API authenticates via a key sent in a header, query parameter, or cookie. |
+| **Basic Auth**                   | The API requires a username and password sent as a Base64-encoded header.     |
+| **OAuth2**                       | The API uses OAuth 2.0 flows (authorization code, client credentials, etc.).  |
+| **OAuth1**                       | The API uses the older OAuth 1.0a signing protocol.                           |
+| **HMAC (Webhook Only)**          | Incoming webhooks that are verified using an HMAC signature.                  |
+| **None (Bypass Authentication)** | The API requires no authentication.                                           |
 
 <Note>
     If the connector was generated from an OpenAPI specification, the authentication type may already be pre-configured.
@@ -118,7 +121,9 @@ details.
 ## Setting up an embedded connection
 
 An embedded connection delegates authentication to the external users of your integration. Rather than storing
-credentials directly, it defines the authentication method and waits for users to provide their own.
+credentials directly, it defines the authentication method and waits for users to provide their own. For background on
+when and why to use embedded connections, see
+[Embedded connectors](/latest/guides/getting-started/connect/embedded-connectors).
 
 <Steps>
 <Step title="Start a new connection">
@@ -131,7 +136,7 @@ Open the connector and click **+ New Connection** as you would for a standard co
 </Step>
 
 <Step title="Save the embedded connection">
-Click **Connect**. The connector now shows an embedded connection indicator instead of stored credentials.
+That‘s it!
 
 <Frame caption="An embedded connection shows the authentication method without stored credentials, and explains how external users connect">
 <img src="/images/guides/connect/embedded-connection-001.png" alt="Embedded Connection view showing Authentication Method Name Apikey, Authentication Type API Key, and an info banner explaining that external users connect with their own credentials via the Users tab or Versori APIs" />
@@ -164,9 +169,8 @@ Each connection card displays:
   point.
 
 <Note>
-    When you deploy an integration to an environment, you assign connections to each connector for that environment. A
-    single connection can be shared across environments, or you can create separate connections with different
-    credentials per environment.
+    When you deploy an integration to an environment, you assign connections to each connector for that environment. The
+    same credentials can be used across environments, or you can create separate connections with different credentials.
 </Note>
 
 ## Bypassing authentication
