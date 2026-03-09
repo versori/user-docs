@@ -61,7 +61,6 @@
                     "group": "Connect",
                     "pages": [
                       "latest/guides/getting-started/connect",
-                      "latest/guides/getting-started/connect/connecting",
                       "latest/guides/getting-started/connect/embedded-connectors",
                       "latest/guides/getting-started/connect/bypass-auth"
                     ]
@@ -70,7 +69,8 @@
                     "group": "Build",
                     "pages": [
                       "latest/guides/getting-started/build",
-                      "latest/guides/getting-started/build/flow",
+                      "latest/guides/getting-started/build/versions",
+
                       "latest/guides/getting-started/build/test"
                     ]
                   },

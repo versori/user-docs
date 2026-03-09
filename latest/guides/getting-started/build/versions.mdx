@@ -1,0 +1,207 @@
+---
+title: Version control
+sidebarTitle: Version control
+---
+
+Versions capture the state of your integration at a specific point in time. They give you a reliable way to track
+changes, roll back safely, and deploy with confidence. This guide covers how to create, manage, and deploy versions in
+the Versori Platform.
+
+<Note>
+    When you save files in the editor, your changes are moved into the **latest draft**. The latest draft represents the
+    current working state of your integration. When you deploy, unless deploying froma version, it is the latest draft
+    that gets deployed — so always ensure your latest draft reflects the state you intend to release.
+</Note>
+
+## Why use versions
+
+As your integration evolves — new workflows, updated mappings, revised error handling — you need a way to track what
+changed and when. Without versions, every edit overwrites the previous state with no way to recover it.
+
+Versions solve this by giving you:
+
+- **Change history**: See exactly what your integration looked like at any point in its development.
+- **Safe rollbacks**: Revert to a known working state instantly if a change introduces issues.
+- **Deployment control**: Choose precisely which version of your integration runs in each environment.
+- **Team coordination**: Give collaborators a clear record of what changed and why through version names and
+  descriptions.
+- **Audit trail**: Maintain a log of how your integration has evolved over time for compliance and troubleshooting.
+
+<Tip>
+    Create versions frequently — especially before and after significant changes. Treat them like save points that you
+    can return to at any time.
+</Tip>
+
+## Creating versions
+
+A version requires a **name** and accepts an optional **description**. The name identifies the version at a glance,
+while the description provides a summary of what changed — making it easier to understand the purpose of each version
+when reviewing history.
+
+<Note>Versions are shared across all available environments and can be deployed to any environment.</Note>
+
+### Manual version creation
+
+You can create a version at any point during the development of your integration. This is useful when you want to
+checkpoint your work before making a large change, or when you reach a stable milestone worth preserving.
+
+<Steps>
+<Step title="Open the Version History popover">
+  Navigate to your project and select the **Version History** popover in the header.
+
+  <Frame caption="The Version History popover shows all versions with their status and deployment info">
+  <img src="/images/guides/build/version-history-001.png" alt="Version History popover showing a list of versions with their status, date, and description" />
+  </Frame>
+</Step>
+
+<Step title="Create a new version">
+    Click **+**, enter a name for the version, and optionally provide a description summarising the changes included.
+
+  <Frame caption="Enter a name and optional description for the new version">
+  <img src="/images/guides/build/version-create-001.png" alt="Create New Version dialog with fields for version name and description" />
+  </Frame>
+</Step>
+
+<Step title="Confirm the version">
+  The version is created as a snapshot of the current integration state. You can continue developing without affecting
+  the saved version.
+</Step>
+</Steps>
+
+<Tip>
+    Use the description field to record the reason for the version — for example, "Added retry logic to order sync
+    workflow" or "Fixed field mapping for customer addresses". This context is invaluable when reviewing versions later.
+</Tip>
+
+### Automatic version creation on deployment
+
+When you deploy an integration, a new version is automatically created. This ensures every deployment is tied to a
+specific, immutable snapshot of your integration code and configuration.
+
+You do not need to create a version manually before deploying — the platform handles it for you. However, you are still
+prompted to provide a name and optional description so the deployment version is clearly identifiable.
+
+<Frame caption="Deploying creates a new version automatically — you provide the name and description at deploy time">
+<img src="/images/guides/build/version-deploy-001.png" alt="Deploy Latest Draft to production dialog showing version name, description, and the latest version number" />
+</Frame>
+
+<Note>
+    Even though versions are created automatically on deployment, you can still create manual versions at any time.
+    Manual versions are useful for checkpointing work-in-progress that you are not yet ready to deploy.
+</Note>
+
+## Switching between versions
+
+You can switch between any previously created version to review its state or restore it as the active working version.
+This is particularly useful when comparing changes across versions or when you need to return to an earlier
+implementation.
+
+<Steps>
+<Step title="Select a version">
+  Choose the version you want to switch to. You can use the name and description to identify the correct version.
+</Step>
+
+<Step title="Review or restore">
+  Review the integration state captured in that version. If you want to you can continue working from this version.
+</Step>
+</Steps>
+
+## Rolling back to a previous version
+
+If a recent change causes issues — failed executions, incorrect data mappings, or unexpected behaviour — you can roll
+back to a previous version to restore a known working state.
+
+Rolling back replaces the current integration state with the selected version. This is the fastest way to recover from a
+problematic change without manually undoing edits.
+
+<Warning>
+    Rolling back does not delete any versions. All previously created versions remain available, including the one you
+    rolled back from. You can always switch forward again if needed.
+</Warning>
+
+## Deploying a version
+
+When you deploy an integration, the platform creates a new version. This means every deployment is traceable back to a
+specific version.
+
+You can also deploy a previously created version to an environment without making further changes — useful when
+promoting a tested version from development to production.
+
+<Steps>
+<Step title="Choose the version to deploy">
+  From the **Version History** popover, select the version you want to deploy. If you are deploying your current work, the
+  platform creates a new version automatically.
+</Step>
+
+<Step title="Select the target environment">
+    Choose which environment to deploy to (e.g. development, staging, production). Each environment runs independently
+    with its own connections and credentials.
+</Step>
+
+<Step title="Confirm the deployment">
+  Review the version details and confirm the deployment. The selected version becomes the active version in the
+  target environment.
+</Step>
+</Steps>
+
+<Tip>
+    Combine versions with [environments](/latest/guides/getting-started/build/environments) to build a robust promotion
+    pipeline. Create and test versions in development, then deploy the verified version to staging and production.
+</Tip>
+
+## Version naming strategies
+
+A consistent naming convention makes it easier to identify versions at a glance, communicate changes across teams, and
+maintain an organised version history. Below are some common strategies.
+
+### Semantic versioning
+
+Use a structured `major.minor.patch` format to communicate the scope of changes.
+
+| Version | When to use                                                  |
+| ------- | ------------------------------------------------------------ |
+| `1.0.0` | Initial stable release                                       |
+| `1.1.0` | New feature added (e.g. added product sync workflow)         |
+| `1.1.1` | Bug fix or minor correction (e.g. fixed date format mapping) |
+| `2.0.0` | Breaking change or major rework (e.g. migrated to v2 API)    |
+
+<Info>
+    Semantic versioning works well when your integration has external consumers or when you need to clearly signal the
+    impact of each change.
+</Info>
+
+### Date-based versioning
+
+Use the release date as the version name for a chronological record.
+
+| Version        | Description                    |
+| -------------- | ------------------------------ |
+| `2026-03-09`   | Daily release snapshot         |
+| `2026-03-09.1` | Second release on the same day |
+| `2026-Q1`      | Quarterly milestone release    |
+
+### Feature or milestone naming
+
+Name versions after the feature or milestone they represent for a human-readable history.
+
+| Version                | Description                            |
+| ---------------------- | -------------------------------------- |
+| `order-sync-v1`        | First version of order synchronisation |
+| `multi-tenant-support` | Added multi-tenant capabilities        |
+| `api-v2-migration`     | Migrated all endpoints to API v2       |
+| `pre-launch-final`     | Final version before go-live           |
+
+### Combining strategies
+
+You can combine approaches to get the best of both worlds.
+
+| Version                   | Description                              |
+| ------------------------- | ---------------------------------------- |
+| `1.2.0-order-retry-logic` | Semantic version with feature context    |
+| `2026-03-09-hotfix-auth`  | Date-based with change summary           |
+| `2.0.0-rc1`               | Release candidate before a major version |
+
+<Tip>
+    Pick a naming convention early and stick with it across your team. Consistent naming makes it significantly easier
+    to navigate version history as your integration grows.
+</Tip>
