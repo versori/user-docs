@@ -34,21 +34,16 @@ Environments solve this by giving you isolated spaces to:
 
 ## Creating environments
 
-You can create environments from the **Environments** tab within the Build section of your project.
+You can create environments from the **Environments** popover within the Header section of your project.
 
 <Steps>
-<Step title="Open the Environments tab">
-  Navigate to your project and select the **Environments** tab in the Build view.
-</Step>
-
 <Step title="Create a new environment">
-    Click **Create Environment** and provide a name that reflects its purpose (e.g. `development`, `staging`,
-    `production`).
+    Open the environments popover, click **+** and provide a name that reflects its purpose (e.g. `development`, `staging`, `production`).
 </Step>
 
 <Step title="Configure connections">
   Each environment requires its own set of connections. After creating the environment, link the appropriate systems and
-  configure credentials specific to that environment's target APIs.
+  configure credentials specific to that environment‘s target APIs.
 </Step>
 </Steps>
 
@@ -62,23 +57,16 @@ You can create environments from the **Environments** tab within the Build secti
 Once you have verified your integration in a lower environment, you can sync changes to a higher environment to promote
 your work through the pipeline.
 
-Syncing copies the integration version from one environment to another. This ensures the exact code and workflow
+Syncing copies the deployed version from one environment to another. This ensures the exact code and workflow
 configuration you tested is what gets deployed — no manual re-entry or drift between environments.
 
+<Note>Syncing will copy the deployed version of the integration across to the new environment.</Note>
+
 <Steps>
-<Step title="Verify in the source environment">
-  Run your integration in the source environment (e.g. development) and confirm that all workflows execute as expected.
-  Use the Flow view to inspect data at each step.
-</Step>
-
-<Step title="Initiate a sync">
-    From the Environments tab, select the target environment you want to sync to and choose the version to promote.
-</Step>
-
-<Step title="Review and confirm">
-  Confirm the sync to apply the integration version to the target environment. The target environment's connections and
-  credentials remain unchanged — only the integration code and workflow configuration are synced.
-</Step>
+    <Step title="Initiate a sync">
+        In the Header of the project, click the 'sync' button, and then select the target and source environments you
+        want to sync.
+    </Step>
 </Steps>
 
 <Warning>
