@@ -1,22 +1,84 @@
 ---
-title: Plan
+title: "The Plan Agent: Research & Scope Your Integrations"
 sidebarTitle: Plan
 ---
+<img
+  className="hidden dark:block"
+  src="/images/Plan Agent.png"
+  alt="Versori UI hovering on a light blue gradient background."
+/>
+<img
+  className="dark:hidden"
+  src="/images/versori.png"
+  alt="Versori UI hovering on a light blue gradient background."
+/>
+The Plan Agent researches your systems and integration requirements before anything is built.
 
-Plan the integration scope so you can build once and reuse across environments.
+Instead of manually reading API docs, checking authentication flows, and mapping objects, the agent does that work for you. It analyses your prompt, identifies the systems involved, and gathers the technical details required to implement the integration correctly.
 
-What to define:
+The output is a structured research document that defines the integration scope so it can be built once and reused across environments.
 
-- **Systems and auth**: Identify source/target systems and confirm the auth scheme.
-- **Data model and mappings**: List objects and fields you need, with examples and edge cases.
-- **Workflows**: Triggers, actions, schedules, retries, and idempotency requirements.
-- **Success criteria**: SLAs, volume expectations, and observability needs.
+### What the Plan Agent Does
 
-Deliverables:
+When you provide a prompt, the agent will automatically:
+- **Identify Systems:** It detects the source and target platforms involved in the integration and selects the appropriate connectors.
+- **Research APIs:** The agent searches documentation to find auth methods, API endpoints, webhooks or triggers, required fields/ request formats, query patterns and pagination rules.
+- **Understand Data Models:** It analyses the objects and fields used by each system so it can recommend mappings between them.
+- **Defines Workflows:** The agent determines how the integration should run, including triggers, actions, retries, and idempotency requirements.
+- **Surface implementation details:** It highlights important constraints such as API rate limits, webhook response requirements, auth flows and missing entities or required workarounds.
 
-- A short solution outline covering the above.
-- A checklist of test inputs and expected outputs.
+### Tips For Prompting the Plan Agent
+The quality of the research depends on the detail in your prompt. The more context you provide, the more precise the integration plan will be.
 
-Next: [Connect](./connect)
+A strong prompt usually includes:
+- **Systems Involved:** Clearly state the platforms you want to connect.
+- **Workflow Trigger:** Describe what event starts the workflow or how frequent a workflow should run on a schedule.
+- **The Action:** Explain what the integration should do.
+- **How Records Should Be Mapped:** If records already exist, explain how they should be found.
+- **Edge Cases or Business Rules:** Mention anything the agent should account for.
+- **Authentication Requirements:** If known, specify how each system should authenticate.
+- **Documentation:** Provide relevant links to each systems API documentation and its endpoints.
+- **Variability (Multi Tenanted Integrations):** What configuration is dynamic per each end user of the integration.
+- **Transformation Mappings:** Provide any known transformation requirements that the integration should follow.
+
+
+### Plan Agent Prompt Example
+```
+I want to build an integration between Shopify and Quickbooks.
+
+Whenever an order is created or updated, we receive individual webhook events, check if they already exist in Quickbooks via a GET, if the order does, update it and if not - create them.
+
+Populate all API required fields to ensure the quickbooks api successfully creates Sales Orders.
+
+Ensure to use oauth2 Authorization Code for Quickbooks, and API key for Shopify Access tokens.
+```
+
+### What the Plan Agent Produces
+
+Once the research completes, the agent generates a structured integration plan.
+
+This typically includes:
+
+- **Connector identification:** The platforms involved in the integration.
+- **Authentication requirements:** How each system must be authenticated.
+- **API endpoints:** Relevant endpoints for creating, updating, or querying data.
+- **Field mappings:** Suggested mappings between source and target data models.
+- **Workflow design:** Triggers, actions, and conditions required to run the integration.
+- **Implementation considerations:** Important details such as webhook verification, retry logic, rate limits, required fields and entity limitations.
+
+### What to do Next
+Once the plan looks correct:
+
+- **Review the research output:** to confirm the systems and workflow match your requirements.
+
+- **Check the field mappings:** and ensure they align with your data model.
+
+- **Adjust the prompt:** if you need the agent to refine the plan.
+
+- **Move on to the Connect step:** to configure authentication and establish the system connections.
+
+
+
+Next: [The Connect Agent](./connect)
 
 

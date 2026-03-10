@@ -3,9 +3,9 @@
   "theme": "almond",
   "name": "Versori User Documentation",
   "colors": {
-    "primary": "#006089",
-    "light": "#006089",
-    "dark": "#006089"
+    "primary": "#6EB0D8",
+    "light": "#6EB0D8",
+    "dark": "#6EB0D8"
   },
   "favicon": "/logo/versori-logo.svg",
   "navigation": {
@@ -18,7 +18,7 @@
             "pages": [
               "latest/home",
               {
-                "group": "How it works",
+                "group": "How It Works",
                 "pages": [
                   "latest/how-it-works/plan",
                   "latest/how-it-works/connect",
