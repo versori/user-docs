@@ -185,12 +185,13 @@
                   "latest/cli/commands/systems",
                   "latest/cli/commands/connections",
                   "latest/cli/commands/users",
-                  "latest/cli/commands/execution-pools"
+                  "latest/cli/commands/execution-pools",
+                  "latest/cli/commands/completion"
                 ]
               },
               {
                 "group": "Guides",
-                "pages": ["latest/cli/configuration", "latest/cli/workflow"]
+                "pages": ["latest/cli/configuration", "latest/cli/workflow", "latest/cli/connections"]
               }
             ]
           },
