@@ -4,12 +4,12 @@ sidebarTitle: Plan
 ---
 <img
   className="hidden dark:block"
-  src="/images/Plan Agent.png"
+  src="/images/plan-agent.png"
   alt="Versori UI hovering on a light blue gradient background."
 />
 <img
   className="dark:hidden"
-  src="/images/versori.png"
+  src="/images/plan-agent.png"
   alt="Versori UI hovering on a light blue gradient background."
 />
 The Plan Agent researches your systems and integration requirements before anything is built.
@@ -25,7 +25,7 @@ When you provide a prompt, the agent will automatically:
 - **Research APIs:** The agent searches documentation to find auth methods, API endpoints, webhooks or triggers, required fields/ request formats, query patterns and pagination rules.
 - **Understand Data Models:** It analyses the objects and fields used by each system so it can recommend mappings between them.
 - **Defines Workflows:** The agent determines how the integration should run, including triggers, actions, retries, and idempotency requirements.
-- **Surface implementation details:** It highlights important constraints such as API rate limits, webhook response requirements, auth flows and missing entities or required workarounds.
+- **Surface Implementation Details:** It highlights important constraints such as API rate limits, webhook response requirements, auth flows and missing entities or required workarounds.
 
 ### Tips For Prompting the Plan Agent
 The quality of the research depends on the detail in your prompt. The more context you provide, the more precise the integration plan will be.
@@ -59,23 +59,23 @@ Once the research completes, the agent generates a structured integration plan.
 
 This typically includes:
 
-- **Connector identification:** The platforms involved in the integration.
-- **Authentication requirements:** How each system must be authenticated.
-- **API endpoints:** Relevant endpoints for creating, updating, or querying data.
-- **Field mappings:** Suggested mappings between source and target data models.
-- **Workflow design:** Triggers, actions, and conditions required to run the integration.
-- **Implementation considerations:** Important details such as webhook verification, retry logic, rate limits, required fields and entity limitations.
+- **Connector Identification:** The platforms involved in the integration.
+- **Authentication Requirements:** How each system must be authenticated.
+- **API Endpoints:** Relevant endpoints for creating, updating, or querying data.
+- **Field Mappings:** Suggested mappings between source and target data models.
+- **Workflow Design:** Triggers, actions, and conditions required to run the integration.
+- **Implementation Considerations:** Important details such as webhook verification, retry logic, rate limits, required fields and entity limitations.
 
 ### What to do Next
 Once the plan looks correct:
 
-- **Review the research output:** to confirm the systems and workflow match your requirements.
+- **Review the Research Output:** to confirm the systems and workflow match your requirements.
 
-- **Check the field mappings:** and ensure they align with your data model.
+- **Check the Field Mappings:** and ensure they align with your data model.
 
-- **Adjust the prompt:** if you need the agent to refine the plan.
+- **Adjust the Prompt:** if you need the agent to refine the plan.
 
-- **Move on to the Connect step:** to configure authentication and establish the system connections.
+- **Move on to the Connect Step:** to configure authentication and establish the system connections.
 
 
 
