@@ -1,0 +1,218 @@
+---
+title: "Connections Guide"
+description: "Learn how connections work in Versori and how to manage them using the CLI."
+---
+
+This guide explains the core concepts behind connections in Versori and provides a walkthrough on how to manage them using the Versori CLI.
+
+## Top-Level Concepts
+
+Understanding how Versori handles connections involves a few key concepts:
+
+*   **Connectors/Systems:** These are the external systems you are connecting to. A system holds the configuration on *how* you connect to it. This connection information is defined in the system's auth schemes. Each system can have multiple auth schemes defined at any given time.
+*   **Auth Schemes:** These are the authentication methods (e.g., `api-key`, `oauth2`) that belong to systems/connectors. An auth scheme represents the *configuration* of the authentication method, not the actual credentials. The actual credentials are stored securely in the connections themselves.
+*   **Projects:** Projects contain the code that uses the connections when talking to the systems.
+*   **Linking Systems to Projects:** Projects can have multiple systems added to them. Before you can deploy a project, you must connect to all systems that are linked to it. When a system is linked to a project, you select which Auth Scheme is used to connect to the system.
+*   **Connections:** Connections belong to a system and are used by a project to talk to that system. They hold the actual credentials required by the configured auth scheme.
+
+---
+
+## Managing Connections via CLI
+
+While systems are typically created by AI agents when using the planning flow in the UI or the build agent, the CLI provides basic support for managing systems, projects, and connections.
+
+### Creating a System
+
+To create a new system in your current organization:
+
+```bash
+versori systems create --name <name> --domain <domain> --template-base-url <url>
+```
+
+{/* TODO: Add screenshot or example output of creating a system */}
+
+### Adding an Auth Scheme to a System
+
+You can add or update an auth scheme configuration for a system. 
+
+```bash
+versori systems add-auth-scheme [flags]
+```
+*(Note: Use `versori systems add-auth-scheme -h` to see all available flags for specific auth types).*
+
+{/* TODO: Add screenshot or example output of adding an auth scheme */}
+
+### Adding a System to a Project
+
+To link a system to a project, which creates a connection template:
+
+```bash
+versori projects systems add \
+  --project <project-id> \
+  --system <system-id> \
+  --name <name> \
+  --environment <environment-name>
+```
+
+**Important:** The `--name` you provide here is how your project's code references the system. You must ensure that this name exactly matches what your code expects when it selects the connection to use.
+
+{/* TODO: Add screenshot or example output of adding a system to a project */}
+
+### Listing Systems Linked to a Project
+
+To check the configured connection templates on a project, you can list the linked systems. Using `-o yaml` provides a detailed view of the connection templates the configured auth schemes on the systems.
+
+```bash
+versori projects systems list --project <project-id> --environment <environment-name> -o yaml
+```
+
+**Example Output (YAML):**
+```yaml
+Items:
+- authSchemeConfigs:
+  - oauth2:
+      authorizeUrl: https://versori-demo.eu.auth0.com/authorize
+      defaultScopes: []
+      description: OAuth2 Authorization Code Authentication
+      grant:
+        authorizationCode:
+          clientId: 3wtaAbGizqC3BjmdKTPa0VyK5URuyUUO
+          clientSecret: '******'
+          credentialId: 01KK9J6VFKZSB86BQQT8903TMY
+          organisationId: 01HFS2NEAZ6ECZBZMN4FF775P7
+        type: authorizationCode
+      id: oauth2-code
+      scopes: []
+      tokenUrl: https://versori-demo.eu.auth0.com/oauth/token
+    type: oauth2
+  connectionTemplateId: 01KKBR67D0484X7WG7KB3DZFS2
+  domain: shopify
+  dynamic: false
+  id: 01K94NJCJFCQ0TEGA44B03942N
+  name: shopify
+  templateBaseUrl: https://test.myshopify.com/
+- authSchemeConfigs:
+  - oauth2:
+      defaultScopes:
+      - read_products
+      description: OAuth2 Client Credentials Authentication
+      grant:
+        clientCredentials: {}
+        type: clientCredentials
+      id: client
+      scopes:
+      - description: Read access to products
+        name: read_products
+      tokenUrl: https://api.example.com/token
+    type: oauth2
+  connectionTemplateId: 01KKBZ1ZB4SG2TRVKWQ7GNY3F3
+  domain: example.com
+  dynamic: false
+  id: 01KKBZ1Z7N3Q3BSRZ9Q3PS78MW
+  name: example-oauth2
+  templateBaseUrl: https://api.example.com
+Type: ProjectConnectionTemplateItem
+```
+
+You can also omit the `-o yaml` flag to see a simplified table view:
+
+```bash
+versori projects systems list --environment production --project 01KKBR46SH7JES8AZ14EEAK0CX
+```
+
+**Example Output (Table):**
+```text
+Name           Id                         ConnectionTemplateId       TemplateBaseUrl             Dynamic AuthSchemeConfigs.Type
+----           --                         --------------------       ---------------             ------- ----------------------
+shopify        01K94NJCJFCQ0TEGA44B03942N 01KKBR67D0484X7WG7KB3DZFS2 https://test.myshopify.com/ false   oauth2 
+example-oauth2 01KKBZ1Z7N3Q3BSRZ9Q3PS78MW 01KKBZ1ZB4SG2TRVKWQ7GNY3F3 https://api.example.com     false   oauth2 
+```
+
+### Creating a Connection
+
+This command connects to the connection template for a specific project. You need to provide the flags for the specified connection template (e.g., `--api-key`, `--client-id`, etc.). 
+
+**Note on Connection Name:** The `--name` you provide here must be unique. However, unlike the system name, this connection name is *only* used for your own reference to easily identify the connection. It does not need to be referenced in your code anywhere.
+
+**OAuth2 Authorization Code Flow:** If the configured auth scheme uses the OAuth2 `authorization_code` grant type, you do not need to provide any credential flags. Instead, running this command will automatically open your web browser to complete the authentication flow. 
+*Important:* The local redirect URL used for this flow is `http://127.0.0.1:62168/oauth/callback`. You may need to whitelist this redirect URL in your external OAuth2 application settings.
+
+The `--bypass` flag is special because it ignores the configured auth scheme (if supported by the connection template).
+
+```bash
+versori connections create \
+  --project <project-id> \
+  --environment <environment-name> \
+  --name <name> \
+  --template-id <template-id> \
+  [--api-key <value> | --bypass | etc...]
+```
+
+**Example: Creating an API Key Connection**
+If you try to create a connection without the required credentials, the CLI will prompt you:
+
+```bash
+versori connections create --project 01KKBR46SH7JES8AZ14EEAK0CX --environment production --template-id 01KKBZ1ZB4SG2TRVKWQ7GNY3F3 --name demo-api-key
+# Output:
+# Message: 
+#   api-key is required for this connection template
+```
+
+Providing the correct flags will successfully create the connection:
+
+```bash
+versori connections create --project 01KKBR46SH7JES8AZ14EEAK0CX --environment production --template-id 01KKBZ1ZB4SG2TRVKWQ7GNY3F3 --name demo-api-key --api-key supersecretdonotshare
+# Output:
+# Connection created successfully with ID: 01KKET3Q3Z8ZKD1WB07RJA8H0A
+```
+
+**Example: Creating an OAuth2 Authorization Code Connection**
+Since the OAuth2 authorization code flow requires browser interaction, you simply omit the credential flags:
+
+```bash
+versori connections create --project 01KKBR46SH7JES8AZ14EEAK0CX --environment production --template-id 01KKBR67D0484X7WG7KB3DZFS2 --name demo-connection 
+# Output:
+# Connection created successfully with ID: 01KKESW82VVJPR2MXR3G06TP6W
+```
+
+### Updating a Connection Template
+
+Once a system is linked to a project, you might need to change the auth scheme that will be used to connect to it. You can update the configured auth schema on a project by updating its connection template:
+
+```bash
+versori projects systems update-connection-template \
+  --project <project-id> \
+  --template <template-id> \
+  --auth-scheme-config-id <new-auth-scheme-id>
+```
+
+*Note:* The `--auth-scheme-config-id` is the unique ID of the auth scheme you want to use. This ID is a user-provided string defined when the auth scheme was originally added to the system.
+
+**Example:**
+Before updating, the system `example-oauth2` is configured to use the `oauth2` auth scheme:
+
+```bash
+versori projects systems list --environment production --project 01KKBR46SH7JES8AZ14EEAK0CX
+# Output:
+# Name           Id                         ConnectionTemplateId       TemplateBaseUrl             Dynamic AuthSchemeConfigs.Type
+# ----           --                         --------------------       ---------------             ------- ----------------------
+# shopify        01K94NJCJFCQ0TEGA44B03942N 01KKBR67D0484X7WG7KB3DZFS2 https://test.myshopify.com/ false   oauth2 
+# example-oauth2 01KKBZ1Z7N3Q3BSRZ9Q3PS78MW 01KKBZ1ZB4SG2TRVKWQ7GNY3F3 https://api.example.com     false   oauth2 
+```
+
+We can update the connection template to use an `api-key` auth scheme instead:
+
+```bash
+versori projects systems update-connection-template --template 01KKBZ1ZB4SG2TRVKWQ7GNY3F3 --auth-scheme-config-id api-key --project 01KKBR46SH7JES8AZ14EEAK0CX
+```
+
+If you list the systems again, you will see the `AuthSchemeConfigs.Type` has been successfully updated:
+
+```bash
+versori projects systems list --environment production --project 01KKBR46SH7JES8AZ14EEAK0CX
+# Output:
+# Name           Id                         ConnectionTemplateId       TemplateBaseUrl             Dynamic AuthSchemeConfigs.Type
+# ----           --                         --------------------       ---------------             ------- ----------------------
+# shopify        01K94NJCJFCQ0TEGA44B03942N 01KKBR67D0484X7WG7KB3DZFS2 https://test.myshopify.com/ false   oauth2  
+# example-oauth2 01KKBZ1Z7N3Q3BSRZ9Q3PS78MW 01KKBZ1ZB4SG2TRVKWQ7GNY3F3 https://api.example.com     false   api-key 
+```
