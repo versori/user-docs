@@ -1,55 +1,92 @@
 ---
-title: Build
+title: "The Build Agent: Implement Your Custom Workflows"
 sidebarTitle: Build
 ---
+<img
+  className="hidden dark:block"
+  src="/images/build-agent.png"
+  alt="An Introduction to the Build Agent"
+/>
+<img
+  className="dark:hidden"
+  src="/images/build-agent.png"
+  alt="An Introduction to the Build Agent"
+/>
 
-Versori uses it's SDK to build and run Integrations. Implement any workflow and data mapping you need.
+The Build Agent is where your integration logic is implemented.
 
-### Build features
+Using Versori’s SDK, you can define workflows, transform data between systems, and test your integrations before deploying them to production.
 
-#### Code
+Workflows are implemented inside a Project, where you can build integrations using code, a visual flow view, or the agentic chat interface.
 
-Using an in browser IDE with AI support you can build any type of workflow thats fits your custom needs.
+### Build Features:
 
-Focus areas:
+### Code
+Use the in-browser IDE with AI assistance to implement workflows tailored to your integration.
 
-- **Workflows**: Define triggers, actions, scheduling, and branching for your use case.
-- **Data mapping**: Transform and validate payloads; capture edge cases defined during planning.
-- **Idempotency and retries**: Use stable keys and retry policies to avoid duplicates.
-- **Observability**: Add logs and issue tracking for each step you need to monitor.
+Focus areas include:
+- **Workflows:** Define triggers, actions, schedules, and branching logic for your integration.
 
-Implement your workflows and data mapping inside a Project.
+- **Data Mapping:** Transform and validate payloads between systems, handling the edge cases identified during planning.
+
+- **Idempotency & Retries:** Use stable keys and retry policies to prevent duplicate operations and ensure reliable execution.
+
+- **Observability:** Add logs and issue tracking to monitor each step of your workflow.
+
+All workflows and transformations are implemented within a Project.
 
 ### Chat
 
-Agentically build, debug your Integration through a chat interface.
+Use the chat interface to build and debug integrations agentically.
+
+You can generate workflows, modify existing logic, or troubleshoot issues through natural language prompts.
+
+### Flow View
+
+Visualise your integration as a flow diagram showing each workflow step and the requests made during execution.
+
+This view helps you understand how data moves through your integration and inspect what happens at every stage.
+
+Features include:
+
+- **Real-Time Testing:** Run workflows using live or representative data, triggered by webhooks or scheduled events.
+
+- **Debugger:** Place breakpoints at specific workflow steps to inspect execution in detail.
+
+### Testing
+
+Run end-to-end test executions through the visual flow diagram to validate your integration.
+
+You can:
+
+- Inspect executed data at each workflow step
+- Verify authentication and request behaviour
+- Validate pagination, rate limiting, and error handling
+- Testing helps ensure your integration behaves correctly before deployment.
+
+Testing helps ensure your integration behaves correctly before deployment.
+
+[See how testing works](../guides/getting-started/build)
 
 ### Versions
 
-Create versions to control changes to an integration.
+Create versions to manage and track changes to an integration over time.
+
+Versioning allows you to safely update workflows while maintaining stability for existing deployments.
+
 
 ### Environments
 
-Deploy integrations across multiple environments. Test your changes in a non-production environment and sync to
-production.
+Deploy integrations across multiple environments, such as development, staging, and production.
 
-### Flow
+This allows you to test changes in a non-production environment before promoting them to production.
 
-- **Visual View** View your integration code in a flow diagram
-- **Real Time Testing**: Debug live data in a test environment, triggered by webhook or schedule
-- **Debugger**: Place breakpoints at specific workflow steps
 
-#### Visual View
+### What to do Next
 
-A flow diagram of workflow steps, and any requests made as part of your workflow, allowing introspection and enquiry
-into what your code is doing at any step.
+Once your workflows are implemented and tested, the final step is to deploy your integration.
 
-#### Testing
+Continue to the Deploy Agent to release your integration to production and monitor its execution.
 
-- Run test executions through the visual flow diagram end‑to‑end using representative data.
-- Enquire executed data at each step and request
-- Validate authentication, pagination, rate limiting, and error handling.
-
-[See how testing works](../guides/getting-started/build)
 
 Next: [Deploy](./deploy)
