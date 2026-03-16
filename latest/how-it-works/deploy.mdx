@@ -1,20 +1,54 @@
-## Deploy
+---
+title: "The Deploy Agent: Release & Monitor Your Integrations"
+sidebarTitle: Deploy
+---
+<img
+  className="hidden dark:block"
+  src="/images/deploy-agent.png"
+  alt="An Introduction to the Deploy Agent"
+/>
+<img
+  className="dark:hidden"
+  src="/images/deploy-agent.png"
+  alt="An Introduction to the Deploy Agent"
+/>
 
-Promote your Project to production with active monitoring and automated maintenance.
+The Deploy Agent is responsible for promoting your integration from development to production and ensuring it runs reliably.
 
-Checklist:
+Once your workflows are implemented and tested, deployment makes them available in a production environment where they can execute continuously and be monitored.
 
-- Confirm credentials for production Connections.
-- Set environment variables, secrets, and rate‑limit guardrails.
-- Enable alerting for failures and latency spikes.
-- Define on‑call or escalation paths for critical workflows.
+Versori provides built-in tools for versioning, monitoring, and operational management so integrations can run safely at scale.
 
-Post‑deploy:
+### Before Deploying: Your Checklist
 
-- Monitor logs and metrics; tune retries and backoff as needed.
-- Version and roll out updates safely; keep Connector versions aligned with upstream API changes.
-- For End Users and Activations (same as legacy), follow the same lifecycle you used previously.
+Before promoting a Project to production, confirm the following:
 
-Done. Return to [How it works](../how-it-works)
+- **Production credentials:** Ensure your Connections use production credentials and correct authentication scopes.
+
+- **Environment configuration:** Set environment variables, secrets, and any configuration values required by your integration.
+
+- **Rate-limit guardrails:** Confirm retry policies and request limits align with the upstream APIs you are calling.
+
+- **Alerting and monitoring:** Enable alerts for workflow failures, latency spikes, or unexpected behaviour.
+
+- **Operational ownership:** Define on-call or escalation paths for critical integrations.
+
+### After Deployment
+
+Once deployed, monitor and maintain your integration to ensure it continues to run reliably.
+
+- **Monitor logs and metrics:** Track workflow execution, error rates, and performance to identify issues early.
+
+- **Tune retries and backoff policies:** Adjust retry behaviour as needed to handle API limits and intermittent failures.
+
+- **Version updates safely:** Use versioning to roll out changes gradually and avoid disrupting running integrations.
+
+- **Keep connectors up to date:** Update Connector versions when upstream APIs change to maintain compatibility.
+
+### What to do Next
+
+Once your integration is deployed, it can run continuously and support production workflows.
+
+You can now monitor executions, iterate on new versions, and scale your integrations as requirements evolve.
 
 
