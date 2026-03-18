@@ -11,6 +11,7 @@ description: "Manage systems within a project"
 |---|---|
 | `add` | Link a system to a project (create a connection template) |
 | `bootstrap` | Create systems from research context |
+| `connect` | Connect to a system |
 | `delete-connection-template` | Delete a connection template from a project |
 | `list-connections` | List static connections for a project environment |
 | `list` | List systems linked to a project |
@@ -34,7 +35,8 @@ versori projects systems add --project <project-id> --system <system-id> --name 
 * `--environment`: The environment name within the project
 * `-h`, `--help`: help for add
 * `--name`: A name for the connection template
-* `--project`: The project ID to link the system to
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `--system`: The system ID to link to the project
 
 
@@ -56,8 +58,30 @@ versori projects systems bootstrap --file <path> [flags]
 * `-h`, `--help`: help for bootstrap
 * `--project`: Project ID; defaults from .versori when inside a synced project directory.
 
-* `--system-overrides`: JSON object of per-system overrides (e.g. `{"Stripe": {"base_url": "..."}}`)
+* `--system-overrides`: JSON object of per-system overrides (for example, `{"Stripe": {"base_url": "..."}}`)
 
+
+
+
+---
+
+### `versori projects systems connect`
+
+
+
+
+```sh
+versori projects systems connect --project <project-id> --system <system-id> [flags]
+```
+
+
+**Flags:**
+* `--connection-id`: ID of the connection to connect to
+* `--environment`: The environment name within the project
+* `-h`, `--help`: help for connect
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
+* `--template-id`: ID of the connection template to connect to
 
 
 
@@ -75,7 +99,8 @@ versori projects systems delete-connection-template --project <project-id> --tem
 
 **Flags:**
 * `-h`, `--help`: help for delete-connection-template
-* `--project`: The project ID containing the connection template
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `--template`: The connection template ID to delete
 
 
@@ -95,7 +120,8 @@ versori projects systems list-connections --project <project-id> --environment <
 **Flags:**
 * `--environment`: The environment name within the project
 * `-h`, `--help`: help for list-connections
-* `--project`: The project ID to list connections for
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 
 
 
@@ -114,7 +140,8 @@ versori projects systems list --project <project-id> --environment <environment-
 **Flags:**
 * `--environment`: The environment name within the project
 * `-h`, `--help`: help for list
-* `--project`: The project ID to list systems for
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 
 
 
@@ -132,7 +159,8 @@ versori projects systems remove --project <project-id> --template <connection-te
 
 **Flags:**
 * `-h`, `--help`: help for remove
-* `--project`: The project ID from which to remove the system
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `--template`: The connection template ID to remove
 
 
@@ -155,7 +183,8 @@ versori projects systems update-connection-template --project <project-id> --tem
 * `--dynamic`: Whether the connection template is dynamic
 * `-h`, `--help`: help for update-connection-template
 * `--name`: New name for the connection template
-* `--project`: The project ID containing the connection template
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `--template`: The connection template ID to update
 
 
