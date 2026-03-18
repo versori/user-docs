@@ -37,7 +37,8 @@ versori projects environments create --project <project-id> --old-env <source-en
 * `-h`, `--help`: help for create
 * `--new-env`: The name of the new environment to create
 * `--old-env`: The name of the source environment to clone from
-* `--project`: The ID of the project
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 
 
 
@@ -50,8 +51,9 @@ Promote one environment to another within a project.
 This command copies the deployment configuration (currently the deployed docker image/version) 
 from the source environment to the target environment.
 
-For example, to promote staging to production:
-  `versori projects environments promote --project <id> --source staging --target production`
+For example, to promote staging to production, run:
+
+`versori projects environments promote --project <id> --source staging --target production`
 
 ```sh
 versori projects environments promote --project <project-id> --source <source-env> --target <target-env> [flags]
@@ -60,7 +62,8 @@ versori projects environments promote --project <project-id> --source <source-en
 
 **Flags:**
 * `-h`, `--help`: help for promote
-* `--project`: The ID of the project
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `--source`: The name of the source environment to promote from
 * `--target`: The name of the target environment to promote to
 
@@ -88,7 +91,8 @@ versori projects environments update-execution-pool --environment <environment-i
 * `--environment`: The name of the environment to update
 * `--execution-pool`: The name of the new execution pool
 * `-h`, `--help`: help for update-execution-pool
-* `--project`: The ID of the project
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `-y`, `--yes`: Skip confirmation prompt
 
 

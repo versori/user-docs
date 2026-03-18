@@ -114,12 +114,15 @@ versori projects edit --project <project-id> --environment <environment-name> [f
 * `-h`, `--help`: help for edit
 * `--max-replicas`: Maximum number of replicas. Setting this option enables autoscaling on the project
 
-* `--project`: The project ID
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
 * `--replicas`: Number of replicas
 * `--resource.cpu.limits`: CPU limits (e.g., 500m)
 * `--resource.cpu.requests`: CPU requests (e.g., 100m)
 * `--resource.memory.limits`: Memory limits (e.g., 500Mi)
 * `--resource.memory.requests`: Memory requests (e.g., 200Mi)
+* `--resource.storage.limits`: Ephemeral storage limits (e.g., 1Gi)
+* `--resource.storage.requests`: Ephemeral storage requests (e.g., 1Gi)
 * `--service-account`: Service account to use for the environment. Pass an empty string to remove the service account
 
 * `--static-ip`: Enable or disable static IP (enabled/disabled)
