@@ -197,6 +197,20 @@
             ]
           },
           {
+            "tab": "AI Tooling",
+            "groups": [
+              {
+                "group": "Claude Code Plugin",
+                "pages": [
+                  "latest/ai-tooling/overview",
+                  "latest/ai-tooling/installation",
+                  "latest/ai-tooling/workflow",
+                  "latest/ai-tooling/tips"
+                ]
+              }
+            ]
+          },
+          {
             "tab": "API Reference",
             "anchors": [
               {

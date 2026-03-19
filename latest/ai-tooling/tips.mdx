@@ -1,0 +1,79 @@
+---
+title: "Tips & Best Practices"
+description: "Get the most out of AI-assisted integration development with the Versori Claude Code plugin."
+---
+
+## Prepare a research document
+
+The plugin works best when it has a clear understanding of the systems and requirements involved. Before starting, gather:
+
+- **API documentation links** for each system you want to integrate
+- **Authentication details** — which auth method each system uses (API key, OAuth 2.0, etc.)
+- **Data models** — the objects and fields you need to map between systems
+- **Example payloads** — sample API requests and responses help the plugin generate accurate transformations
+- **Trigger requirements** — whether the integration should run on webhook events, a schedule, or manually
+
+<Tip>
+    Start your prompt with a research document or a detailed description of the integration. The more context you
+    provide upfront, the fewer iterations you will need.
+</Tip>
+
+## Write effective prompts
+
+Be specific about what you want to build. A good prompt includes:
+
+- **The systems involved** — name the source and target platforms
+- **The trigger type** — webhook, schedule (with cron expression), or manual
+- **Field mappings** — which fields in the source map to which fields in the target
+- **Authentication methods** — how each system should authenticate
+- **Edge cases** — what should happen when records already exist, when fields are missing, or when API calls fail
+
+**Good prompt:**
+```
+Build an integration between HubSpot and Salesforce.
+When a new contact is created in HubSpot (webhook), check if they exist in Salesforce by email.
+If they exist, update the record. If not, create a new lead.
+Use OAuth 2.0 for both systems.
+Map: HubSpot firstname → Salesforce FirstName, HubSpot lastname → Salesforce LastName,
+HubSpot email → Salesforce Email, HubSpot company → Salesforce Company.
+```
+
+**Vague prompt:**
+```
+Sync contacts between HubSpot and Salesforce.
+```
+
+The vague prompt will still work, but the plugin will need to make assumptions about trigger type, field mappings, and authentication — leading to more back-and-forth.
+
+## SDK patterns the plugin uses
+
+The plugin generates code using the Versori Run SDK. Understanding these patterns helps you review and refine the generated workflows:
+
+- **[Workflows & triggers](/latest/run-sdk/latest/workflows)** — webhook and schedule-based entry points for integrations
+- **[Task types](/latest/run-sdk/latest/workflows/task-types)** — the building blocks of workflows: functions, HTTP calls, and more
+- **[Context & KV storage](/latest/run-sdk/latest/context)** — how workflows access connections, logging, and persistent state
+- **[Durable workflows](/latest/run-sdk/latest/durable-workflows)** — long-running workflows with persistent state across executions
+
+## Common integration patterns
+
+The plugin handles a variety of integration patterns. These guides cover common use cases in detail:
+
+- [Real-time integrations](/latest/guides/use-cases/real-time) — event-driven workflows triggered by webhooks
+- [Batch integrations](/latest/guides/use-cases/batch) — scheduled data synchronisation between systems
+- [Bidirectional sync](/latest/guides/use-cases/bidirectional) — two-way data flow between systems
+- [Multi-tenancy](/latest/guides/use-cases/multi-tenancy) — integrations that support multiple end users
+
+<Warning>
+    Always review generated code before deploying to production. While the plugin follows best practices and
+    generates tested code, you should verify that field mappings, authentication configuration, and error handling
+    meet your specific requirements.
+</Warning>
+
+## Troubleshooting
+
+If the plugin is not activating or behaving as expected:
+
+- **Check the CLI is authenticated** — run `versori context list` to verify you have an active context
+- **Ensure a project exists** — the plugin needs a project to deploy to. Create one with `versori projects create`
+- **Check your prompt** — the plugin activates on integration-related tasks. If your request is about something unrelated, it will not engage
+- **Update the plugin** — if using Claude Code, reinstall to get the latest version. If using downloaded skills, re-run `versori skills download --latest`

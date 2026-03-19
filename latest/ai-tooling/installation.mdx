@@ -1,0 +1,74 @@
+---
+title: "Installation"
+description: "Install the Versori plugin in Claude Code or download skills for other AI tools."
+---
+
+## Prerequisites
+
+Before installing the plugin, ensure you have:
+
+1. The [Versori CLI installed](/latest/cli/installation) (v0.4.0 or later)
+2. An authenticated CLI context — see the [Quickstart](/latest/cli/quickstart) guide
+3. A Versori project — create one with `versori projects create --name my-project`
+
+## Claude Code
+
+<Steps>
+    <Step title="Install the plugin">
+        In Claude Code, run:
+
+        ```
+        /plugin install versori-skills@versori-cli
+        ```
+
+        You can also discover and install it from the [Claude Code plugin marketplace](https://platform.claude.com/plugins).
+    </Step>
+    <Step title="Verify the plugin is active">
+        After installation, the plugin activates automatically when Claude Code detects integration-related tasks. You can verify it is installed by checking your active plugins:
+
+        ```
+        /plugins
+        ```
+
+        You should see `versori-skills@versori-cli` listed with its `coding-versori-sdk` skill.
+    </Step>
+    <Step title="Start building">
+        Describe your integration task to Claude Code. The plugin will guide you through the full workflow — from research through deployment.
+
+        ```
+        Build an integration that syncs new Shopify orders to QuickBooks as sales receipts.
+        ```
+    </Step>
+</Steps>
+
+## Cursor and other AI tools
+
+The Versori skills can be downloaded and used with any AI tool that supports skill or agent files.
+
+<Steps>
+    <Step title="Download skills">
+        Use the CLI to extract skills to your tool's skill directory:
+
+        ```sh
+        versori skills download --directory ~/.cursor/skills/
+        ```
+
+        This extracts individual skill files from the CLI's bundled skills.
+    </Step>
+    <Step title="Combine into a single agent file (optional)">
+        If your tool works better with a single file, use the `--agent` flag to combine skills into an `AGENTS.md` file:
+
+        ```sh
+        versori skills download --agent --directory ~/.cursor/skills/
+        ```
+    </Step>
+    <Step title="Get the latest version (optional)">
+        To download the latest skills from GitHub instead of using the bundled version:
+
+        ```sh
+        versori skills download --latest --directory ~/.cursor/skills/
+        ```
+    </Step>
+</Steps>
+
+See the [`versori skills` command reference](/latest/cli/commands/skills) for the full list of flags and options.
