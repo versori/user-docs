@@ -54,14 +54,22 @@ When activated, the plugin guides Claude Code through a structured workflow that
             .then(
                 fn('transform', (ctx) => {
                     // Map source fields to target format
-                    return { /* mapped data */ };
+                    return {
+                        name: ctx.body.customer_name,
+                        email: ctx.body.customer_email,
+                        total: ctx.body.total_price,
+                    };
                 })
             )
             .then(
-                http('create-record', {
-                    connection: 'target-system',
-                    method: 'POST',
-                    path: '/api/records',
+                http('create-record', 'target-system', async (ctx) => {
+                    const response = await ctx.fetch('/api/records', {
+                        method: 'POST',
+                        body: JSON.stringify(ctx.data),
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+
+                    return response.json();
                 })
             );
         ```
