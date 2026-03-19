@@ -1,0 +1,128 @@
+---
+title: "Workflow"
+description: "The structured 8-step process the Claude Code plugin follows to build Versori integrations."
+---
+
+When activated, the plugin guides Claude Code through a structured workflow that mirrors the Versori integration lifecycle. Each step builds on the previous one, ensuring integrations are researched, built, tested, and deployed consistently.
+
+## The 8-step workflow
+
+<Steps>
+    <Step title="Scope Validation">
+        The plugin confirms that your request is related to data integration — ETL pipelines, API integrations, webhooks, data synchronisation, or similar tasks. If the request falls outside this scope, it lets you know and suggests alternatives.
+    </Step>
+    <Step title="Research">
+        The plugin prepares a structured research document covering:
+        - The source and target systems involved
+        - API endpoints, authentication methods, and data models
+        - Field mappings between systems
+        - Trigger types (webhook, schedule, or manual)
+        - Implementation considerations such as rate limits, pagination, and error handling
+
+        This mirrors what the [Plan agent](/latest/how-it-works/plan) does in the Versori platform UI.
+    </Step>
+    <Step title="System Setup">
+        Using the research document, the plugin runs CLI commands to bootstrap systems on the Versori platform:
+
+        ```sh
+        versori systems create --name "Shopify" --base-url "https://my-store.myshopify.com"
+        ```
+
+        It creates each system identified in the research phase and links them to your project.
+    </Step>
+    <Step title="Connection Creation">
+        The plugin creates authenticated connections for each system using the appropriate authentication method (API key, OAuth 2.0, etc.):
+
+        ```sh
+        versori connections create --system <system-id> --auth-type api-key
+        ```
+
+        See the [Connections guide](/latest/cli/connections) for details on authentication methods and connection configuration.
+    </Step>
+    <Step title="Code Generation">
+        The plugin generates TypeScript workflows using the [Versori Run SDK](/latest/run-sdk/latest/introduction). It writes workflow files that:
+
+        - Define triggers (webhook or schedule)
+        - Map data between source and target systems
+        - Handle authentication via connections
+        - Include error handling and logging
+
+        ```typescript
+        import { webhook, fn, http } from '@versori/run';
+
+        export const syncOrders = webhook('sync-orders')
+            .then(
+                fn('transform', (ctx) => {
+                    return { /* mapped data */ };
+                })
+            )
+            .then(
+                http('create-record', { connection: 'target-system' }, async ({ fetch, data }) => {
+                    const response = await fetch('/api/records', {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                    });
+
+                    return response.json();
+                })
+            );
+        ```
+    </Step>
+    <Step title="Testing">
+        The plugin writes Deno test files for pure functions — data transformations, field mappings, and validation logic. This ensures your business logic is correct before deployment.
+    </Step>
+    <Step title="Verification">
+        The plugin runs local verification to catch issues before deployment:
+
+        ```sh
+        deno check src/workflows.ts
+        deno test
+        ```
+
+        Type errors and test failures are resolved before proceeding.
+    </Step>
+    <Step title="Deployment">
+        Once verification passes, the plugin deploys the integration:
+
+        ```sh
+        versori projects deploy --environment production
+        ```
+
+        See the [Project Workflow guide](/latest/cli/workflow) for details on deployment, versioning, and monitoring.
+    </Step>
+</Steps>
+
+## What the plugin handles vs. what you handle
+
+| Plugin | You |
+|---|---|
+| Researches APIs, auth methods, and data models | Provides the integration requirements and context |
+| Generates CLI commands to set up systems and connections | Reviews and approves system/connection configuration |
+| Writes TypeScript workflow code using the Run SDK | Reviews generated code for correctness |
+| Writes and runs tests for business logic | Provides test cases or edge cases to cover |
+| Runs type checking and tests locally | Supplies API credentials and access tokens |
+| Deploys via the CLI | Confirms the target environment |
+
+## Example interaction
+
+**Your prompt:**
+```
+Build an integration that syncs new Shopify orders to QuickBooks Online as sales receipts.
+Use OAuth 2.0 Authorization Code for QuickBooks and API key for Shopify.
+Run on webhook — trigger whenever a new order is created in Shopify.
+```
+
+**What the plugin does:**
+1. Produces a research document covering both Shopify and QuickBooks APIs
+2. Creates systems for Shopify and QuickBooks on the platform
+3. Sets up connections with the specified authentication methods
+4. Generates a webhook workflow that receives Shopify order events, transforms the data, and creates sales receipts in QuickBooks
+5. Writes tests for the data transformation logic
+6. Runs verification and deploys
+
+## Related docs
+
+- [Plan agent](/latest/how-it-works/plan) — how Versori researches integrations
+- [Connections guide](/latest/cli/connections) — managing authenticated connections
+- [Run SDK](/latest/run-sdk/latest/introduction) — the SDK used to build workflows
+- [Project Workflow](/latest/cli/workflow) — CLI-based project lifecycle
