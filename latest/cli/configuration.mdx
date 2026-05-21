@@ -26,7 +26,19 @@ See the [context commands reference](/latest/cli/commands/context) for all avail
 
 ## Project-level configuration
 
-When you run `versori projects sync`, a `.versori` file is created in the target directory containing the project ID and context name. This allows subsequent commands like `save` and `deploy` to infer the project automatically when run from that directory. If the context int he file doesn't match the active context the CLI will exit with an error.
+When you run `versori projects sync`, a `.versori` file is created in the target directory containing the project ID and context name. Subsequent commands that accept `--project` infer the project automatically when run from that directory, so flags like `save`, `deploy`, `logs`, and `proxy` can be invoked without re-typing the project ID.
+
+### Resolution rules for `--project`
+
+| State | Behaviour |
+|---|---|
+| No `.versori` in current directory | `--project` is required. |
+| `.versori` present, `--project` omitted | The file's `project_id` is used. |
+| `.versori` present, `--project` matches | The flag is used; no warning. |
+| `.versori` present, `--project` differs | **`--project` wins**; a warning is written to stderr noting the override. |
+| `.versori.context` differs from the active CLI context | The **active context wins**; a warning is written to stderr. The `project_id` is still used (a re-synced project keeps its ULID across contexts). |
+
+Warnings are written to stderr so JSON / piped output on stdout stays clean. To suppress override warnings entirely, either `cd` into the matching synced directory or `cd` somewhere without a `.versori` file before running the command.
 
 ## Global flags
 

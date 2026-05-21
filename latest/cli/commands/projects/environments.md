@@ -51,9 +51,8 @@ Promote one environment to another within a project.
 This command copies the deployment configuration (currently the deployed docker image/version) 
 from the source environment to the target environment.
 
-For example, to promote staging to production, run:
-
-`versori projects environments promote --project <id> --source staging --target production`
+For example, to promote staging to production:
+  versori projects environments promote --project <id> --source staging --target production
 
 ```sh
 versori projects environments promote --project <project-id> --source <source-env> --target <target-env> [flags]

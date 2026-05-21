@@ -10,20 +10,35 @@ The `projects` command (alias: `project`) provides subcommands for the full proj
 
 | Subcommand | Description |
 |---|---|
+| `activations` | Manage activations (end-user → environment links). Alias for the activation-lifecycle commands under `versori projects users`. |
 | `asset` | Manage assets within a project |
 | `create` | Create a new project in the current organisation |
 | `deploy` | Deploy the project to versori |
 | `details` | Get details for a project. Pass in - to read the project id from stdin |
 | `edit` | Edit project environment configuration (resource limits and requests) |
 | `environments` | Manage project environments |
+| `files` | List or read files from a project |
 | `list` | Lists all projects in the current context |
 | `logs` | Check the project logs |
 | `proxy` | Send an HTTP request to a project's deployed environment |
 | `save` | Save the project files to versori (no deploy) |
+| `star` | Mark a project as a starred reference project for the organisation |
 | `sync` | Sync pulls the project files to the local directory. WARNING: This will overwrite any local changes |
 | `systems` | Manage systems within a project |
+| `unstar` | Remove the starred flag from a project |
 | `users` | Manage users (activations) within a project |
+| `variables` | Manage a project's DynamicVariablesSchema (declares valid activation-variable keys) |
 | `versions` | Manage versions within a project. |
+
+---
+
+### `versori projects activations`
+
+
+
+See the [activations reference](projects/activations) for detailed subcommands to manage activations (end-user → environment links). alias for the activation-lifecycle commands under `versori projects users`.
+.
+
 
 ---
 
@@ -140,6 +155,33 @@ See the [environments reference](projects/environments) for detailed subcommands
 
 ---
 
+### `versori projects files`
+
+
+List files in a project, or print a single file's content to stdout.
+
+With no arguments, lists files. Default -o table shows filename and size;
+-o json and -o yaml include file contents too.
+
+With a filename, writes that file's content verbatim to stdout so it can be
+piped to other tools (jq, less, grep, etc.).
+
+```sh
+versori projects files [filename] [flags]
+```
+
+
+**Flags:**
+* `-h`, `--help`: help for files
+* `--project`: Project ID; defaults from .versori when inside a synced project directory.
+
+* `--version`: Read files from a specific version id instead of the current files
+
+
+
+
+---
+
 ### `versori projects list`
 
 
@@ -152,6 +194,7 @@ versori projects list [flags]
 
 **Flags:**
 * `-h`, `--help`: help for list
+* `--starred`: Only list projects the organisation has starred
 
 
 
@@ -198,6 +241,7 @@ versori projects proxy --path <path> [flags]
 
 **Flags:**
 * `-b`, `--body`: Request body (string or @filename to read from file)
+* `-d`, `--data`: HTTP POST data (alias for --body)
 * `--environment`: Project environment name (e.g. production, staging)
 * `-H`, `--header`: HTTP headers as key:value pairs (repeatable)
 * `-h`, `--help`: help for proxy
@@ -206,6 +250,8 @@ versori projects proxy --path <path> [flags]
 * `--project`: Project ID; defaults from .versori when inside a synced project directory.
 
 * `-q`, `--query`: Query parameters as key:value pairs (repeatable)
+* `-X`, `--request`: HTTP method (alias for --method)
+* `-u`, `--user`: Server user and password (e.g. user:password)
 
 
 
@@ -228,6 +274,23 @@ versori projects save [--project <project-id>] [--directory <directory>] [flags]
 * `-h`, `--help`: help for save
 * `--project`: Project ID; defaults from .versori when inside a synced project directory.
 
+
+
+
+---
+
+### `versori projects star`
+
+
+
+
+```sh
+versori projects star <project-id> [flags]
+```
+
+
+**Flags:**
+* `-h`, `--help`: help for star
 
 
 
@@ -267,11 +330,38 @@ See the [systems reference](projects/systems) for detailed subcommands to manage
 
 ---
 
+### `versori projects unstar`
+
+
+
+
+```sh
+versori projects unstar <project-id> [flags]
+```
+
+
+**Flags:**
+* `-h`, `--help`: help for unstar
+
+
+
+---
+
 ### `versori projects users`
 
 
 
 See the [users reference](projects/users) for detailed subcommands to manage users (activations) within a project.
+
+
+---
+
+### `versori projects variables`
+
+
+
+See the [variables reference](projects/variables) for detailed subcommands to manage a project's dynamicvariablesschema (declares valid activation-variable keys)
+.
 
 
 ---
