@@ -36,9 +36,10 @@ When you run `versori projects sync`, a `.versori` file is created in the target
 | `.versori` present, `--project` omitted | The file's `project_id` is used. |
 | `.versori` present, `--project` matches | The flag is used; no warning. |
 | `.versori` present, `--project` differs | **`--project` wins**; a warning is written to stderr noting the override. |
-| `.versori.context` differs from the active CLI context | The **active context wins**; a warning is written to stderr. The `project_id` is still used (a re-synced project keeps its ULID across contexts). |
+| `.versori.context` differs from the active CLI context | When the resolved project ID matches `.versori`'s `project_id`, the **`.versori` context is auto-applied** for that invocation and a `using context "…" from <dir>/.versori (matches --project <id>; pass --context to override)` notice is written to stderr (once per process). Pass `--context` to override. If the resolved project ID does not match (e.g. `--project <other-id>`) or the command is not project-scoped, `.versori.context` is ignored and the active CLI context is used. |
+| `.versori.context` references a context that isn't in your config | The CLI errors out and points you at `versori context add --name <ctx> …`. It will not silently fall back to a different context. |
 
-Warnings are written to stderr so JSON / piped output on stdout stays clean. To suppress override warnings entirely, either `cd` into the matching synced directory or `cd` somewhere without a `.versori` file before running the command.
+Warnings and notices are written to stderr so JSON / piped output on stdout stays clean. Pass `--context` explicitly to override the `.versori` auto-switch; the active CLI context itself is unchanged (no need to re-run `versori context select`).
 
 ## Global flags
 
