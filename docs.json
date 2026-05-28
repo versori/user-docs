@@ -175,15 +175,25 @@
                     "group": "Projects",
                     "pages": [
                       "latest/cli/commands/projects",
+                      "latest/cli/commands/projects/activations",
                       "latest/cli/commands/projects/asset",
                       "latest/cli/commands/projects/environments",
                       "latest/cli/commands/projects/systems",
                       "latest/cli/commands/projects/users",
+                      "latest/cli/commands/projects/variables",
                       "latest/cli/commands/projects/versions"
                     ]
                   },
                   "latest/cli/commands/systems",
                   "latest/cli/commands/connections",
+                  {
+                    "group": "Notifications",
+                    "pages": [
+                      "latest/cli/commands/notifications",
+                      "latest/cli/commands/notifications/channels",
+                      "latest/cli/commands/notifications/project"
+                    ]
+                  },
                   "latest/cli/commands/skills",
                   "latest/cli/commands/users",
                   "latest/cli/commands/execution-pools",
