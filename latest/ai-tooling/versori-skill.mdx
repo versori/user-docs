@@ -1,0 +1,77 @@
+---
+title: "Versori Skill"
+description: "What the coding-versori-sdk skill contains, how it is structured, and the platform behaviour it encodes."
+---
+
+Versori ships a single built-in skill, `coding-versori-sdk`, that teaches an AI coding tool how to build data integrations the way the Versori platform expects. It turns any compatible AI tool — such as Claude Code or Cursor — into a Versori integration expert that follows the same lifecycle the platform uses internally.
+
+This skill is delivered through the [Versori CLI](/latest/cli/installation) and the [Claude Code plugin](/latest/ai-tooling/overview), not the organisation skill library. For Skills as a platform concept — including how to author and apply your own — see [Skills](/latest/ai-tooling/skills).
+
+## What it provides
+
+Rather than relying on whatever an AI model happens to know about Versori, the skill gives the agent authoritative, version-matched instructions. It teaches the agent how to:
+
+- Recognise when a task is a Versori data-integration task
+- Research source and target systems before writing code
+- Set up systems and authenticated connections using the CLI
+- Generate TypeScript workflows with the [Run SDK](/latest/run-sdk/latest/introduction) following platform conventions
+- Write and run tests for transformation logic
+- Verify and deploy integrations safely
+
+## What it covers
+
+The skill spans the full integration lifecycle:
+
+- TypeScript workflow authoring with the Run SDK
+- Schedule, webhook, and durable workflow patterns
+- KV store usage for incremental sync and stateful batch processing
+- API research and documentation before code generation
+- CLI usage for creating projects, managing connections, and deploying
+
+## How it is structured
+
+The skill is a directory of Markdown files. The agent reads the top-level instructions first and only loads the deeper reference material when it is needed, keeping the agent's context focused.
+
+```
+coding-versori-sdk/
+├── SKILL.md                  # Core workflow, conventions, and critical rules
+└── references/
+    ├── research-docs.md      # Research document structure and guidelines
+    ├── sdk-guide.md          # Comprehensive Run SDK usage guide
+    └── cli-usage.md          # CLI commands, environment variables, deployment safety
+```
+
+The `SKILL.md` file begins with frontmatter containing a `name` and a `description`. The description defines exactly when the skill should activate:
+
+```markdown
+---
+name: coding-versori-sdk
+description: Use this skill whenever the user wants to create, debug, or
+  modify data integration workflows using the versori-run SDK...
+---
+```
+
+The skill activates on integration-related requests — ETL pipelines, API integrations, webhooks, data synchronisation — and also in any workspace that imports `@versori/run`, even when your prompt contains no Versori keywords.
+
+## Platform behaviour it encodes
+
+Because the skill is applied at the point of use, it encodes platform behaviour that an AI model could not infer on its own. For example, it instructs the agent to:
+
+- Inspect a project's systems with `versori projects systems list` before generating any `fetch()` paths
+- Account for platform-specific behaviour, such as the runtime stripping a trailing `/api` segment from a system's base URL
+- Resolve the `connection` parameter against a project's **system** name, so the underlying credentials can be swapped without editing workflow code
+- Prefer activation variables and the KV store for configuration and state, rather than hard-coded values
+- Read the official documentation and inspect your project's actual systems and connections rather than relying on assumptions, so generated code matches your real configuration
+
+## Reference projects
+
+When generating code, the skill consults your organisation's **starred reference projects** — the blessed examples for your org. Before writing a new workflow, the agent reads these projects and follows their structure, naming conventions, and error-handling patterns. This means the skill adapts to how your organisation actually builds integrations, not just to generic defaults.
+
+See [Reference projects](/latest/cli/commands/projects) for how to star a project.
+
+## Related docs
+
+- [Skills](/latest/ai-tooling/skills) — how skills are loaded and applied in the Versori platform
+- [Workflow](/latest/ai-tooling/workflow) — the step-by-step process the skill drives
+- [Run SDK](/latest/run-sdk/latest/introduction) — the SDK the skill generates code with
+- [`versori skills` command](/latest/cli/commands/skills) — download and packaging options
