@@ -231,10 +231,9 @@
             "tab": "AI Tooling",
             "groups": [
               {
-                "group": "Tooling",
+                "group": "Platform",
                 "pages": [
-                  "latest/ai-tooling/skills",
-                  "latest/ai-tooling/versori-skill"
+                  "latest/ai-tooling/skills"
                 ]
               },
               {
@@ -243,7 +242,8 @@
                   "latest/ai-tooling/overview",
                   "latest/ai-tooling/installation",
                   "latest/ai-tooling/workflow",
-                  "latest/ai-tooling/tips"
+                  "latest/ai-tooling/tips",
+                  "latest/ai-tooling/versori-skill"
                 ]
               }
             ]
