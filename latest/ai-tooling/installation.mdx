@@ -1,16 +1,57 @@
 ---
 title: "Installation"
-description: "Install the Versori plugin in Claude Code or download skills for other AI tools."
+description: "Add the Versori skill to Cursor, Codex, Claude Code, or any other AI coding tool."
 ---
 
 ## Prerequisites
 
-Before installing the plugin, ensure you have:
+Before adding the skill, ensure you have:
 
 1. The [Versori CLI installed](/latest/cli/installation)
 2. An authenticated CLI context — see the [Quickstart](/latest/cli/quickstart) guide
 
-## Claude Code
+The Versori skill is bundled with the CLI. You can either download it into any AI tool's skill directory, or install it as a plugin in Claude Code.
+
+## Any AI tool
+
+The skill can be used with any AI tool that supports skill or agent files, such as Cursor, Codex, and Claude Code.
+
+<Steps>
+    <Step title="Download the skill">
+        Use the CLI to extract the skill to your tool's skill directory. For example, for Cursor:
+
+        ```sh
+        versori skills download --directory ~/.cursor/skills/
+        ```
+
+        Point `--directory` at wherever your tool loads skills from.
+    </Step>
+    <Step title="Combine into a single agent file (optional)">
+        If your tool works better with a single file — for example Codex or Cursor using `AGENTS.md` — use the `--agent` flag to combine the skill into an `AGENTS.md` file:
+
+        ```sh
+        versori skills download --agent --directory ./
+        ```
+    </Step>
+    <Step title="Get the latest version (optional)">
+        To download the latest skill from GitHub instead of using the bundled version:
+
+        ```sh
+        versori skills download --latest --directory ~/.cursor/skills/
+        ```
+    </Step>
+    <Step title="Start building">
+        Describe your integration task to your AI tool. The skill will guide it through the full workflow — from research through deployment.
+
+        ```
+        Build an integration that syncs new Shopify orders to QuickBooks as sales receipts.
+        ```
+    </Step>
+</Steps>
+
+## Claude Code plugin
+
+If you use Claude Code, you can install the skill as a plugin in one step instead of downloading it manually.
 
 <Steps>
     <Step title="Install the plugin">
@@ -28,43 +69,6 @@ Before installing the plugin, ensure you have:
         ```
 
         You should see `versori-skills@versori-cli` listed with its `coding-versori-sdk` skill.
-    </Step>
-    <Step title="Start building">
-        Describe your integration task to Claude Code. The plugin will guide you through the full workflow — from research through deployment.
-
-        ```
-        Build an integration that syncs new Shopify orders to QuickBooks as sales receipts.
-        ```
-    </Step>
-</Steps>
-
-## Cursor and other AI tools
-
-The Versori skills can be downloaded and used with any AI tool that supports skill or agent files.
-
-<Steps>
-    <Step title="Download skills">
-        Use the CLI to extract skills to your tool's skill directory:
-
-        ```sh
-        versori skills download --directory ~/.cursor/skills/
-        ```
-
-        This extracts individual skill files from the CLI's bundled skills.
-    </Step>
-    <Step title="Combine into a single agent file (optional)">
-        If your tool works better with a single file, use the `--agent` flag to combine skills into an `AGENTS.md` file:
-
-        ```sh
-        versori skills download --agent --directory ~/.cursor/skills/
-        ```
-    </Step>
-    <Step title="Get the latest version (optional)">
-        To download the latest skills from GitHub instead of using the bundled version:
-
-        ```sh
-        versori skills download --latest --directory ~/.cursor/skills/
-        ```
     </Step>
 </Steps>
 

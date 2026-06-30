@@ -237,7 +237,7 @@
                 ]
               },
               {
-                "group": "Claude Code Plugin",
+                "group": "Local Development",
                 "pages": [
                   "latest/ai-tooling/overview",
                   "latest/ai-tooling/installation",

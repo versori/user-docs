@@ -1,19 +1,19 @@
 ---
-title: "Claude Code Plugin"
+title: "AI-Assisted Integration Development"
 sidebarTitle: "Overview"
-description: "AI-assisted skill for building Versori data integrations in Claude Code."
+description: "Use the Versori skill in your AI coding tool to build data integrations locally."
 ---
 
-The Versori Claude Code plugin (`versori-skills@versori-cli`) is an AI skill that guides Claude Code through the full integration lifecycle — from research and system setup through code generation, testing, and deployment.
+Versori ships a built-in skill, `coding-versori-sdk`, that turns your AI coding tool into a Versori integration expert. It guides the agent through the full integration lifecycle — from research and system setup through code generation, testing, and deployment.
 
-When you describe an integration task, the plugin provides Claude Code with structured knowledge about the Versori CLI, Run SDK, and platform workflow. It activates automatically when you work on ETL pipelines, API integrations, data synchronisation, webhooks, or mention Versori.
+The skill works with any AI coding tool that supports skills or agent files, including [Cursor](https://cursor.com/), [Codex](https://openai.com/codex/), and [Claude Code](https://www.anthropic.com/claude-code). When you describe an integration task, the skill provides your agent with structured knowledge about the Versori CLI, Run SDK, and platform workflow. It activates automatically when you work on ETL pipelines, API integrations, data synchronisation, webhooks, or mention Versori.
 
 <CardGroup cols={2}>
     <Card title="Installation" icon="download" href="/latest/ai-tooling/installation">
-        Install the plugin in Claude Code or download skills for other tools.
+        Add the skill to Cursor, Codex, Claude Code, or any other AI coding tool.
     </Card>
     <Card title="Workflow" icon="arrows-spin" href="/latest/ai-tooling/workflow">
-        The structured 8-step process the plugin follows to build integrations.
+        The structured 8-step process the skill follows to build integrations.
     </Card>
     <Card title="Tips & Best Practices" icon="lightbulb" href="/latest/ai-tooling/tips">
         Get the most out of AI-assisted integration development.
@@ -23,9 +23,9 @@ When you describe an integration task, the plugin provides Claude Code with stru
     </Card>
 </CardGroup>
 
-## What the plugin does
+## What the skill does
 
-The plugin equips Claude Code with a skill that understands Versori's platform, CLI commands, and SDK patterns. When activated, it follows a structured workflow to:
+The skill equips your AI tool with knowledge of Versori's platform, CLI commands, and SDK patterns. When activated, it follows a structured workflow to:
 
 - **Research** your integration requirements and produce a structured plan
 - **Set up systems** on the Versori platform using the CLI
@@ -36,14 +36,14 @@ The plugin equips Claude Code with a skill that understands Versori's platform, 
 
 ## Prerequisites
 
-Before using the plugin, make sure you have:
+Before using the skill, make sure you have:
 
 - A [Versori account](https://platform.versori.com) with an active organisation
 - The [Versori CLI installed](/latest/cli/installation) and [authenticated](/latest/cli/quickstart)
 - [Node.js](https://nodejs.org/) or [Deno](https://deno.com/) installed for local development and testing
+- An AI coding tool such as Cursor, Codex, or Claude Code
 
 <Note>
-    The plugin is designed for Claude Code, but the underlying skills can be used with other AI tools like Cursor.
-    Run `versori skills download` to extract skills for use outside Claude Code.
-    See the [Installation](/latest/ai-tooling/installation) page for details.
+    The skill is distributed with the Versori CLI. Run `versori skills download` to add it to any AI tool, or install
+    the Claude Code plugin for a one-step setup. See the [Installation](/latest/ai-tooling/installation) page for details.
 </Note>
