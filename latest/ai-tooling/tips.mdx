@@ -1,16 +1,16 @@
 ---
 title: "Tips & Best Practices"
-description: "Get the most out of AI-assisted integration development with the Versori Claude Code plugin."
+description: "Get the most out of AI-assisted integration development with the Versori skill."
 ---
 
 ## Prepare a research document
 
-The plugin works best when it has a clear understanding of the systems and requirements involved. Before starting, gather:
+The skill works best when your AI tool has a clear understanding of the systems and requirements involved. Before starting, gather:
 
 - **API documentation links** for each system you want to integrate
 - **Authentication details** — which auth method each system uses (API key, OAuth 2.0, etc.)
 - **Data models** — the objects and fields you need to map between systems
-- **Example payloads** — sample API requests and responses help the plugin generate accurate transformations
+- **Example payloads** — sample API requests and responses help the agent generate accurate transformations
 - **Trigger requirements** — whether the integration should run on webhook events, a schedule, or manually
 
 <Tip>
@@ -43,11 +43,11 @@ HubSpot email → Salesforce Email, HubSpot company → Salesforce Company.
 Sync contacts between HubSpot and Salesforce.
 ```
 
-The vague prompt will still work, but the plugin will need to make assumptions about trigger type, field mappings, and authentication — leading to more back-and-forth.
+The vague prompt will still work, but the agent will need to make assumptions about trigger type, field mappings, and authentication — leading to more back-and-forth.
 
-## SDK patterns the plugin uses
+## SDK patterns the skill uses
 
-The plugin generates code using the Versori Run SDK. Understanding these patterns helps you review and refine the generated workflows:
+The skill generates code using the Versori Run SDK. Understanding these patterns helps you review and refine the generated workflows:
 
 - **[Workflows & triggers](/latest/run-sdk/latest/workflows)** — webhook and schedule-based entry points for integrations
 - **[Task types](/latest/run-sdk/latest/workflows/task-types)** — the building blocks of workflows: functions, HTTP calls, and more
@@ -56,7 +56,7 @@ The plugin generates code using the Versori Run SDK. Understanding these pattern
 
 ## Common integration patterns
 
-The plugin handles a variety of integration patterns. These guides cover common use cases in detail:
+The skill handles a variety of integration patterns. These guides cover common use cases in detail:
 
 - [Real-time integrations](/latest/guides/use-cases/real-time) — event-driven workflows triggered by webhooks
 - [Batch integrations](/latest/guides/use-cases/batch) — scheduled data synchronisation between systems
@@ -64,16 +64,16 @@ The plugin handles a variety of integration patterns. These guides cover common 
 - [Multi-tenancy](/latest/guides/use-cases/multi-tenancy) — integrations that support multiple end users
 
 <Warning>
-    Always review generated code before deploying to production. While the plugin follows best practices and
+    Always review generated code before deploying to production. While the skill follows best practices and
     generates tested code, you should verify that field mappings, authentication configuration, and error handling
     meet your specific requirements.
 </Warning>
 
 ## Troubleshooting
 
-If the plugin is not activating or behaving as expected:
+If the skill is not activating or behaving as expected:
 
 - **Check the CLI is authenticated** — run `versori context list` to verify you have an active context
-- **Ensure a project exists** — the plugin will guide you through creating one, but you can also create one manually with `versori projects create`
-- **Check your prompt** — the plugin activates on integration-related tasks. If your request is about something unrelated, it will not engage
-- **Update skills for other tools** — if using downloaded skills, re-run `versori skills download --latest` to get the latest version
+- **Ensure a project exists** — the agent will guide you through creating one, but you can also create one manually with `versori projects create`
+- **Check your prompt** — the skill activates on integration-related tasks. If your request is about something unrelated, it will not engage
+- **Make sure the skill is installed** — confirm it is in your tool's skill directory, or re-run `versori skills download --latest` to get the latest version

@@ -55,7 +55,10 @@
                 "pages": [
                   {
                     "group": "Plan",
-                    "pages": ["latest/guides/getting-started/plan", "latest/guides/getting-started/plan/questions"]
+                    "pages": [
+                      "latest/guides/getting-started/plan",
+                      "latest/guides/getting-started/plan/questions"
+                    ]
                   },
                   {
                     "group": "Connect",
@@ -76,11 +79,15 @@
                   },
                   {
                     "group": "Deploy",
-                    "pages": ["latest/guides/getting-started/deploy"]
+                    "pages": [
+                      "latest/guides/getting-started/deploy"
+                    ]
                   },
                   {
                     "group": "Miscellaneous",
-                    "pages": ["latest/guides/getting-started/misc/prompting-tips"]
+                    "pages": [
+                      "latest/guides/getting-started/misc/prompting-tips"
+                    ]
                   }
                 ]
               },
@@ -114,7 +121,9 @@
                       },
                       {
                         "group": "OAuth 1.0",
-                        "pages": ["latest/guides/auth-methods/oauth1"]
+                        "pages": [
+                          "latest/guides/auth-methods/oauth1"
+                        ]
                       }
                     ]
                   }
@@ -122,7 +131,9 @@
               },
               {
                 "anchor": "Advanced",
-                "pages": ["latest/guides/advanced/ip-allowlist"]
+                "pages": [
+                  "latest/guides/advanced/ip-allowlist"
+                ]
               }
             ]
           },
@@ -154,7 +165,9 @@
                   },
                   {
                     "group": "Developers",
-                    "pages": ["latest/run-sdk/latest/developers/overview"]
+                    "pages": [
+                      "latest/run-sdk/latest/developers/overview"
+                    ]
                   }
                 ]
               }
@@ -165,7 +178,11 @@
             "groups": [
               {
                 "group": "Getting Started",
-                "pages": ["latest/cli/introduction", "latest/cli/installation", "latest/cli/quickstart"]
+                "pages": [
+                  "latest/cli/introduction",
+                  "latest/cli/installation",
+                  "latest/cli/quickstart"
+                ]
               },
               {
                 "group": "Commands",
@@ -202,7 +219,11 @@
               },
               {
                 "group": "Guides",
-                "pages": ["latest/cli/configuration", "latest/cli/workflow", "latest/cli/connections"]
+                "pages": [
+                  "latest/cli/configuration",
+                  "latest/cli/workflow",
+                  "latest/cli/connections"
+                ]
               }
             ]
           },
@@ -210,12 +231,19 @@
             "tab": "AI Tooling",
             "groups": [
               {
-                "group": "Claude Code Plugin",
+                "group": "Platform",
+                "pages": [
+                  "latest/ai-tooling/skills"
+                ]
+              },
+              {
+                "group": "Local Development",
                 "pages": [
                   "latest/ai-tooling/overview",
                   "latest/ai-tooling/installation",
                   "latest/ai-tooling/workflow",
-                  "latest/ai-tooling/tips"
+                  "latest/ai-tooling/tips",
+                  "latest/ai-tooling/versori-skill"
                 ]
               }
             ]
@@ -225,7 +253,10 @@
             "anchors": [
               {
                 "anchor": "Overview",
-                "pages": ["latest/api-reference/getting-started", "latest/api-reference/authentication"]
+                "pages": [
+                  "latest/api-reference/getting-started",
+                  "latest/api-reference/authentication"
+                ]
               },
               {
                 "anchor": "Platform API",
@@ -267,7 +298,9 @@
             "groups": [
               {
                 "group": "Home",
-                "pages": ["legacy/welcome"]
+                "pages": [
+                  "legacy/welcome"
+                ]
               },
               {
                 "group": "Concepts",
@@ -286,7 +319,9 @@
                   },
                   {
                     "group": "Boards",
-                    "pages": ["legacy/concepts/boards"]
+                    "pages": [
+                      "legacy/concepts/boards"
+                    ]
                   }
                 ]
               }
@@ -336,7 +371,9 @@
                     "pages": [
                       {
                         "group": "Tools",
-                        "pages": ["legacy/embedded/integrations/tools/user_extractor"]
+                        "pages": [
+                          "legacy/embedded/integrations/tools/user_extractor"
+                        ]
                       }
                     ]
                   }
@@ -344,22 +381,31 @@
               },
               {
                 "group": "Guides",
-                "pages": ["legacy/embedded/guides/create-hub"]
+                "pages": [
+                  "legacy/embedded/guides/create-hub"
+                ]
               },
               {
                 "group": "Developer Guides",
-                "pages": ["legacy/embedded/developer/intro", "legacy/embedded/developer/quickstart-react"]
+                "pages": [
+                  "legacy/embedded/developer/intro",
+                  "legacy/embedded/developer/quickstart-react"
+                ]
               },
               {
                 "group": "SDKs",
                 "pages": [
                   {
                     "group": "Typescript",
-                    "pages": ["legacy/embedded/sdks/typescript"]
+                    "pages": [
+                      "legacy/embedded/sdks/typescript"
+                    ]
                   },
                   {
                     "group": "React",
-                    "pages": ["legacy/embedded/sdks/react"]
+                    "pages": [
+                      "legacy/embedded/sdks/react"
+                    ]
                   }
                 ]
               }
@@ -373,11 +419,16 @@
                 "groups": [
                   {
                     "group": "Home",
-                    "pages": ["legacy/switchboard/introduction"]
+                    "pages": [
+                      "legacy/switchboard/introduction"
+                    ]
                   },
                   {
                     "group": "Concepts",
-                    "pages": ["legacy/switchboard/introduction", "legacy/switchboard/core-concepts"]
+                    "pages": [
+                      "legacy/switchboard/introduction",
+                      "legacy/switchboard/core-concepts"
+                    ]
                   },
                   {
                     "group": "Features",
@@ -434,7 +485,9 @@
             "anchors": [
               {
                 "anchor": "Authentication",
-                "pages": ["legacy/api-reference/authentication"]
+                "pages": [
+                  "legacy/api-reference/authentication"
+                ]
               },
               {
                 "anchor": "Connect API",
@@ -524,7 +577,9 @@
                       },
                       {
                         "group": "Miscellaneous",
-                        "pages": ["legacy/api-reference/connect-api/misc/list-all-available-categories"]
+                        "pages": [
+                          "legacy/api-reference/connect-api/misc/list-all-available-categories"
+                        ]
                       }
                     ]
                   }
@@ -595,7 +650,9 @@
                       },
                       {
                         "group": "Miscellaneous",
-                        "pages": ["legacy/api-reference/embedded-api/miscellaneous/health-check"]
+                        "pages": [
+                          "legacy/api-reference/embedded-api/miscellaneous/health-check"
+                        ]
                       }
                     ]
                   }
@@ -767,7 +824,9 @@
                 "groups": [
                   {
                     "group": "Home",
-                    "pages": ["v2/introduction"]
+                    "pages": [
+                      "v2/introduction"
+                    ]
                   }
                 ]
               },
@@ -776,7 +835,10 @@
                 "groups": [
                   {
                     "group": "Introduction",
-                    "pages": ["v2/embedded/introduction", "v2/embedded/concepts"]
+                    "pages": [
+                      "v2/embedded/introduction",
+                      "v2/embedded/concepts"
+                    ]
                   },
                   {
                     "group": "Developer Guides",
@@ -896,7 +958,9 @@
       "proxy": false
     },
     "mdx": {
-      "server": ["https://platform.versori.com/api"],
+      "server": [
+        "https://platform.versori.com/api"
+      ],
       "auth": {
         "method": "bearer",
         "name": "Authorization"

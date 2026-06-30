@@ -1,0 +1,102 @@
+---
+title: "Skills"
+description: "What Skills are in the Versori platform, how to create them, and how the AI applies them when planning and building integrations."
+---
+
+Skills are reusable sets of guidelines and best practices that teach the Versori AI how your team builds integrations — coding standards, naming conventions, security requirements, or partner-specific rules. You add a skill once to your organisation's library, then attach it to any integration so the AI consistently follows it while planning, building, and reviewing.
+
+Skills follow an open standard for packaging AI agent knowledge, so the same skill format works across the Versori platform and AI coding tools such as Claude Code and Cursor.
+
+<Info>
+    Skills are managed per organisation under **Organisation Settings → Skills**.
+</Info>
+
+## What a skill contains
+
+A skill is a small bundle of Markdown files:
+
+| File | Required | Purpose |
+|---|---|---|
+| `SKILL.md` | Yes | The index file. Holds the skill's frontmatter and the guidelines the AI should follow. Must be named exactly `SKILL.md` (uppercase). |
+| Resource files | No | Supporting files the `SKILL.md` can reference — for example longer references, examples, or templates. Stored under their relative path (e.g. `references/naming.md`). |
+
+### The `SKILL.md` file
+
+`SKILL.md` begins with a YAML frontmatter block followed by the guidelines themselves, written in Markdown.
+
+```markdown SKILL.md
+---
+name: example-skill-name
+description: One line describing what this skill covers and when the AI should apply it
+---
+
+# Criteria
+
+- Replace this example with the rules or guidelines the AI should follow.
+```
+
+The frontmatter defines how the skill is identified and scoped:
+
+<ParamField path="name" type="string" required>
+    A short, unique name for the skill, shown in the library and the integration's skill list.
+</ParamField>
+
+<ParamField path="description" type="string" required>
+    One line describing what the skill covers and when the AI should apply it. The planning agent uses this to decide whether the skill is relevant.
+</ParamField>
+
+<ParamField path="category" type="string">
+    An optional grouping label (for example `ELR` or `AvaTax`). Skills with the same category can be attached together, and untagged skills apply regardless of category. You can also set the category at upload time, which writes it into the frontmatter for you.
+</ParamField>
+
+## Create a skill
+
+<Steps>
+    <Step title="Write the SKILL.md">
+        Create a `SKILL.md` file with the frontmatter above and the guidelines you want the AI to follow. Keep the guidelines clear and specific — they are instructions the AI reads while it works.
+    </Step>
+    <Step title="Add resource files (optional)">
+        If your guidelines reference longer material — detailed examples, templates, or per-system notes — add them as separate files and refer to them from `SKILL.md` by their relative path, such as `references/mapping-rules.md`.
+    </Step>
+    <Step title="Upload to your library">
+        In **Organisation Settings → Skills**, select **New Skill**, then add your skill in whichever form is easiest:
+
+        - **Paste** the `SKILL.md` contents directly into the editor
+        - **Files** — select `SKILL.md` and any resource files
+        - **Folder** — select the whole skill folder
+        - **Bundle** — upload a packaged `.skill` or `.zip` archive
+
+        **Upload skill**. The skill will now appear in your organisation‘s library.
+
+        <Note>
+            The index file must be named exactly `SKILL.md`. A miscased name such as `skill.md` is rejected so the
+            bundle is never uploaded without its index.
+        </Note>
+    </Step>
+</Steps>
+
+## How skills are applied
+
+Once a skill is in your library, the AI uses it only when it is attached to an integration. You choose what to attach when you create an integration.
+
+<Steps>
+    <Step title="Attach skills to an integration">
+        When you create a new integration, choose which skills apply:
+
+        - **Auto** — let the planning agent decide which skills are relevant across your whole library
+        - **Individually** — when no categories are used, pick specific skills by hand
+    </Step>
+    <Step title="The AI follows them">
+        The attached skills become part of the AI's context. It applies their criteria while planning, building, and reviewing the integration, so the generated work follows your team's conventions.
+    </Step>
+</Steps>
+
+## Manage your library
+
+In **Organisation Settings → Skills** you can browse every skill in your organisation, open one to read its `SKILL.md` and resource files, and delete skills you no longer need. Uploading a skill with the same name updates the existing entry.
+
+## Related docs
+
+- [Versori Skill](/latest/ai-tooling/versori-skill) — the built-in `coding-versori-sdk` skill that ships with the CLI
+- [Claude Code Plugin](/latest/ai-tooling/overview) — using Versori skills inside AI coding tools
+- [Plan agent](/latest/how-it-works/plan) — how Versori plans integrations
