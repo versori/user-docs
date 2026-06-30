@@ -187,6 +187,13 @@
                   "latest/cli/commands/systems",
                   "latest/cli/commands/connections",
                   {
+                    "group": "KV",
+                    "pages": [
+                      "latest/cli/commands/kv",
+                      "latest/cli/commands/kv/stores"
+                    ]
+                  },
+                  {
                     "group": "Notifications",
                     "pages": [
                       "latest/cli/commands/notifications",
