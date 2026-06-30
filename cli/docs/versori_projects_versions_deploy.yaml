@@ -1,7 +1,7 @@
 name: versori projects versions deploy
 synopsis: |
-    Creates a new version for a project with the files from --directory
-usage: versori projects versions deploy --project <project-id> --version <version-id> --environment <environment-name> [flags]
+    Deploy an existing project version to an environment (without creating a new version)
+usage: versori projects versions deploy --project <project-id> --version-id <version-id> --environment <environment-name> [flags]
 options:
     - name: environment
       usage: The name of the environment to deploy to.
