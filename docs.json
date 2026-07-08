@@ -193,6 +193,7 @@
                       "latest/cli/commands/kv/stores"
                     ]
                   },
+                  "latest/cli/commands/issues",
                   {
                     "group": "Notifications",
                     "pages": [
