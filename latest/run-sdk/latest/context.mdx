@@ -79,10 +79,10 @@ const myTask = fn('my-task', async (ctx) => {
         },
     });
 
-    // The `createIssue` method can be used to create a new issue in the owner's Organisation, this can be useful for 
-    // alerting on errors or other specific edge cases where human intervention is required.
+    // The `createIssue` method creates an issue in the owner's organisation — visible in the Issues UI
+    // regardless of notification setup. Link an email channel (optional) for proactive alerts.
     await createIssue({
-        severity: 'high', // 'low' | 'medium' | 'high'
+        severity: 'high', // 'critical' | 'high' | 'medium' | 'low'
         title: 'My Issue',
         message: 'This is a message to display to the user',
         annotations: {
