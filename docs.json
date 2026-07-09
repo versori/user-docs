@@ -121,6 +121,13 @@
                 ]
               },
               {
+                "anchor": "Single Sign-On",
+                "pages": [
+                  "latest/guides/sso/overview",
+                  "latest/guides/sso/account-security"
+                ]
+              },
+              {
                 "anchor": "Advanced",
                 "pages": ["latest/guides/advanced/ip-allowlist"]
               }
