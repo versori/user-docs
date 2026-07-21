@@ -8,7 +8,7 @@ the data it needs to perform its function.
 ## Example
 
 The following example demonstrates the various properties and methods available on the context object, see the SDK 
-documentation for the [`Context`](https://jsr.io/@versori/run@0.4.4/doc/~/Context) object for more details.
+documentation for the [`Context`](https://jsr.io/@versori/run@0.8.1/doc/~/Context) object for more details.
 
 ```typescript
 import { fn } from '@versori/run';
@@ -49,6 +49,20 @@ const myTask = fn('my-task', async (ctx) => {
 
     await kv.delete('my-kv-variable');
 
+    // Batch operations act on many keys in a single request. `setMany` upserts and reports per-entry
+    // successes/failures; `insertMany` is atomic and insert-only (rejects if a key already exists);
+    // `deleteMany` removes many keys (deleting a missing key is not an error).
+    const { failures } = await kv.setMany([
+        { key: ['users', '1'], value: { name: 'Ada' } },
+        { key: ['users', '2'], value: { name: 'Alan' } },
+    ]);
+    if (failures.length) {
+        ctx.log.error('Some KV writes failed', { failures });
+    }
+
+    await kv.insertMany([{ key: ['users', '3'], value: { name: 'Grace' } }]);
+    await kv.deleteMany([['users', '1'], ['users', '2']]);
+
     // When you require an integration to an API which requires an authentication method not supported natively by 
     // Versori, you can use the `credentials` object to interact with our credentials store directly and manually 
     // perform authenticated requests using the global 
@@ -64,7 +78,7 @@ const myTask = fn('my-task', async (ctx) => {
     // - expiry: the expiry time of the token
     // - tokenType: the type of token (e.g. "Bearer")
     //
-    // See the [`CredentialProvider`](https://jsr.io/@versori/run@0.4.4/doc/~/CredentialsProvider) SDK documentation
+    // See the [`CredentialProvider`](https://jsr.io/@versori/run@0.8.1/doc/~/CredentialsProvider) SDK documentation
     // for more details on interacting with the credentials store.
 
     if (token.expiry && token.expiry < Date.now()) {
