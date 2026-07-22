@@ -53,6 +53,7 @@
               {
                 "anchor": "Getting Started",
                 "pages": [
+                  "latest/guides/getting-started/chat",
                   {
                     "group": "Plan",
                     "pages": [
