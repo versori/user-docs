@@ -1,0 +1,68 @@
+---
+title: "Single Sign-On"
+sidebarTitle: "Overview"
+---
+
+Single sign-on (SSO) lets you sign in to Versori using your organisation's existing login service. Instead of a
+separate Versori password, you use the same credentials you already use at work.
+
+<Note>
+    SSO is set up by your organisation's administrator. If you are unsure whether your organisation uses SSO, contact
+    your administrator. If you're an administrator looking to set this up, see [Setting Up Single
+    Sign-On](/latest/guides/sso/admin-setup).
+</Note>
+
+## How SSO works
+
+Your administrator configures SSO for your organisation's email domain. When you enter your email on the Versori
+sign-in page, Versori checks whether SSO is set up for your domain. If it is, Versori takes you to your
+organisation's sign-in page instead of asking for a Versori password.
+
+## Signing in with SSO
+
+<Steps>
+<Step title="Enter your email address">
+    Go to the Versori sign-in page, enter your work email address, and click **Continue**.
+</Step>
+
+<Step title="Sign in with your organisation">
+    Versori takes you to your organisation's sign-in page. Enter your usual work credentials there.
+</Step>
+
+<Step title="Return to Versori">
+    Once signed in, you are taken back to Versori automatically.
+</Step>
+</Steps>
+
+## Registering with SSO
+
+To create a Versori account through SSO, you need an invitation from your organisation's Versori administrator.
+
+<Steps>
+<Step title="Open your invitation link">
+    Click the invitation link in the email sent to you. The Versori registration page opens with your email address
+    already filled in.
+</Step>
+
+<Step title="Continue to your organisation's sign-in page">
+    Click **Continue**. Versori takes you to your organisation's sign-in page.
+</Step>
+
+<Step title="Complete your profile">
+    After signing in, Versori asks you to fill in a short profile — your role and how you plan to use the platform.
+</Step>
+</Steps>
+
+<Warning>
+    Without an invitation, you cannot register on a domain that requires SSO. Ask your organisation's Versori
+    administrator to invite you.
+</Warning>
+
+## Error messages
+
+| Situation                               | Message                                                                                                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| No invitation for an SSO-required domain | "You don't have access to Versori. Ask an administrator of your organisation to invite you."                                                                 |
+| SSO service is unavailable              | "Single sign-on is required for your organisation but is currently unavailable. Please contact your administrator."                                          |
+| Invitation link expired or invalid      | "We couldn't verify your invitation. Your invitation link may have expired or is no longer valid. Please try again, or contact the person who invited you for a new link." |
+| Already have a Versori password account | "You already have a Versori account for this email. Continue signing in to your account below." Sign in with your password — if your organisation requires SSO, Versori then automatically takes you to a page where you can link your account. |
