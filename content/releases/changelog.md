@@ -1,0 +1,155 @@
+---
+title: 'Changelog'
+description: 'Product updates and announcements'
+weight: 1
+---
+
+## 22nd July 2026
+*2026.07.22*
+
+#### Features
+
+- Plan and Build are now one conversation. Use the Plan/Build toggle next to the message box to research and scope your integration with the planning agent, then switch to Build to implement it — all in a single chat with shared context.
+
+## 08th June 2026
+*2026.06.08*
+
+#### Improvements
+
+- Added support for OAuth2 connections where the token refresh endpoint differs from the token endpoint.
+
+## 21st May 2026
+*2026.05.21*
+
+#### Improvements
+
+- The Issues tab has been reworked to improve readability by adding search, improving the existing filtering and sort features, and enabling pagination.
+
+## 17th February 2026
+*2026.02.17*
+
+#### Features
+
+- Multiple chat support in Build
+
+## 11th February 2026
+*2026.02.11*
+
+#### Improvements
+
+- The Connect tab has been redesigned to be more user-friendly and intuitive. The new design removes the sidebar once used for connecting and managing connectors, and instead displays the connector details in the main content area. Creating new connections, configuring an embedded connector, or selecting an existing connection is now quicker and more seamless. You will still find the connector endpoints, discovered during planning, available to test.
+- The Opus 4.6 model has been added into the Plan Tab
+
+#### Bug fixes
+
+- Gracefully handle JSON.parse errors on AI returned data
+
+## 06th February 2026
+*2026.02.06*
+
+#### Improvements
+
+- Gemini 3 Flash support in the Build tab
+- Search in new tab menu
+
+#### Bug fixes
+
+- Fixed file tracking of either version or latest draft files against deployed files. File diff changes are visible in the Changes to Deploy button located in the header.
+- For members of multiple organisations - active organisation is now determined by the org query param, context switching between tabs is now actively efficient.
+- On error of deployment, the retry deployment button now correctly tracks whether a version or the latest draft was deployed and triggers the re-deployment of the correct files.
+
+## 22nd January 2026
+*2026.01.22*
+
+#### Features
+
+- Versions has been rolled out into the UI. Versions can be created at any time and are created on deployment of the current working draft project. If a previous version is selected and the user then saves a new file change on top of this version, the user will no longer be on that version but rather the 'Current Draft' and a new version can be created from this point.
+- Accept and undo AI modified file changes. After AI has applied a change, you can now either accept or undo any file changes allowing for greater control.
+
+#### Improvements
+
+- We have added the option to save individual files in the UI giving you greater control. This is especially important when AI is editing multiple files in one action or you are manually editing multiple files at once and want more granular control. The Save All function is still available although the button has moved inside the Build tab as it is more contextually relevant here.
+
+#### Bug fixes
+
+- Correct handling of AI file deletion.
+
+## 15th January 2026
+*2026.01.15*
+
+#### Improvements
+
+- The plan chat now offers the option to switch between AI models - Gemini 3 Pro and Claude Sonnet 4.5
+
+## 14th January 2026
+*2026.01.14*
+
+#### Improvements
+
+- The Console has been removed and it's features moved. You will now find deployment logs, execution trace history, embedded users, and the runtime test features in their respective tabs, alongside all existing tabs.
+- For your Embedded users, now located in an integration tab - including a re-design and updated UX, you can now manage activated users, including updating their activation variables and viewing active connections.
+- The Flow preview will now auto generate for you after initial code generation.
+
+## 6th January 2026
+*2026.01.06*
+
+#### Improvements
+
+- You can now access nested folders and files for your assets in the asset picker
+
+#### Bug fixes
+
+- Connector authentication information correctly updates when switching between connectors.
+
+## 16th December 2026
+*2026.12.16*
+
+#### Improvements
+
+- We have released an updated version of the Plan tab, including more fine grained searching of information, auto generation of workflows and identification of connectors feedback.
+
+#### Bug fixes
+
+- Connector authentication information correctly updates when switching between connectors.
+
+## 10th December 2026
+*2026.12.10*
+
+#### Improvements
+
+- You can search logs inside the test console
+
+## 14th November 2025
+*2025.11.14*
+
+#### Features
+
+- Added new workflow testing mode to the Build tab, allowing integrations to be tested before deployment.
+- Add support to upload JSON (.json), plain text (.txt), and markdown (.md) file attachments in chat.
+
+## 30th August 2025
+*2025.08.30*
+
+#### Features
+
+Project build process revamped to the "Plan", "Connect", "Build", "Deploy" flow, including
+touch-ups to the UIs and an improved UX for connecting to and testing Connectors.
+
+#### Bug fixes
+
+The AI should be more aware of SDK features which are available in your Projects, and stop
+hallucinating about features that aren't available.
+
+#### Breaking changes
+
+There are no breaking changes to the APIs or SDKs, but you may realise some functionality has
+moved around in the UI.
+
+#### Deprecations
+
+There are no deprecations in this release.
+
+#### Documentation updates
+
+This release fully revamps our documentation site, as well as moving all documentation of our
+legacy platform under the "Legacy" version, which can be accessed by the top-left dropdown menu.

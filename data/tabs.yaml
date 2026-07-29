@@ -1,0 +1,26 @@
+# Maps the old Mintlify tab structure onto Hugo's content sections.
+# Consumed by layouts/_partials/docs/inject/menu-before.html (top tab bar) and
+# layouts/_partials/docs/menu-filetree.html (per-tab scoped sidebar tree).
+#
+# `sections` lists the first-level content sections (dirs directly under
+# content/) that belong to this tab. Home is the only tab spanning more than
+# one, mirroring how docs.json grouped How It Works / Concepts / Releases
+# together under its "Home" tab.
+- name: Home
+  path: /
+  sections: ["how-it-works", "concepts", "releases"]
+- name: User Guide
+  path: /user-guide/
+  sections: ["user-guide"]
+- name: Run SDK
+  path: /run-sdk/
+  sections: ["run-sdk"]
+- name: CLI
+  path: /cli/
+  sections: ["cli"]
+- name: AI Tooling
+  path: /ai-tooling/
+  sections: ["ai-tooling"]
+- name: API Reference
+  path: /api-reference/
+  sections: ["api-reference"]

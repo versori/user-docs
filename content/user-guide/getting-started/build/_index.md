@@ -1,0 +1,122 @@
+---
+title: Building your integration
+weight: 4
+BookCollapseSection: true
+---
+
+Building is where you prompt, write, and iterate on your integration code. A full integration can encompass one or
+more workflows — for example, syncing orders and products between two systems might use a separate workflow for each.
+Keeping business cases in dedicated workflows is recommended, though combining them in a single workflow is possible.
+
+Building happens in the same conversation as planning — set the toggle next to the message box to **Build** to have
+the coding agent handle your next message. See [The Chat](/user-guide/getting-started/chat/) for how the combined conversation works.
+
+## Before you begin
+
+There are two ways to start building your integration:
+
+- **Self-prompting**: You define the integration requirements and prompt the agent directly with the toggle set to
+  **Build**.
+- **Workflow-driven prompting**: You follow on from [planning](/user-guide/getting-started/plan/) and workflow generation carried out earlier in
+  the same chat.
+
+Choose whichever approach suits your current stage. If you have already generated workflows during planning, the
+workflow-driven approach gives you a structured starting point. Otherwise, self-prompting lets you begin from your own
+requirements.
+
+## Building from your own requirements
+
+Before you start prompting, ensure you have a clear understanding of what the integration needs to achieve. Gather the
+following details:
+
+- **Systems and authentication**: Identify the source and target systems and the authentication methods each requires.
+- **Business requirements**: Define what the integration must accomplish.
+- **Workflow trigger**: Decide how the workflow will be triggered — via webhook or on a schedule.
+- **Integration type**: Determine whether this is a real-time integration, a batch job, a bidirectional data sync, or a
+  multi-tenant integration.
+- **Data model and mappings**: List the objects and fields you need, including examples and edge cases.
+
+Once you have these details in hand, you can begin prompting the agent to build your integration.
+
+## Building from planned workflows
+
+If you have carried out research and generated workflows during [planning](/user-guide/getting-started/plan/), those workflows appear as cards
+in the conversation. Each card has a **Build** button that switches the toggle to Build and sends the workflow's
+prompt for you — the agent automatically reads the research and workflow specification produced during planning.
+
+> [!NOTE]
+> Workflow cards only appear in the chat if workflows have been generated after carrying out research in Plan mode.
+
+Each workflow provides the following context for the agent:
+
+- **Workflow story** — an overview of what the workflow achieves
+- **User stories** — individual criteria highlighting specific logical requirements
+- **Description** — a summary of the workflow
+- **Prompt** — the prompt used when selecting the workflow
+- **Acceptance criteria** — the capabilities the workflow must deliver
+- **Systems deep dive** — system and authentication details
+- **Trigger** — the trigger type that initiates the workflow
+- **API endpoints** — the endpoints used in the integration
+- **Data flow architecture** — the sequential steps describing how data passes through the workflow
+- **Transformations** — a table of data mappings between systems
+
+{{% columns %}}
+- ### Build Workflows
+  {{< image src="/images/guides/build/build-workflows.png" alt="Build Workflows" >}}
+
+- ### Workflow Information
+  {{< image src="/images/guides/build/workflow-detail.png" alt="Workflow Information" >}}
+{{% /columns %}}
+
+After the initial workflow prompt, you can continue to test, debug, and iterate on the workflow.
+
+## Prompting best practices
+
+Effective prompting helps the agent produce accurate, well-structured integration code. Follow these guidelines to get
+the best results.
+
+- **Be clear and concise**: Provide detailed requirements without unnecessary noise.
+- **Be specific about scope**: When editing part of an integration, specify the exact workflow and step. You can do this
+  by:
+  - Using the edit step function in Flow mode
+  - Using the **@** button to select a specific file in the chat textbox
+  - Manually naming the workflow and step in your prompt
+- **Attach supporting context**: Additional attachments such as API documentation or example payloads give the agent
+  more context to work with.
+- **Start new chats for new topics**: Opening a new chat when switching to a different issue or area of the code keeps
+  the conversation focused. See [Managing multiple chats](#managing-multiple-chats) below.
+- **Include error logs**: If you are debugging, include relevant error logs in your prompt to help the agent diagnose
+  the issue.
+- **Use Question mode for queries**: When you only want to ask the agent about your code without making changes, use
+  Question mode to prevent unintended edits.
+
+> [!TIP]
+> Treat each prompt like a well-written ticket — state what you want to change, where it applies, and what the expected
+> outcome is. The more precise the prompt, the more accurate the result.
+
+## Managing multiple chats
+
+When working with AI-assisted tools, keeping separate chats for separate tasks is one of the most effective habits you
+can develop. The chat toolbar lets you create and switch between multiple chat sessions using the **+** button and the
+chat history panel — each session covers both planning and building.
+
+{{< image src="/images/guides/build/multiple-chats-001.png" alt="The chat history panel showing multiple chat sessions" >}}
+*Use the + button to start a new chat and the history panel to switch between existing sessions*
+
+Each chat session maintains its own context window — the set of messages and code the agent uses to understand your
+intent. As a conversation grows longer, the context becomes increasingly loaded with previous instructions, code
+changes, and debugging history. This can lead to several problems:
+
+- **Context dilution**: The agent may lose sight of your current goal when earlier, unrelated instructions compete for
+  attention in a long conversation.
+- **Conflicting instructions**: Fixes or changes from an earlier part of the chat can contradict what you need now,
+  causing the agent to produce inconsistent results.
+- **Slower responses**: Larger context windows require more processing, which can increase response times.
+
+By starting a fresh chat each time you move to a new task — such as switching from building a webhook handler to
+debugging a data mapping issue — you give the agent a clean slate with focused context. This leads to more accurate
+responses and faster iterations.
+
+> [!TIP]
+> A good rule of thumb: if you find yourself saying "ignore what I said earlier" or "going back to the original
+> approach," it is time to open a new chat.

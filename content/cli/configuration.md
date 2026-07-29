@@ -1,0 +1,53 @@
+---
+title: "Configuration"
+description: "Configure the Versori CLI with contexts and global settings."
+weight: 5
+---
+
+## Config file
+
+The CLI stores its configuration at `~/.versori/config.yaml` by default. You can override this with the `--config` flag or the `VERSORI_CONFIG` environment variable.
+
+The config file holds your contexts (name, organisation ID, JWT) and tracks which context is currently active.
+
+## Contexts
+
+A context groups together an organisation ID and a JWT token under a name. The active context is used by default for all commands. You can switch contexts with `versori context select` or override per-invocation with the `--context` flag.
+
+```sh
+versori context add \
+  --name production \
+  --organisation <organisation-id> \
+  --jwt <jwt-token>
+
+versori context select --name production
+```
+
+See the [context commands reference](/cli/commands/context/) for all available operations.
+
+## Project-level configuration
+
+When you run `versori projects sync`, a `.versori` file is created in the target directory containing the project ID and context name. Subsequent commands that accept `--project` infer the project automatically when run from that directory, so flags like `save`, `deploy`, `logs`, and `proxy` can be invoked without re-typing the project ID.
+
+### Resolution rules for `--project`
+
+| State | Behaviour |
+|---|---|
+| No `.versori` in current directory | `--project` is required. |
+| `.versori` present, `--project` omitted | The file's `project_id` is used. |
+| `.versori` present, `--project` matches | The flag is used; no warning. |
+| `.versori` present, `--project` differs | **`--project` wins**; a warning is written to stderr noting the override. |
+| `.versori.context` differs from the active CLI context | When the resolved project ID matches `.versori`'s `project_id`, the **`.versori` context is auto-applied** for that invocation and a `using context "…" from <dir>/.versori (matches --project <id>; pass --context to override)` notice is written to stderr (once per process). Pass `--context` to override. If the resolved project ID does not match (e.g. `--project <other-id>`) or the command is not project-scoped, `.versori.context` is ignored and the active CLI context is used. |
+| `.versori.context` references a context that isn't in your config | The CLI errors out and points you at `versori context add --name <ctx> …`. It will not silently fall back to a different context. |
+
+Warnings and notices are written to stderr so JSON / piped output on stdout stays clean. Pass `--context` explicitly to override the `.versori` auto-switch; the active CLI context itself is unchanged (no need to re-run `versori context select`).
+
+## Global flags
+
+These flags are available on every command.
+
+| Flag | Short | Default | Description |
+|---|---|---|---|
+| `--config` | `-c` | `~/.versori/config.yaml` | Path to the config file |
+| `--context` | `-x` | *(active context)* | Use a specific context for this invocation |
+| `--output` | `-o` | `table` | Output format: `table`(default), `json`, or `yaml` |

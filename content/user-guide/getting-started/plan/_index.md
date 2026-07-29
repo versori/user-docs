@@ -1,0 +1,103 @@
+---
+title: Starting your plan
+weight: 2
+BookCollapseSection: true
+---
+
+The first step in building an integration is to plan the scope, this includes:
+
+- **Systems and auth**: Identify source/target systems and authentication methods.
+- **Business requirements**: What are you trying to achieve?
+- **Type of integration**: Is this a real-time integration, a batch job, a bidirectional data sync, and/or a
+  multi-tenant integration?
+- **Data model and mappings**: List objects and fields you need, with examples and edge cases.
+
+Planning happens in the same conversation as building — set the toggle next to the message box to **Plan** so the
+planning agent handles your message. See [The Chat](/user-guide/getting-started/chat/) for how the combined conversation works.
+
+Users start by providing as much information about their integration as possible and uploading any attachments, this can
+include screenshots, diagrams, PDF/Word documents, or even OpenAPI specifications.
+
+{{< image src="/images/guides/plan/getting-started-001.png" alt="Form for describing an integration and uploading supporting attachments" >}}
+
+Once the details above are submitted, Versori uses AI to perform in-depth research of the requirements and provides a
+detailed plan of how the integration will be implemented.
+
+## Research agent
+
+The research agent is an AI agent trained to perform research on integration requirements. The majority of the "Plan"
+stage is conducted by the research agent, it is able to read through the information provided by the user and perform a
+series of actions to identify the requirements of the integration including searching the web and internal knowledge
+bases.
+
+The research agent process is split into the following steps:
+
+{{% steps %}}
+1. **Extract, Analyse & Search**
+
+   Versori analyses all the information provided by the user, and extracts all relevant information, including
+   scraping any URLs which may be included in the attachments or text provided by the user.
+
+   This data is then analysed to identify any gaps in information which need to be filled.
+
+   Additional web searches are performed to fill in any gaps in information, this may identify additional sources
+   which can be extracted and analysed in a loop until the agent is satisfied that all information has been
+   gathered.
+
+   {{< image src="/images/guides/plan/hs-qs-plan-progress-002.png" alt="Research agent progress showing information gathering steps" >}}
+
+   Once the research agent has completed, a summary of the integration is produced and and outstanding questions
+   are presented to the user.
+
+2. **Summary**
+
+   Here you can see the summary of the integration and a technical resources document. Review these documents to
+   ensure the proposed solution is correct and complete.
+
+   {{< image src="/images/guides/plan/hs-qs-plan-complete-001.png" alt="Summary of the integration and technical resources document" >}}
+
+3. **Questions**
+
+   The AI may also produce some additional questions which it has identified as important to the success of the
+   integration.
+
+   These questions vary in importance, some questions are highly recommended to be answered before continuing,
+   but other questions can be left blank and Versori will make assumptions based on the other information
+   gathered.
+
+   {{< image src="/images/guides/plan/hs-qs-plan-questions-001.png" alt="List of outstanding questions produced by the research agent" >}}
+
+   For more information on answering questions, see the [Questions](/user-guide/getting-started/plan/questions/) guide.
+
+4. **Next Steps**
+
+   At this point, the user may choose next steps, either to start building the integration, or to refine the
+   requirements by answering the outstanding questions and/or prompting with more information.
+
+   {{< image src="/images/guides/plan/next-steps-001.png" alt="Next steps options after research completes" >}}
+{{% /steps %}}
+
+## Connect
+
+> [!NOTE]
+> It's possible the research stage has not identified all the systems which need to be connected, in this case you
+> must prompt the research agent to identify any additional systems, providing more information if necessary.
+
+After the initial research step, you may notice the "Connect" tab has a badge denoting the number of Systems which have
+been identified and requires configuration. The badge is only visible when the Connect tab requires attention, once the
+systems are connected the badge will disappear.
+
+{{< image src="/images/guides/plan/connect-toolbar-002.png" alt="Connect tab showing a badge for systems requiring configuration" >}}
+
+Our [Connect](/user-guide/getting-started/connect/) guide covers how to connect your systems, and how to manage these
+connections over time.
+
+## Generate Workflows
+
+Looking back to the "Next Steps" image above, there is also a call-to-action to "Generate Workflows", which will
+generate separate requirements prompts for each of the workflows which have been identified for your integration.
+
+Each generated workflow appears as a card in the chat. To start building one, use the card's **Build** button — or
+switch the chat toggle to **Build** and prompt the agent yourself.
+
+Our [Build](/user-guide/getting-started/build/) guide covers building and its capabilities.

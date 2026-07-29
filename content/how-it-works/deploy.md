@@ -1,0 +1,37 @@
+---
+title: "The Deploy Agent: Release & Monitor Your Integrations"
+weight: 4
+---
+
+{{< image src="/images/deploy-agent.png" alt="An Introduction to the Deploy Agent" >}}
+
+The Deploy Agent is responsible for promoting your integration from development to production and ensuring it runs reliably.
+
+Once your workflows are implemented and tested, deployment makes them available in a production environment where they can execute continuously and be monitored.
+
+Versori provides built-in tools for versioning, monitoring, and operational management so integrations can run safely at scale.
+
+### Before Deploying: Your Checklist
+
+Before promoting a Project to production, confirm the following:
+
+- **Production credentials:** Ensure your Connections use production credentials and correct authentication scopes.
+- **Environment configuration:** Set environment variables, secrets, and any configuration values required by your integration.
+- **Rate-limit guardrails:** Confirm retry policies and request limits align with the upstream APIs you are calling.
+- **Alerting and monitoring:** Enable alerts for workflow failures, latency spikes, or unexpected behaviour.
+- **Operational ownership:** Define on-call or escalation paths for critical integrations.
+
+### After Deployment
+
+Once deployed, monitor and maintain your integration to ensure it continues to run reliably.
+
+- **Monitor logs and metrics:** Track workflow execution, error rates, and performance to identify issues early.
+- **Tune retries and backoff policies:** Adjust retry behaviour as needed to handle API limits and intermittent failures.
+- **Version updates safely:** Use versioning to roll out changes gradually and avoid disrupting running integrations.
+- **Keep connectors up to date:** Update Connector versions when upstream APIs change to maintain compatibility.
+
+### What to do Next
+
+Once your integration is deployed, it can run continuously and support production workflows.
+
+You can now monitor executions, iterate on new versions, and scale your integrations as requirements evolve.

@@ -1,0 +1,88 @@
+---
+title: "Installation"
+description: "Add the Versori skill to Cursor, Codex, Claude Code, or any other AI coding tool."
+weight: 3
+---
+
+## Prerequisites
+
+Before adding the skill, ensure you have:
+
+1. The [Versori CLI installed](/cli/installation/)
+2. An authenticated CLI context — see the [Quickstart](/cli/quickstart/) guide
+
+The Versori skill is bundled with the CLI. You can either download it into any AI tool's skill directory, or install it as a plugin in Claude Code.
+
+## Any AI tool
+
+The skill can be used with any AI tool that supports skill or agent files, such as Cursor, Codex, and Claude Code.
+
+{{% steps %}}
+1. **Download the skill**
+
+   Use the CLI to extract the skill to your tool's skill directory. For example, for Cursor:
+
+   ```sh
+   versori skills download --directory ~/.cursor/skills/
+   ```
+
+   Point `--directory` at wherever your tool loads skills from.
+
+2. **Combine into a single agent file (optional)**
+
+   If your tool works better with a single file — for example Codex or Cursor using `AGENTS.md` — use the `--agent` flag to combine the skill into an `AGENTS.md` file:
+
+   ```sh
+   versori skills download --agent --directory ./
+   ```
+
+3. **Get the latest version (optional)**
+
+   To download the latest skill from GitHub instead of using the bundled version:
+
+   ```sh
+   versori skills download --latest --directory ~/.cursor/skills/
+   ```
+
+4. **Start building**
+
+   Describe your integration task to your AI tool. The skill will guide it through the full workflow — from research through deployment.
+
+   ```
+   Build an integration that syncs new Shopify orders to QuickBooks as sales receipts.
+   ```
+{{% /steps %}}
+
+## Claude Code plugin
+
+If you use Claude Code, you can install the skill as a plugin in one step instead of downloading it manually.
+
+{{% steps %}}
+1. **Add the marketplace**
+
+   In Claude Code, add the Versori plugin marketplace:
+
+   ```
+   /plugin marketplace add versori/cli
+   ```
+
+2. **Install the plugin**
+
+   Then install the skill plugin:
+
+   ```
+   /plugin install versori-skills@versori-cli
+   ```
+
+3. **Verify the plugin is active**
+
+   After installation, the plugin activates automatically when Claude Code detects integration-related tasks. You can verify it is installed by checking your active plugins:
+
+   ```
+   /plugins
+   ```
+
+   You should see `versori-skills@versori-cli` listed with its `coding-versori-sdk` skill.
+{{% /steps %}}
+
+See the [`versori skills` command reference](/cli/commands/skills/) for the full list of flags and options.

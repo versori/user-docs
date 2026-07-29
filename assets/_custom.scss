@@ -1,0 +1,71 @@
+// Site customisations for the Versori docs (see also layouts/_partials/docs/inject/menu-before.html
+// and layouts/_partials/docs/menu-filetree.html, which render/scope the elements styled below).
+
+// Brand color, matching the previous Mintlify theme's primary color (#6EB0D8).
+//
+// Deliberately not overriding the `theme-light`/`theme-dark` mixins from
+// _defaults.scss: this file is @import-ed *before* book.scss's closing
+// `:root { @include theme-{light,dark,auto}; }` block, so redefining those
+// mixins here would just get shadowed by (or shadow *all* of, losing every
+// other variable) the real ones depending on import order - not a targeted
+// override. Setting the variable on `body` instead sidesteps that: `body` is
+// always a closer ancestor than the `:root` the theme mixins apply to, so it
+// wins on every element regardless of stylesheet source order.
+body {
+  --color-link: #2E7DA6;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    --color-link: #6EB0D8;
+  }
+}
+
+// Tab switcher (Home / User Guide / Run SDK / CLI / AI Tooling / API Reference),
+// standing in for Mintlify's top tab bar.
+.book-tab-switcher {
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-16);
+  border-bottom: 1px solid var(--gray-200);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  li {
+    list-style: none;
+  }
+
+  a {
+    display: block;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+
+    &:hover {
+      background: var(--gray-100);
+    }
+
+    &.active {
+      background: var(--gray-100);
+      color: var(--color-link);
+    }
+  }
+}
+
+// Light/dark image pairs (replaces Mintlify's `className="hidden dark:block"` /
+// `"dark:hidden"` convention). Usage:
+//   <img class="only-light" src="/images/foo-light.svg" alt="…">
+//   <img class="only-dark" src="/images/foo-dark.svg" alt="…">
+.only-dark {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  .only-light {
+    display: none;
+  }
+  .only-dark {
+    display: initial;
+  }
+}

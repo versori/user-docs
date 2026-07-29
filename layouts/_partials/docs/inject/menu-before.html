@@ -1,0 +1,20 @@
+{{- /*
+  Top-of-sidebar tab switcher, replacing Mintlify's top tab bar (Home, User
+  Guide, Run SDK, CLI, AI Tooling, API Reference). Reads data/tabs.yaml.
+  Active tab = whichever tab's `sections` list contains the current page's
+  top-level content section (empty string for the home page itself).
+*/ -}}
+{{- $current := . -}}
+{{- $currentSection := $current.Section -}}
+{{- $tabs := hugo.Data.tabs -}}
+<nav class="book-tab-switcher">
+  <ul>
+    {{- range $tabs -}}
+      {{- $active := in .sections $currentSection -}}
+      {{- if and (eq $currentSection "") (eq .name "Home") }}{{ $active = true }}{{ end -}}
+      <li>
+        <a href="{{ .path | relURL }}" class="{{ if $active }}active{{ end }}">{{ .name }}</a>
+      </li>
+    {{- end -}}
+  </ul>
+</nav>
