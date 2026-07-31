@@ -1,0 +1,139 @@
+---
+title: "The Unified Chat: Plan and Build in One Conversation"
+sidebarTitle: Unified Chat
+description: "Understand the unified agent chat, where planning and building an integration happen in a single conversation."
+---
+
+The unified chat is your single conversation for the whole integration journey. The Plan and Build agents are no
+longer separate chats — they now live side by side in one thread, with every capability from both agents carried
+over. Describe the systems you want to connect and the workflows you want to build, and the agent will research the
+APIs, plan the flow, and build the integration with you — from scoping to deploy — without leaving the conversation.
+
+<Frame caption="One chat covers planning and building, with a Plan/Build toggle next to the message box">
+<img
+  src="/images/unified-chat.png"
+  alt="The unified agent chat showing a planning conversation on the left, the project files in the centre, and the build workspace on the right."
+/>
+</Frame>
+
+## The Plan / Build toggle
+
+Next to the send button is a toggle that decides which agent handles your next message:
+
+- **Plan**: The planning agent researches your systems and requirements. It searches API documentation, writes
+  research documents, identifies the systems that need connecting, and defines workflow specifications.
+- **Build**: The coding agent implements your integration. It reads the research and workflow specifications produced
+  during planning, then writes and edits the workflow code.
+
+<Frame caption="Set the toggle before sending to choose which agent handles your message">
+<img src="/images/guides/chat/plan-build-toggle-001.png" alt="The Plan/Build toggle next to the chat send button" />
+</Frame>
+
+The toggle only affects the message you are about to send — you can switch back and forth freely within the same
+conversation, and both agents can see the full history. Your last choice is remembered per project. Each mode keeps
+its own model picker, so you can choose the most suitable model for planning and for building independently.
+
+<Note>
+Regenerating a previous answer replays it through the mode it was originally created in. Regenerating a plan response
+always routes back to planning, even if you're currently toggled to Build.
+</Note>
+
+## Why one conversation?
+
+When planning and building lived in separate chats, moving between them meant switching context and manually
+carrying findings from one to the other. It was also tempting to plan the entire integration upfront — every
+workflow researched and specified before any code was written. In practice, plans made that far ahead quickly went
+stale: decisions made while building the first workflow (an API limitation discovered during testing, a change to how
+records are matched) invalidated assumptions in workflows planned weeks earlier, and the planning documents drifted
+out of date as the build progressed.
+
+Bringing both agents into one conversation removes that gap:
+
+- **One continuous conversation**: Plan and Build share the same thread, so research and implementation stay in the
+  same context. The planning agent sees what has actually been built and tested so far, so each new workflow is
+  planned against the real state of the integration rather than against assumptions made at the start.
+- **Nothing lost**: Everything the Plan agent and the Build agent could do before is still available.
+- **Documents saved as files**: Every document produced during planning — research and workflow definitions — is
+  saved as a file in your project's `documents/` folder, so it's versioned and reusable alongside your workflow code
+  rather than living only in the chat.
+
+## Working iteratively
+
+Because plans stay accurate only when they're made just before they're needed, the recommended way to work is one
+workflow at a time, rather than planning everything upfront:
+
+1. **Plan a workflow**: With the toggle set to **Plan**, describe what you want. The agent researches the APIs and
+   produces a structured research document and workflow specification. For full detail on prompting and outputs, see
+   [Starting your plan](./plan).
+2. **Build it**: Switch the toggle to **Build** and ask the agent to implement the workflow. It automatically reads
+   the research documents and workflow specification from the planning turns, so you don't need to repeat any
+   context. Build mode also gives you access to the wider build workspace, including the in-browser code editor, the
+   visual Flow view, testing, and sandbox verification. For full detail on building, testing, and versioning, see
+   [Building your integration](./build).
+3. **Plan the next one**: Once the workflow is built and tested, switch back to **Plan** and scope the next workflow.
+
+Planned workflows appear as cards in the conversation. Each card has a **Build** button that switches the toggle to
+Build and sends the workflow's prompt for you.
+
+<Frame caption="Use a workflow card's Build button to move straight from planning to implementation">
+<img src="/images/guides/chat/workflow-card-build-001.png" alt="A planned workflow card with a Build button" />
+</Frame>
+
+<Tip>
+Planning and building in small increments keeps the conversation focused and lets you validate each workflow before
+scoping the next.
+</Tip>
+
+## Answering questions
+
+While planning, the agent may pause to ask clarifying questions when it needs information it can't find on its own —
+for example, how records should be matched, or which authentication method to use. Answer the questions to continue;
+the toggle is locked until the pending questions are resolved, since your answers go back to the planning agent.
+
+## Verifying your work
+
+When the toggle is set to **Build**, a **Verify** button (flask icon) appears next to the message box. Use it to run
+your integration in a sandbox and check that the code behaves as expected before deploying.
+
+## Adding context
+
+The message box supports the same context tools in both modes:
+
+- **@ mentions**: Use the **@** button to reference a specific file or asset in your prompt, including existing
+  project files, shared assets, and previously produced research documents.
+- **Attachments**: Attach supporting material such as API documentation, CSV samples, PRDs, mapping documents,
+  example request/response JSON, screenshots, PDFs, Markdown, and YAML.
+- **Paste payloads and links**: Include example payloads or links to API documentation inline in your prompt.
+- **Model selection**: Choose which model handles your request. The available models differ between Plan and Build
+  modes.
+- **Question mode**: Ask the agent about your integration without making changes to the code.
+- **Skills**: Apply reusable Skills to guide how the agent approaches the task.
+
+## Managing chats
+
+The chat toolbar lets you start new conversations and switch between existing ones:
+
+- **New chat** (**+** button): Start a fresh conversation. New chats always support both planning and building, and
+  each can be renamed, closed, or deleted independently. The active chat persists as you move between the project's
+  tabs.
+- **Chat history**: Open the history panel to switch between past conversations. Each entry is labelled by its kind —
+  Plan, Build, or a combined chat.
+
+<Frame caption="Switch between conversations from the chat history panel">
+<img src="/images/guides/chat/chat-history-001.png" alt="The chat history panel listing past conversations with kind labels" />
+</Frame>
+
+Starting a new chat for each new task keeps the agent's context focused — see
+[Managing multiple chats](./build#managing-multiple-chats) for guidance on when to start fresh.
+
+<Note>
+Chats created before planning and building were unified remain readable in your history, but they stay locked to
+their original mode. Some older projects may still see separate Plan and Build chats; new projects always get the
+single combined chat.
+</Note>
+
+## What to do next
+
+- Learn what the planning agent researches and produces in [Starting your plan](./plan).
+- See how to implement, test, and iterate on workflows in [Building your integration](./build).
+- Move on to the [Connect](./connect) step to configure authentication and establish system connections.
