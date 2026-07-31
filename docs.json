@@ -53,6 +53,7 @@
               {
                 "anchor": "Getting Started",
                 "pages": [
+                  "latest/guides/getting-started/chat",
                   {
                     "group": "Plan",
                     "pages": [
@@ -89,6 +90,13 @@
                       "latest/guides/getting-started/misc/prompting-tips"
                     ]
                   }
+                ]
+              },
+              {
+                "anchor": "Single Sign-On",
+                "pages": [
+                  "latest/guides/sso/overview",
+                  "latest/guides/sso/admin-setup"
                 ]
               },
               {

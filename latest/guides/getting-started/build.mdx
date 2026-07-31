@@ -3,19 +3,23 @@ title: Building your integration
 sidebarTitle: Building your integration
 ---
 
-The Build tab is where you prompt, write, and iterate on your integration code. A full integration can encompass one or
+Building is where you prompt, write, and iterate on your integration code. A full integration can encompass one or
 more workflows — for example, syncing orders and products between two systems might use a separate workflow for each.
 Keeping business cases in dedicated workflows is recommended, though combining them in a single workflow is possible.
+
+Building happens in the same conversation as planning — set the toggle next to the message box to **Build** to have
+the coding agent handle your next message. See [The Chat](./chat) for how the combined conversation works.
 
 ## Before you begin
 
 There are two ways to start building your integration:
 
-- **Self-prompting**: You define the integration requirements and prompt the agent directly.
-- **Workflow-driven prompting**: You follow on from planning and workflow generation carried out in the
-  [Plan tab](./plan).
+- **Self-prompting**: You define the integration requirements and prompt the agent directly with the toggle set to
+  **Build**.
+- **Workflow-driven prompting**: You follow on from [planning](./plan) and workflow generation carried out earlier in
+  the same chat.
 
-Choose whichever approach suits your current stage. If you have already generated workflows in the Plan tab, the
+Choose whichever approach suits your current stage. If you have already generated workflows during planning, the
 workflow-driven approach gives you a structured starting point. Otherwise, self-prompting lets you begin from your own
 requirements.
 
@@ -35,11 +39,12 @@ Once you have these details in hand, you can begin prompting the agent to build 
 
 ## Building from planned workflows
 
-If you have carried out research and generated workflows in the [Plan tab](./plan), those workflows are available
-directly in the Build chat.
+If you have carried out research and generated workflows during [planning](./plan), those workflows appear as cards
+in the conversation. Each card has a **Build** button that switches the toggle to Build and sends the workflow's
+prompt for you — the agent automatically reads the research and workflow specification produced during planning.
 
 <Note>
-Workflows only appear in the Build chat if they have been generated in the Plan tab after carrying out research.
+Workflow cards only appear in the chat if workflows have been generated after carrying out research in Plan mode.
 </Note>
 
 Each workflow provides the following context for the agent:
@@ -94,11 +99,11 @@ outcome is. The more precise the prompt, the more accurate the result.
 ## Managing multiple chats
 
 When working with AI-assisted tools, keeping separate chats for separate tasks is one of the most effective habits you
-can develop. The Build tab lets you create and switch between multiple chat sessions using the **+** button and the chat
-history panel.
+can develop. The chat toolbar lets you create and switch between multiple chat sessions using the **+** button and the
+chat history panel — each session covers both planning and building.
 
 <Frame caption="Use the + button to start a new chat and the history panel to switch between existing sessions">
-<img src="/images/guides/build/multiple-chats-001.png" alt="Build tab showing multiple chat sessions in the history panel" />
+<img src="/images/guides/build/multiple-chats-001.png" alt="The chat history panel showing multiple chat sessions" />
 </Frame>
 
 Each chat session maintains its own context window — the set of messages and code the agent uses to understand your
