@@ -3,10 +3,36 @@ title: 'Changelog'
 description: 'Product updates and announcements'
 ---
 
+<Update label="19th August 2026" description="2026.08.19">
+    ## Features
+
+    - You can now drag and drop tabs in the workspace to reorder them, so you can arrange Plan, Build, Connect, and the rest of your open tabs the way you work.
+
+</Update>
+
+<Update label="17th August 2026" description="2026.08.17">
+    ## Features
+
+    - OAuth 2.0 authorization code connections now support PKCE (Proof Key for Code Exchange), so providers that require it can be configured directly from the Connect tab.
+
+    ## Bug fixes
+
+    - Secret fields in connection forms (passwords and client secrets) are now masked by default, with a toggle to reveal them when you need to check what you typed. Previously these values were shown in plain text.
+
+</Update>
+
+<Update label="13th August 2026" description="2026.08.13">
+    ## Features
+
+    - The Build agent can now take more actions on your behalf during a chat: it can call a connected system to test or inspect an API, invoke your deployed integration in the current environment, or manually run one of your schedulers. Each action is shown as a confirmation card — nothing happens until you approve it, and actions that touch real data are clearly flagged as such.
+
+</Update>
+
 <Update label="12th August 2026" description="2026.08.12">
     ## Features
 
     - The Build agent can now deploy your project for you. When it proposes a deployment, you'll see a confirmation card in the chat — approve it to deploy right away, or decline and keep working. Clear messages are shown if a deploy can't go ahead.
+    - A new Usage tab in Account settings shows your organisation's usage against its monthly and lifetime allowances, including any trial or custom allowance limits, so you can see at a glance how close you are to your limits.
 
 </Update>
 
