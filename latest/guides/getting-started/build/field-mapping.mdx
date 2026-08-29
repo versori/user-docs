@@ -1,0 +1,43 @@
+---
+title: "Field Mapping"
+description: "Map fields between your connected systems in the Field Mapping tab, with AI-assisted expressions and transformation pipelines."
+---
+
+Field Mapping lets you map data from a source system to a destination system — matching fields, transforming values, and shaping the payload your integration sends. It runs in a dedicated **Field Mapping** tab alongside Build, Connect, and the other workspace tabs.
+
+<Note>
+    **Prerequisite:** the Build Agent only creates field mappings when the **field-mapping skill** is attached to your integration. Add it to your organisation's library and attach it when building — see [Skills](/latest/ai-tooling/skills).
+</Note>
+
+<Info>
+    With the skill attached, ask the Build Agent to create field mappings for your integration and the **Field Mapping** tab appears automatically.
+</Info>
+
+## Opening the mapper
+
+Open the **Field Mapping** tab, then pick a mapping from the dropdown at the top. The canvas shows your source fields on the left and destination fields on the right, with the mapping between them.
+
+## Guided walkthrough
+
+The quickest way to learn the mapper is the built-in tour.
+
+<Info>
+    Click the eye icon<span style={{ margin: '0 0.4rem' }}><Icon icon="eye" library="lucide" /></span>next to **Field mapping** on the left to launch a guided tour that steps through every feature. The **Help** icon in the top-right opens the reference documentation.
+</Info>
+
+## Adjusting the source and destination schemas
+
+The mapper derives its fields from sample JSON for each side. Use **Edit Source** and **Edit Destination** to change those samples in a field-tree editor — add, rename, retype, or remove fields. When you save, the mapper rebuilds the field tree and reconciles your existing mappings against it; if an edit would drop a field that a mapping still uses, you'll be warned first.
+
+## AI assistance
+
+Two AI helpers are available, both powered by the Build Agent with your project's context:
+
+- **Expression AI** — describe what you want and it generates a single JSONata / JSON-formula expression for a field.
+- **AI Pipeline** — generates an ordered transformation pipeline for a mapping (e.g. format a date, then uppercase).
+
+Generated results appear in the canvas for you to review; nothing is persisted until you save.
+
+## Saving
+
+Click **Save DSL** to persist the mapping to your project. Your integration then uses it at runtime to transform data between the connected systems.
