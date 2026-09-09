@@ -1,0 +1,102 @@
+---
+title: "Manage Your Skills"
+sidebarTitle: "Manage skills"
+description: "Upload your own skills to your Versori organisation, then edit, enable, disable, and remove them."
+---
+
+Your organisation's skills live on the **Skills** page, reached from the left-hand navigation. It lists everything
+the AI can draw on — skills you have uploaded, and skills you have added from the
+[marketplace](/latest/ai-tooling/marketplace) — with a count of the total.
+
+Two buttons sit in the header:
+
+- **Upload skill** — add a skill your team has written
+- **Browse marketplace** — add a ready-made skill from the Versori catalogue
+
+To find a skill in a long list, use **Search organisation skills** to match on name and summary, or the **Status**
+filter to show only **Enabled** or **Disabled** skills. Select any skill to open it and read its `SKILL.md` and
+resource files.
+
+## Upload a skill
+
+<Steps>
+    <Step title="Write the SKILL.md">
+        Create a `SKILL.md` file with the [frontmatter and guidelines](/latest/ai-tooling/skills#the-skillmd-file)
+        you want the AI to follow. Add resource files alongside it if your guidelines reference longer material.
+    </Step>
+    <Step title="Select Upload skill">
+        On the **Skills** page, select **Upload skill**, then drop in your skill or use **Select file** /
+        **Select folder**. Three shapes work:
+
+        - A `.skill` or `.zip` bundle
+        - A single `SKILL.md`
+        - A folder with `SKILL.md` at its root
+
+        Resource files may be `.md`, `.txt`, `.json`, `.yaml`, `.csv`, `.xml`, or `.html`. Anything else is
+        dropped from the upload, and the dialog tells you what it removed.
+
+        <Note>
+            The index file must be named exactly `SKILL.md`. A miscased name such as `skill.md` is rejected, so a
+            bundle is never uploaded without its index.
+        </Note>
+    </Step>
+    <Step title="Check the details">
+        **Name** and the skill body are read from your `SKILL.md` frontmatter. Fill in the rest as needed:
+
+        - **Summary** — one or two lines on what the skill does
+        - **Category** — an optional grouping label, used for filtering
+        - **Product image URL** — an optional logo shown against the skill
+        - **Mandatory** — turn on to apply this skill to every request. See
+          [How the AI applies skills](/latest/ai-tooling/skills#how-the-ai-applies-skills) before you do; the
+          default suits most skills.
+    </Step>
+    <Step title="Select Save skill">
+        The skill appears in your organisation's list, enabled and ready for the AI to use.
+    </Step>
+</Steps>
+
+<Warning>
+    Uploads are checked for content that would try to hijack the AI's instructions, and an upload that fails the
+    check is rejected. If the check cannot run, the upload is refused rather than allowed through — try again
+    shortly. Each file must be under roughly 200 KB.
+</Warning>
+
+Skill names are unique within your organisation. Uploading a skill whose name is already taken is rejected as a
+conflict — to change a skill you already have, edit it rather than re-uploading.
+
+## Edit a skill
+
+Open a skill you own and edit its `SKILL.md` or any resource file, then save. Each save records a new version, and
+the AI picks up your change on its next request.
+
+Skills added from the marketplace are read-only, because Versori maintains them. To change one, fork it first —
+see [Fork a skill to customise it](/latest/ai-tooling/marketplace#fork-a-skill-to-customise-it).
+
+## Enable and disable skills
+
+Every skill carries an **Enabled** or **Disabled** badge. Disabling one stops the AI applying it while keeping it —
+and its edits — in your organisation.
+
+This is the fastest way to narrow down whether a particular skill is behind something the AI is doing: disable it,
+run the same request again, and compare. A disabled skill is never applied, even if it is marked mandatory.
+
+## Remove a skill
+
+Select a skill and confirm the action in the dialog. What happens depends on where the skill came from:
+
+| Skill | Action | Effect |
+|---|---|---|
+| Uploaded or forked by you | **Delete** | Removes the skill and its edits. This cannot be undone. |
+| Added from the marketplace | **Uninstall** | Removes it from your organisation. You can add it again at any time. |
+
+The confirmation dialog names the skill and which of the two is about to happen, so check it before confirming.
+
+## Work with several skills at once
+
+Select multiple skills to enable, disable, fork, or remove them together — useful when you are turning a group of
+related skills on or off, or forking a set of marketplace skills to customise.
+
+## Related docs
+
+- [Skills](/latest/ai-tooling/skills) — what a skill is and how the AI applies it
+- [Skills Marketplace](/latest/ai-tooling/marketplace) — add ready-made skills from the Versori catalogue

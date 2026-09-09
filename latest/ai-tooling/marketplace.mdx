@@ -1,0 +1,93 @@
+---
+title: "Skills Marketplace"
+sidebarTitle: "Marketplace"
+description: "Browse the Versori skills catalogue, add skills to your organisation, and fork them to fit how your team works."
+---
+
+The skills marketplace is a catalogue of ready-made [skills](/latest/ai-tooling/skills) maintained by Versori.
+Instead of writing a skill from scratch, you can add one to your organisation in a couple of clicks — and if it is
+close but not quite right, fork it and edit your own copy.
+
+<Note>
+    This is not the same thing as the Claude Code plugin marketplace. That one installs the Versori skill into your
+    local AI coding tool — see [Installation](/latest/ai-tooling/installation). The skills marketplace on this page
+    adds skills to your Versori organisation, for the AI that plans and builds your integrations.
+</Note>
+
+## Browse the catalogue
+
+Open **Skills** in the left-hand navigation, then select **Browse marketplace**.
+
+Each skill shows its name, a short summary, and a category. To narrow the list:
+
+- **Search marketplace** — match against skill names and summaries
+- **Category** — filter to a single area, such as a particular product or partner
+
+Select any skill to read its full `SKILL.md` and resource files before you commit to adding it.
+
+## Add a skill to your organisation
+
+<Steps>
+    <Step title="Open the skill">
+        In **Browse marketplace**, select the skill you want. Its contents open so you can review what the AI will
+        be told to follow.
+    </Step>
+    <Step title="Select Add">
+        The button changes to **Added** once it succeeds, and the skill appears in your organisation's skill list
+        tagged **Installed**.
+    </Step>
+</Steps>
+
+Adding a skill applies it to your whole organisation — every integration the AI plans or builds can use it. There
+is no per-integration step.
+
+## Fork a skill to customise it
+
+Marketplace skills are read-only: Versori maintains them, so you cannot edit one in place. To change one, **fork**
+it — this creates an editable copy owned by your organisation, tagged **Forked**.
+
+<Steps>
+    <Step title="Select Fork">
+        Fork from the skill itself, or select several skills in your list and fork them together.
+    </Step>
+    <Step title="Edit your copy">
+        Open the forked skill and edit its `SKILL.md` or resource files. Your changes affect only your
+        organisation.
+    </Step>
+</Steps>
+
+<Warning>
+    A fork is a point-in-time copy. If Versori later improves the original, your fork does not pick up the change —
+    you would need to fork again. Prefer adding the marketplace skill as-is where you can.
+</Warning>
+
+## Enable and disable
+
+Every skill in your organisation carries an **Enabled** or **Disabled** badge. Disabling a skill stops the AI
+applying it without removing it, which is the quickest way to test whether a skill is responsible for something
+the AI is doing. See
+[Enable and disable skills](/latest/ai-tooling/manage-skills#enable-and-disable-skills).
+
+## Remove a skill
+
+Select the skill in your organisation's list and choose **Uninstall**. This removes it from your organisation; you
+can add it again from the marketplace at any time.
+
+Forked and uploaded skills are yours rather than the catalogue's, so removing one **deletes** it and its edits.
+The confirmation dialog tells you which of the two is about to happen.
+
+## When the AI suggests a skill
+
+The AI also searches the marketplace itself. If it finds a skill relevant to what you are working on — while
+planning an integration or partway through building one — it pauses and shows you a card naming the skill and why
+it would help.
+
+Choose **Install** to add it and carry on, or **Not now** to continue without it. Nothing is added unless you
+select **Install**: because a skill changes how the AI behaves across your whole organisation, this is always your
+decision rather than the AI's.
+
+## Related docs
+
+- [Skills](/latest/ai-tooling/skills) — what a skill is and how the AI applies it
+- [Manage Your Skills](/latest/ai-tooling/manage-skills) — upload and maintain your own skills
+- [Installation](/latest/ai-tooling/installation) — the Claude Code plugin marketplace, for local AI coding tools
