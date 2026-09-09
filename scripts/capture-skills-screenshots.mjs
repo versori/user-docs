@@ -48,6 +48,8 @@
  *   --width=<px>    Viewport width in CSS pixels. Default 1440.
  *   --dpr=<n>       Device pixel ratio. Default 2, so images are captured at
  *                   twice the CSS size and stay sharp on high-density screens.
+ *   --theme=any     Skip the light-theme check. The committed screenshots are
+ *                   light, so a dark capture would be inconsistent with them.
  */
 
 import { mkdir } from 'node:fs/promises';
@@ -256,6 +258,24 @@ async function gotoSkills(page) {
     );
   });
   await settle(page);
+  if (arg('theme', 'light') !== 'any') await assertLightTheme(page);
+}
+
+/**
+ * The docs screenshots are light-theme by decision, so a dark set would be
+ * inconsistent rather than merely different. The app takes its appearance from a
+ * store that can follow the system, so ask for light first, then check what
+ * actually rendered: a profile with the appearance pinned to dark ignores the
+ * media emulation.
+ */
+async function assertLightTheme(page) {
+  const className = await page.evaluate(() => document.querySelector('.radix-themes')?.className ?? '');
+  if (/\bdark\b/.test(className)) {
+    throw new Error(
+      'The app rendered in dark theme, but the committed screenshots are light.\n' +
+        'Switch the appearance to light in the app, then re-run, or pass --theme=any.'
+    );
+  }
 }
 
 /**
@@ -367,6 +387,7 @@ async function main() {
 
   const page = await context.newPage();
   await blockConsentBanner(page);
+  await page.emulateMedia({ colorScheme: 'light' });
   await setWindowSize(page, WIDTH, 900);
   await page.goto(BASE, { waitUntil: 'domcontentloaded' });
   await assertPixelRatio(page);
