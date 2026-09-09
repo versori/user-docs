@@ -4,7 +4,7 @@ description: "What Skills are in the Versori platform, how to write one, and how
 ---
 
 Skills are reusable sets of guidelines and best practices that teach the Versori AI how your team builds
-integrations — coding standards, naming conventions, security requirements, or partner-specific rules. You add a
+integrations: coding standards, naming conventions, security requirements, or partner-specific rules. You add a
 skill to your organisation once, and the AI follows it while planning, building, and reviewing.
 
 Skills follow an open standard for packaging AI agent knowledge, so the same skill format works across the Versori
@@ -33,7 +33,7 @@ A skill is a small bundle of Markdown files:
 | File | Required | Purpose |
 |---|---|---|
 | `SKILL.md` | Yes | The index file. Holds the skill's frontmatter and the guidelines the AI should follow. Must be named exactly `SKILL.md` (uppercase). |
-| Resource files | No | Supporting files the `SKILL.md` can reference — for example longer references, examples, or templates. Stored under their relative path (e.g. `references/naming.md`). |
+| Resource files | No | Supporting files the `SKILL.md` can reference: for example, longer references, examples, or templates. Stored under their relative path (e.g. `references/naming.md`). |
 
 ## The `SKILL.md` file
 
@@ -72,9 +72,14 @@ The frontmatter defines how the skill is identified and applied:
     `verification` skill never reaches the planning agent.
 </ParamField>
 
+{/* TODO screenshot: images/ai-tooling/skill-detail.png
+    Capture: a skill open on the Skills page, showing its SKILL.md alongside its resource files in the file tree, so the bundle shape is concrete.
+    Alt: "A skill open in Versori, showing SKILL.md and its resource files"
+    Wrap in <Frame> and supply the light/dark pair, per the other sections. */}
+
 ## How the AI applies skills
 
-Every skill your organisation has added is available to the AI, but there are two ways it reaches the model — and
+Every skill your organisation has added is available to the AI, but there are two ways it reaches the model, and
 the `mandatory` flag decides which:
 
 <CardGroup cols={2}>
@@ -90,7 +95,7 @@ the `mandatory` flag decides which:
 
 Prefer the default. A clear, specific `description` is usually enough for the AI to find a skill at the right
 moment, and it leaves more room for your own project's context. Reserve `mandatory: true` for rules that must
-never be missed — compliance requirements, for example — and keep those skills short.
+never be missed, such as compliance requirements, and keep those skills short.
 
 <Note>
     A skill that is [disabled](/latest/ai-tooling/manage-skills#enable-and-disable-skills) is never applied, even
@@ -102,7 +107,7 @@ skills, and cannot be edited or removed.
 
 ## Related docs
 
-- [Skills Marketplace](/latest/ai-tooling/marketplace) — add a ready-made skill from the Versori catalogue
-- [Manage Your Skills](/latest/ai-tooling/manage-skills) — upload, update, and remove your own skills
-- [Versori Skill](/latest/ai-tooling/versori-skill) — the built-in `coding-versori-sdk` skill that ships with the CLI
-- [Plan agent](/latest/how-it-works/plan) — how Versori plans integrations
+- [Skills Marketplace](/latest/ai-tooling/marketplace): add a ready-made skill from the Versori catalogue
+- [Manage Your Skills](/latest/ai-tooling/manage-skills): upload, update, and remove your own skills
+- [Versori Skill](/latest/ai-tooling/versori-skill): the built-in `coding-versori-sdk` skill that ships with the CLI
+- [Plan agent](/latest/how-it-works/plan): how Versori plans integrations

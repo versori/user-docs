@@ -5,12 +5,12 @@ description: "Browse the Versori skills catalogue, add skills to your organisati
 ---
 
 The skills marketplace is a catalogue of ready-made [skills](/latest/ai-tooling/skills) maintained by Versori.
-Instead of writing a skill from scratch, you can add one to your organisation in a couple of clicks — and if it is
+Instead of writing a skill from scratch, you can add one to your organisation in a couple of clicks. If it is
 close but not quite right, fork it and edit your own copy.
 
 <Note>
     This is not the same thing as the Claude Code plugin marketplace. That one installs the Versori skill into your
-    local AI coding tool — see [Installation](/latest/ai-tooling/installation). The skills marketplace on this page
+    local AI coding tool. See [Installation](/latest/ai-tooling/installation). The skills marketplace on this page
     adds skills to your Versori organisation, for the AI that plans and builds your integrations.
 </Note>
 
@@ -20,10 +20,15 @@ Open **Skills** in the left-hand navigation, then select **Browse marketplace**.
 
 Each skill shows its name, a short summary, and a category. To narrow the list:
 
-- **Search marketplace** — match against skill names and summaries
-- **Category** — filter to a single area, such as a particular product or partner
+- **Search marketplace**: match against skill names and summaries
+- **Category**: filter to a single area, such as a particular product or partner
 
 Select any skill to read its full `SKILL.md` and resource files before you commit to adding it.
+
+{/* TODO screenshot: images/ai-tooling/marketplace-browse.png
+    Capture: the Browse marketplace dialog listing catalogue skills, with the search box and category filters visible.
+    Alt: "The Versori skills marketplace, showing catalogue skills with search and category filters"
+    Wrap in <Frame> and supply the light/dark pair, per the other sections. */}
 
 ## Add a skill to your organisation
 
@@ -38,13 +43,18 @@ Select any skill to read its full `SKILL.md` and resource files before you commi
     </Step>
 </Steps>
 
-Adding a skill applies it to your whole organisation — every integration the AI plans or builds can use it. There
+Adding a skill applies it to your whole organisation, so every integration the AI plans or builds can use it. There
 is no per-integration step.
+
+{/* TODO screenshot: images/ai-tooling/marketplace-skill-add.png
+    Capture: a marketplace skill open in the dialog with the Add button visible, so the read-only view and the action are both clear.
+    Alt: "A marketplace skill open for review, with the Add button"
+    Wrap in <Frame> and supply the light/dark pair, per the other sections. */}
 
 ## Fork a skill to customise it
 
 Marketplace skills are read-only: Versori maintains them, so you cannot edit one in place. To change one, **fork**
-it — this creates an editable copy owned by your organisation, tagged **Forked**.
+it. This creates an editable copy owned by your organisation, tagged **Forked**.
 
 <Steps>
     <Step title="Select Fork">
@@ -57,8 +67,8 @@ it — this creates an editable copy owned by your organisation, tagged **Forked
 </Steps>
 
 <Warning>
-    A fork is a point-in-time copy. If Versori later improves the original, your fork does not pick up the change —
-    you would need to fork again. Prefer adding the marketplace skill as-is where you can.
+    A fork is a point-in-time copy. If Versori later improves the original, your fork does not pick up the change,
+    so you would need to fork again. Prefer adding the marketplace skill as-is where you can.
 </Warning>
 
 ## Enable and disable
@@ -78,16 +88,21 @@ The confirmation dialog tells you which of the two is about to happen.
 
 ## When the AI suggests a skill
 
-The AI also searches the marketplace itself. If it finds a skill relevant to what you are working on — while
-planning an integration or partway through building one — it pauses and shows you a card naming the skill and why
+The AI also searches the marketplace itself. If it finds a skill relevant to what you are working on, whether you are
+planning an integration or partway through building one, it pauses and shows you a card naming the skill and why
 it would help.
 
 Choose **Install** to add it and carry on, or **Not now** to continue without it. Nothing is added unless you
 select **Install**: because a skill changes how the AI behaves across your whole organisation, this is always your
 decision rather than the AI's.
 
+{/* TODO screenshot: images/ai-tooling/install-skill-card.png
+    Capture: the Install skill card as it appears in chat, showing the skill name, the AI's reason for suggesting it, and the Install / Not now buttons. This one is hard to picture from prose, so it is the highest-value shot on the page.
+    Alt: "The AI suggesting a skill in chat, with Install and Not now buttons"
+    Wrap in <Frame> and supply the light/dark pair, per the other sections. */}
+
 ## Related docs
 
-- [Skills](/latest/ai-tooling/skills) — what a skill is and how the AI applies it
-- [Manage Your Skills](/latest/ai-tooling/manage-skills) — upload and maintain your own skills
-- [Installation](/latest/ai-tooling/installation) — the Claude Code plugin marketplace, for local AI coding tools
+- [Skills](/latest/ai-tooling/skills): what a skill is and how the AI applies it
+- [Manage Your Skills](/latest/ai-tooling/manage-skills): upload and maintain your own skills
+- [Installation](/latest/ai-tooling/installation): the Claude Code plugin marketplace, for local AI coding tools
