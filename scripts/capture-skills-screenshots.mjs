@@ -19,10 +19,12 @@
  *        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
  *          --remote-debugging-port=9222 \
  *          --user-data-dir=/tmp/versori-shots-profile \
- *          https://platform-staging.versori.com
+ *          http://localhost:5173
  *
  *   2. Log in in that window, and open the Skills page once to confirm access.
- *      The route requires a Versori-domain account.
+ *      The route requires an account whose email is @versori.com or
+ *      @versori.io: `isAllowedEmailDomain` allows nothing else, and both the
+ *      route and the nav entry are gated on it.
  *
  *   3. Run:
  *
@@ -30,7 +32,7 @@
  *        node <path-to-this-file> --base=https://platform-staging.versori.com
  *
  * Flags:
- *   --base=<url>    App origin. Default https://platform-staging.versori.com
+ *   --base=<url>    App origin. Default http://localhost:5173 (Vite dev server)
  *   --cdp=<url>     DevTools endpoint. Default http://localhost:9222
  *   --out=<dir>     Output directory. Default <repo>/images/ai-tooling
  *   --only=<a,b>    Capture only these shot ids.
@@ -49,7 +51,7 @@ const arg = (name, fallback) => {
   return hit ? hit.slice(name.length + 3) : fallback;
 };
 
-const BASE = arg('base', 'https://platform-staging.versori.com').replace(/\/$/, '');
+const BASE = arg('base', 'http://localhost:5173').replace(/\/$/, '');
 const CDP = arg('cdp', 'http://localhost:9222');
 const OUT = resolve(arg('out', resolve(HERE, '..', 'images', 'ai-tooling')));
 const WIDTH = Number(arg('width', '1440'));

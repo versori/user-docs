@@ -8,27 +8,26 @@
  *   2 marketplace installs -> Installed
  *   1 fork                 -> Forked
  *
- * Runs against a Chrome you have already logged into, over the DevTools
- * Protocol, and issues the API calls from inside that page so the session
- * cookies travel with them. No credentials are read or stored here.
+ * Talks to the switchboard API directly. Locally that needs no auth, so no
+ * browser and no credentials are involved.
  *
- * This writes to whichever organisation you pass. Point it at a demo org, not a
- * customer's: the skills it creates are visible to everyone in that org, and the
- * screenshots end up on a public docs site.
+ * This writes to whichever organisation you pass. Check where your local
+ * switchboard's database actually lives before running it: if CockroachDB is
+ * reached over an SSH tunnel rather than a local container, "local" seeding
+ * writes to shared infrastructure that other people can see.
  *
- * Usage (see capture-skills-screenshots.mjs for the Chrome setup):
+ * Usage:
  *
+ *   node scripts/seed-skills-for-screenshots.mjs --org=<organisation-id> --dry-run
  *   node scripts/seed-skills-for-screenshots.mjs --org=<organisation-id>
- *   node scripts/seed-skills-for-screenshots.mjs --org=<id> --dry-run
  *
  * Flags:
  *   --org=<id>      Required. Organisation to seed.
- *   --base=<url>    App origin. Default https://platform-staging.versori.com
- *   --cdp=<url>     DevTools endpoint. Default http://localhost:9222
+ *   --api=<url>     Switchboard base. Default http://localhost:8000.
+ *                   Deployed environments mount it under
+ *                   <origin>/api/sparkboard/v1alpha1 instead.
  *   --dry-run       Print what would be created, change nothing.
  */
-
-import { chromium } from 'playwright-core';
 
 const arg = (name, fallback) => {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -37,10 +36,8 @@ const arg = (name, fallback) => {
 const has = (name) => process.argv.includes(`--${name}`);
 
 const ORG = arg('org', '');
-const BASE = arg('base', 'https://platform-staging.versori.com').replace(/\/$/, '');
-const CDP = arg('cdp', 'http://localhost:9222');
+const API = arg('api', 'http://localhost:8000').replace(/\/$/, '');
 const DRY = has('dry-run');
-const API = `${BASE}/api/sparkboard/v1alpha1`;
 
 if (!ORG) {
   console.error('--org=<organisation-id> is required.');
@@ -93,42 +90,17 @@ description: Retry and error-reporting rules. Apply when writing a task that cal
 ];
 
 async function main() {
-  let browser;
-  try {
-    browser = await chromium.connectOverCDP(CDP);
-  } catch (cause) {
-    throw new Error(
-      `Could not attach to Chrome at ${CDP}. Start it with --remote-debugging-port=9222.`,
-      { cause }
-    );
-  }
-
-  const context = browser.contexts()[0];
-  if (!context) throw new Error('Chrome exposed no browser context.');
-  const page = await context.newPage();
-
-  // Load the app origin first so the API calls below are same-origin and carry
-  // the session cookies.
-  await page.goto(BASE, { waitUntil: 'domcontentloaded' });
-
   const call = async (method, path, body) => {
-    const result = await page.evaluate(
-      async ({ url, method, body }) => {
-        const res = await fetch(url, {
-          method,
-          credentials: 'include',
-          headers: body ? { 'Content-Type': 'application/json' } : undefined,
-          body: body ? JSON.stringify(body) : undefined,
-        });
-        const text = await res.text();
-        return { ok: res.ok, status: res.status, text };
-      },
-      { url: `${API}${path}`, method, body }
-    );
-    if (!result.ok) {
-      throw new Error(`${method} ${path} -> ${result.status} ${result.text.slice(0, 300)}`);
+    const res = await fetch(`${API}${path}`, {
+      method,
+      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`${method} ${path} -> ${res.status} ${text.slice(0, 300)}`);
     }
-    return result.text ? JSON.parse(result.text) : null;
+    return text ? JSON.parse(text) : null;
   };
 
   // Every row from the org-scoped listing carries `orgId` (null for a
@@ -136,7 +108,7 @@ async function main() {
   const mine = (await call('GET', `/marketplace/o/${encodeURIComponent(ORG)}/skills`)).skills ?? [];
   const have = new Set(mine.map((s) => s.name));
   const installedIds = new Set(mine.filter((s) => s.installed).map((s) => s.id));
-  console.log(`Organisation ${ORG} already has ${have.size} skill(s).`);
+  console.log(`Organisation ${ORG} already has ${mine.length} skill(s).`);
 
   // The unscoped catalogue never reports install state (there is no org to
   // enrich against), so cross-reference against the org listing above.
@@ -149,10 +121,15 @@ async function main() {
     plan.push({ what: `create own skill "${skill.name}"${skill.mandatory ? ' (mandatory)' : ''}`, skill });
   }
 
-  const notInstalled = catalogue.filter((s) => !installedIds.has(s.id) && !have.has(s.name));
-  const toInstall = notInstalled.slice(0, 2);
-  const toFork = notInstalled[2] ?? notInstalled[0];
-  for (const s of toInstall) plan.push({ what: `install "${s.name}" from the catalogue`, install: s });
+  // One install and one fork are enough to show the Installed and Forked
+  // badges. A small catalogue (local ones often hold a single skill) can supply
+  // both from the same entry: the fork lands as a separate org-owned row.
+  const toInstall = catalogue.find((s) => !installedIds.has(s.id));
+  if (toInstall) plan.push({ what: `install "${toInstall.name}" from the catalogue`, install: toInstall });
+
+  // Forking does not require the skill to be uninstalled, so pick from the
+  // whole catalogue and only skip an entry whose fork already exists.
+  const toFork = catalogue.find((s) => !have.has(`${s.name} (fork)`));
   if (toFork) plan.push({ what: `fork "${toFork.name}"`, fork: toFork });
 
   if (!plan.length) {
@@ -162,8 +139,6 @@ async function main() {
 
   if (DRY) {
     console.log('\nDry run, nothing changed.');
-    await page.close();
-    await browser.close().catch(() => {});
     return;
   }
 
@@ -194,11 +169,17 @@ async function main() {
   }
 
   const after = (await call('GET', `/marketplace/o/${encodeURIComponent(ORG)}/skills`)).skills ?? [];
-  console.log(`\nOrganisation now has ${after.length} skill(s). Clear any search or filter before capturing:`);
-  console.log('the count badge shows the full total while the grid shows only matches.');
-
-  await page.close();
-  await browser.close().catch(() => {});
+  console.log(`\nOrganisation now has ${after.length} skill(s):`);
+  for (const s of after) {
+    const kind = s.orgId ? (s.forkedFromSkillId ? 'Forked' : 'Own') : 'Installed';
+    // List rows carry the install flag as `installMandatory`; the bare
+    // `mandatory` field is absent here, and reading it reports everything as
+    // Optional. The frontend does the same mapping in marketplaceApi.ts.
+    const mandatory = s.installMandatory === true;
+    console.log(`  ${mandatory ? 'Mandatory' : 'Optional '}  ${kind.padEnd(9)}  ${s.name}`);
+  }
+  console.log('\nClear any search or filter before capturing: the count badge shows the');
+  console.log('full total while the grid shows only matches.');
 }
 
 main().catch((error) => {
