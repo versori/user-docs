@@ -50,6 +50,10 @@
  *                   twice the CSS size and stay sharp on high-density screens.
  *   --theme=any     Skip the light-theme check. The committed screenshots are
  *                   light, so a dark capture would be inconsistent with them.
+ *   --project=<name> Project to drive for the install-card shot. Default
+ *                   v-c4l91t. Any project works; the shot reuses a pending card
+ *                   if there is one, otherwise it sends a prompt.
+ *   --prompt=<text> The prompt used to make the agent propose a skill.
  */
 
 import { mkdir } from 'node:fs/promises';
@@ -209,9 +213,48 @@ const SHOTS = [
       return page.locator(ALERT);
     },
   },
-  // Deliberately not automated: install-skill-card. The card only appears when
-  // the agent genuinely proposes a skill mid-conversation, which needs a real
-  // chat rather than a scripted click. Capture that one by hand.
+  {
+    id: 'install-skill-card',
+    page: 'marketplace.mdx',
+    note: "The agent proposing a skill: the reason, the org-wide warning, and Install / Not now.",
+    async prepare(page) {
+      // This one needs a conversation, not a click path. If the project already
+      // has a pending card, use it; otherwise send a prompt that reliably makes
+      // the agent propose the Avalara skill and wait for the card to stream in.
+      await openProject(page, arg('project', 'v-c4l91t'));
+      const card = page.locator('[class*="_ConfirmCard_"]').first();
+      if (!(await card.count())) {
+        const composer = page.locator('textarea, [contenteditable="true"]').first();
+        await composer.click();
+        await composer.fill(arg('prompt', 'I\'d like an integration that syncs my e-invoices with NetSuite with ELR in Avalara'));
+        await page.keyboard.press('Enter');
+        // An agent turn: allow for thinking, tool calls, then the card.
+        await card.waitFor({ timeout: 120000 });
+      }
+      await page.getByRole('button', { name: 'Not now' }).first().waitFor();
+      await settle(page);
+
+      // Clip the conversation column down to the card. The chat sits in a
+      // narrow column of a wide layout, and the message list is a fixed-height
+      // scroller, so both a viewport shot and an element shot would carry a
+      // large empty area below the card.
+      const clip = await page.evaluate(() => {
+        const container = document.querySelector('[class*="_StickToBottomContent_"]');
+        const confirm = document.querySelector('[class*="_ConfirmCard_"]');
+        if (!container || !confirm) return null;
+        const c = container.getBoundingClientRect();
+        const k = confirm.getBoundingClientRect();
+        return {
+          x: Math.max(Math.floor(c.x) - 8, 0),
+          y: Math.max(Math.floor(c.y) - 8, 0),
+          width: Math.ceil(c.width) + 16,
+          height: Math.ceil(k.bottom - c.y) + 24,
+        };
+      });
+      if (!clip) throw new Error('Could not locate the conversation column or the install card.');
+      return { clip };
+    },
+  },
 ];
 
 /**
@@ -244,6 +287,21 @@ async function clickButtonByText(page, text) {
     return true;
   }, text);
   if (!clicked) throw new Error(`No button labelled "${text}" on the page.`);
+}
+
+/**
+ * Open a project by name from the integrations list.
+ *
+ * Deliberately a click rather than a URL: the route takes an id that is not the
+ * one in the platform `projects` table, and navigating to /integrations/{uuid}
+ * silently redirects to the list. The rows are not anchors either, so there is
+ * no href to read.
+ */
+async function openProject(page, name) {
+  await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+  await page.getByText(name, { exact: true }).first().click({ timeout: 20000 });
+  await page.waitForURL(/\/integrations\//, { timeout: 20000 });
+  await settle(page);
 }
 
 async function gotoSkills(page) {
@@ -427,7 +485,6 @@ async function main() {
     console.log('\nRe-run individual shots with --only=<id> after checking the page state.');
     process.exitCode = 1;
   }
-  console.log('\nStill to capture by hand: install-skill-card.png (needs the agent to propose a skill in chat).');
 }
 
 main().catch((error) => {
