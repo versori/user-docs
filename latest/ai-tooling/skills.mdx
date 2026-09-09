@@ -61,11 +61,6 @@ The frontmatter defines how the skill is identified and applied:
     the skill is relevant to the work in front of it, so make it specific.
 </ParamField>
 
-<ParamField path="mandatory" type="boolean" default="false">
-    Whether the skill is always applied. See [How the AI applies skills](#how-the-ai-applies-skills) below. Omit
-    the field for a skill that should be loaded only when relevant.
-</ParamField>
-
 <ParamField path="target" type="string" default="assistant">
     Which agent the skill applies to. `assistant` covers planning, building, and review. `verification` applies
     only to the agent that tests your integration in a sandbox. Each agent reads only its own skills, so a
@@ -80,28 +75,29 @@ The frontmatter defines how the skill is identified and applied:
 
 ## How the AI applies skills
 
-Every skill your organisation has added is available to the AI, but there are two ways it reaches the model, and
-the `mandatory` flag decides which:
+Adding a skill to your organisation is what makes it available: there is no separate step to attach it to a
+project or an integration. Every skill on your **Skills** page can be used by the AI.
+
+What differs is *how* each one reaches the model. Every skill is either **Optional** or **Mandatory**, shown as a
+badge on its card:
 
 <CardGroup cols={2}>
-    <Card title="Loaded when relevant" icon="magnifying-glass">
+    <Card title="Optional" icon="magnifying-glass">
         The default. The AI sees the skill's name and `description`, and reads the full skill only when the
         description matches the work it is doing.
     </Card>
-    <Card title="Always applied" icon="lock">
-        With `mandatory: true`, the skill's full contents go into every request, whether or not the AI judges it
-        relevant.
+    <Card title="Mandatory" icon="lock">
+        The skill's full contents go into every request, whether or not the AI judges it relevant.
     </Card>
 </CardGroup>
 
-Prefer the default. A clear, specific `description` is usually enough for the AI to find a skill at the right
-moment, and it leaves more room for your own project's context. Reserve `mandatory: true` for rules that must
-never be missed, such as compliance requirements, and keep those skills short.
+This is a choice your organisation makes about a skill it has added, not something the skill's author sets in the
+file. Switch between the two at any time with **Make mandatory** and **Make optional**. See
+[Mandatory and optional skills](/latest/ai-tooling/manage-skills#mandatory-and-optional-skills).
 
-<Note>
-    A skill that is [disabled](/latest/ai-tooling/manage-skills#enable-and-disable-skills) is never applied, even
-    if it is marked mandatory.
-</Note>
+Prefer **Optional**. A clear, specific `description` is usually enough for the AI to find a skill at the right
+moment, and it leaves more room for your own project's context. Reserve **Mandatory** for rules that must never be
+missed, such as compliance requirements, and keep those skills short.
 
 Some skills are built into the platform and always available. They are not listed alongside your organisation's
 skills, and cannot be edited or removed.
