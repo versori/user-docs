@@ -19,7 +19,12 @@
  *        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
  *          --remote-debugging-port=9222 \
  *          --user-data-dir=/tmp/versori-shots-profile \
+ *          --force-device-scale-factor=2 \
  *          http://localhost:5173
+ *
+ *      The scale factor is what makes the images sharp; it cannot be set from
+ *      this script. Reuse the same --user-data-dir and the login survives a
+ *      relaunch.
  *
  *   2. Log in in that window, and open the Skills page once to confirm access.
  *      The route requires an account whose email is @versori.com or
@@ -40,7 +45,9 @@
  *   --cdp=<url>     DevTools endpoint. Default http://localhost:9222
  *   --out=<dir>     Output directory. Default <repo>/images/ai-tooling
  *   --only=<a,b>    Capture only these shot ids.
- *   --width=<px>    Viewport width. Default 1440.
+ *   --width=<px>    Viewport width in CSS pixels. Default 1440.
+ *   --dpr=<n>       Device pixel ratio. Default 2, so images are captured at
+ *                   twice the CSS size and stay sharp on high-density screens.
  */
 
 import { mkdir } from 'node:fs/promises';
@@ -88,6 +95,7 @@ const BASE = arg('base', 'http://localhost:5173').replace(/\/$/, '');
 const CDP = arg('cdp', 'http://localhost:9222');
 const OUT = resolve(arg('out', resolve(HERE, '..', 'images', 'ai-tooling')));
 const WIDTH = Number(arg('width', '1440'));
+const DPR = Number(arg('dpr', '2'));
 const ONLY = arg('only', '')
   .split(',')
   .map((s) => s.trim())
@@ -109,11 +117,11 @@ const SHOTS = [
     note: 'The Skills page: count badge, header buttons, toolbar, and the card grid.',
     async prepare(page) {
       await gotoSkills(page);
-      // Whole viewport, so the left-hand nav is in frame: the prose tells the
-      // reader to find Skills there, and a cropped content pane would not show
-      // it. Height is fitted to the content to avoid a band of empty page.
-      await fitViewportToContent(page);
-      return null;
+      // Full width, so the left-hand nav is in frame: the prose tells the reader
+      // to find Skills there, and a cropped content pane would not show it.
+      // Height is clipped to the content, because the app shell is a fixed
+      // 100svh and would otherwise leave a band of empty page below the cards.
+      return { clip: await contentClip(page) };
     },
   },
   {
@@ -251,17 +259,61 @@ async function gotoSkills(page) {
 }
 
 /**
- * Size the viewport to the document so a full-viewport shot has no dead space
- * below the content, without resorting to fullPage (which would also capture
- * anything scrolled out of the fixed layout).
+ * Size the real browser window, rather than emulating a viewport.
+ *
+ * `page.setViewportSize` is the obvious call and the wrong one here: on a page
+ * attached over CDP it re-applies device metrics with the context's pixel ratio
+ * of 1, which quietly halves the resolution of every capture. Resizing the
+ * window leaves the ratio alone, so the images come out at whatever
+ * --force-device-scale-factor Chrome was started with.
  */
-async function fitViewportToContent(page, max = 1400) {
-  const height = await page.evaluate(() => {
-    const d = document.documentElement;
-    return Math.ceil(Math.max(d.scrollHeight, document.body.scrollHeight));
+async function setWindowSize(page, width, height) {
+  const cdp = await page.context().newCDPSession(page);
+  const { windowId } = await cdp.send('Browser.getWindowForTarget');
+  await cdp.send('Browser.setWindowBounds', {
+    windowId,
+    // Chrome window bounds include the chrome itself, so add a little height
+    // for the tab strip and address bar to leave the requested space usable.
+    bounds: { width, height: height + 120, windowState: 'normal' },
   });
-  await page.setViewportSize({ width: WIDTH, height: Math.min(Math.max(height, 600), max) });
-  await settle(page);
+  await page.waitForTimeout(300);
+}
+
+/** Refuse to write soft images: a 1x capture is not obvious until it ships. */
+async function assertPixelRatio(page) {
+  const actual = await page.evaluate(() => window.devicePixelRatio);
+  if (actual < DPR) {
+    throw new Error(
+      `Chrome is running at ${actual}x, but ${DPR}x was asked for. Relaunch it with
+` +
+        `  --force-device-scale-factor=${DPR}
+` +
+        'keeping the same --user-data-dir so the login survives, or pass --dpr=' +
+        `${actual} to accept ${actual}x.`
+    );
+  }
+}
+
+/**
+ * A full-width clip that stops just below the last card.
+ *
+ * The app shell is a fixed 100svh, so the document never reports a height that
+ * reflects how much of the page is actually used. Measuring the content and
+ * clipping is the only way to avoid a band of empty page in the image.
+ */
+async function contentClip(page, pad = 24) {
+  const bottom = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('[role="button"]')];
+    const lowest = cards.reduce((max, el) => Math.max(max, el.getBoundingClientRect().bottom), 0);
+    return Math.ceil(lowest);
+  });
+  const size = page.viewportSize() ?? { width: WIDTH, height: 900 };
+  return {
+    x: 0,
+    y: 0,
+    width: size.width,
+    height: Math.min(bottom + pad, size.height),
+  };
 }
 
 /**
@@ -315,7 +367,9 @@ async function main() {
 
   const page = await context.newPage();
   await blockConsentBanner(page);
-  await page.setViewportSize({ width: WIDTH, height: 900 });
+  await setWindowSize(page, WIDTH, 900);
+  await page.goto(BASE, { waitUntil: 'domcontentloaded' });
+  await assertPixelRatio(page);
 
   const wanted = ONLY.length ? SHOTS.filter((s) => ONLY.includes(s.id)) : SHOTS;
   const done = [];
@@ -324,10 +378,17 @@ async function main() {
   for (const shot of wanted) {
     const file = resolve(OUT, `${shot.id}.png`);
     try {
-      // Each shot starts from the same viewport: skills-page resizes it to fit.
-      await page.setViewportSize({ width: WIDTH, height: 900 });
-      const clip = await shot.prepare(page);
-      await (clip ?? page).screenshot({ path: file, scale: 'css' });
+      // Each shot starts from the same window size: skills-page resizes to fit.
+      await setWindowSize(page, WIDTH, 900);
+      const target = await shot.prepare(page);
+      // 'device' honours the browser's pixel ratio; 'css' would throw it away
+      // and write a 1x image.
+      const opts = { path: file, scale: 'device' };
+      if (target && 'clip' in target) {
+        await page.screenshot({ ...opts, clip: target.clip });
+      } else {
+        await (target ?? page).screenshot(opts);
+      }
       done.push(shot);
       console.log(`  captured  ${shot.id}.png  (${shot.page})`);
     } catch (error) {
