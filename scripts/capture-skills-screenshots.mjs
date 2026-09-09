@@ -26,10 +26,14 @@
  *      @versori.io: `isAllowedEmailDomain` allows nothing else, and both the
  *      route and the nav entry are gated on it.
  *
- *   3. Run:
+ *   3. Install playwright-core somewhere (it needs no browser download of its
+ *      own, since it attaches to the Chrome above), then run this file from
+ *      anywhere. It searches /tmp/versori-shots and versori-ai/node_modules,
+ *      or honours PLAYWRIGHT_CORE=/abs/path/to/playwright-core/index.js:
  *
- *        cd /tmp/versori-shots && npm install playwright-core
- *        node <path-to-this-file> --base=https://platform-staging.versori.com
+ *        mkdir -p /tmp/versori-shots && cd /tmp/versori-shots
+ *        npm install playwright-core
+ *        node ~/dev/user-docs/scripts/capture-skills-screenshots.mjs
  *
  * Flags:
  *   --base=<url>    App origin. Default http://localhost:5173 (Vite dev server)
@@ -39,12 +43,41 @@
  *   --width=<px>    Viewport width. Default 1440.
  */
 
-import { chromium } from 'playwright-core';
 import { mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+
+/**
+ * playwright-core is deliberately not a dependency of this repo: user-docs has
+ * no package.json, and adding one for a screenshot script is not worth it. So
+ * resolve it from wherever it happens to be installed. A bare `import` would
+ * only search upwards from this file and miss a sibling install entirely.
+ */
+async function loadChromium() {
+  const candidates = [
+    process.env.PLAYWRIGHT_CORE, // explicit override wins
+    'playwright-core', // if it ever is a local dependency
+    '/tmp/versori-shots/node_modules/playwright-core/index.js',
+    resolve(HERE, '..', '..', 'versori-ai', 'node_modules', 'playwright-core', 'index.js'),
+  ].filter(Boolean);
+
+  for (const spec of candidates) {
+    try {
+      const mod = await import(spec);
+      return (mod.chromium ?? mod.default?.chromium);
+    } catch {
+      // Try the next location.
+    }
+  }
+  throw new Error(
+    'Could not load playwright-core. Install it somewhere and point at it:\n' +
+      '  mkdir -p /tmp/versori-shots && cd /tmp/versori-shots && npm install playwright-core\n' +
+      'or set PLAYWRIGHT_CORE=/abs/path/to/playwright-core/index.js'
+  );
+}
 
 const arg = (name, fallback) => {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -76,18 +109,38 @@ const SHOTS = [
     note: 'The Skills page: count badge, header buttons, toolbar, and the card grid.',
     async prepare(page) {
       await gotoSkills(page);
-      return page.locator('h1:has-text("Skills")').locator('xpath=ancestor::*[3]');
+      // Whole viewport, so the left-hand nav is in frame: the prose tells the
+      // reader to find Skills there, and a cropped content pane would not show
+      // it. Height is fitted to the content to avoid a band of empty page.
+      await fitViewportToContent(page);
+      return null;
     },
   },
   {
     id: 'upload-skill-dialog',
     page: 'manage-skills.mdx',
-    note: 'The Upload skill dialog, showing the drop zone and the detail fields.',
+    note: 'The Upload skill dialog: the drop zone and the fields read from SKILL.md.',
     async prepare(page) {
       await gotoSkills(page);
-      await page.getByRole('button', { name: 'Upload skill' }).first().click();
-      await page.getByText('Upload skill', { exact: true }).waitFor();
-      return page.locator('[role="dialog"]').first();
+      await clickButtonByText(page, 'Upload skill');
+      await page.locator(DIALOG).waitFor();
+
+      // An empty dialog shows only placeholders, which does not illustrate
+      // "the fields are read from your SKILL.md". Feed it a real bundle. The
+      // file inputs are hidden, which setInputFiles handles.
+      const bundle = sampleBundleFile();
+      if (bundle) {
+        await page.locator(`${DIALOG} input[type="file"]:not([multiple])`).first().setInputFiles(bundle);
+        // The name field is filled from frontmatter once the bundle parses.
+        await page
+          .locator(`${DIALOG} #upload-skill-name`)
+          .filter({ has: page.locator(':not([value=""])') })
+          .first()
+          .waitFor({ timeout: 5000 })
+          .catch(() => {});
+      }
+      await settle(page);
+      return page.locator(DIALOG);
     },
   },
   {
@@ -96,10 +149,10 @@ const SHOTS = [
     note: 'The Browse marketplace dialog with search and category filters.',
     async prepare(page) {
       await gotoSkills(page);
-      await page.getByRole('button', { name: 'Browse marketplace' }).first().click();
+      await clickButtonByText(page, 'Browse marketplace');
       await page.getByPlaceholder('Search marketplace').waitFor();
       await settle(page);
-      return page.locator('[role="dialog"]').first();
+      return page.locator(DIALOG);
     },
   },
   {
@@ -108,13 +161,15 @@ const SHOTS = [
     note: 'A catalogue skill open for review, with the Add button.',
     async prepare(page) {
       await gotoSkills(page);
-      await page.getByRole('button', { name: 'Browse marketplace' }).first().click();
+      await clickButtonByText(page, 'Browse marketplace');
       await page.getByPlaceholder('Search marketplace').waitFor();
       await settle(page);
-      // Open the first catalogue card. Cards are buttons wrapping a heading.
-      await page.locator('[role="dialog"] h3, [role="dialog"] h4').first().click();
-      await page.getByRole('button', { name: /^Add(ed)?$/ }).first().waitFor();
-      return page.locator('[role="dialog"]').first();
+      // Open the first catalogue card. Cards are role=button, so clicking the
+      // card itself is the intended way in.
+      await page.locator(`${DIALOG} [role="button"]`).first().click();
+      await page.locator(`${DIALOG} button`).filter({ hasText: /^Add(ed)?$/ }).first().waitFor();
+      await settle(page);
+      return page.locator(DIALOG).last();
     },
   },
   {
@@ -123,10 +178,12 @@ const SHOTS = [
     note: 'A skill open showing SKILL.md beside its resource files.',
     async prepare(page) {
       await gotoSkills(page);
-      await page.locator('h3, h4').first().click();
-      await page.getByText('SKILL.md').first().waitFor();
+      // Prefer a skill with resource files: the point of the shot is the bundle
+      // shape, which a single-file skill cannot show.
+      await page.locator('[role="button"]').filter({ hasText: 'avalara' }).first().click();
+      await page.locator(DIALOG).waitFor();
       await settle(page);
-      return page.locator('[role="dialog"]').first();
+      return page.locator(DIALOG);
     },
   },
   {
@@ -135,18 +192,49 @@ const SHOTS = [
     note: 'The removal confirmation, showing the Delete / Uninstall distinction.',
     async prepare(page) {
       await gotoSkills(page);
-      // Prefer Uninstall: the marketplace-vs-owned distinction is the point.
-      const uninstall = page.getByRole('button', { name: 'Uninstall' }).first();
-      const target = (await uninstall.count()) ? uninstall : page.getByRole('button', { name: 'Delete' }).first();
-      await target.click();
-      await page.getByRole('button', { name: /^(Uninstall|Delete)$/ }).last().waitFor();
-      return page.locator('[role="alertdialog"], [role="dialog"]').first();
+      // Prefer Uninstall: the marketplace-versus-owned distinction is the point.
+      await clickButtonByText(page, 'Uninstall').catch(() => clickButtonByText(page, 'Delete'));
+      await page.locator(ALERT).waitFor();
+      await settle(page);
+      return page.locator(ALERT);
     },
   },
   // Deliberately not automated: install-skill-card. The card only appears when
   // the agent genuinely proposes a skill mid-conversation, which needs a real
   // chat rather than a scripted click. Capture that one by hand.
 ];
+
+/**
+ * The app loads a third-party consent banner that renders as [role="dialog"].
+ * It is non-deterministic, has no place in documentation, and will otherwise be
+ * mistaken for the app's own dialog. Block it at the network layer.
+ */
+async function blockConsentBanner(page) {
+  await page.route(/cookie-script\.com/, (route) => route.abort());
+}
+
+/** The app's dialogs, never the consent banner. */
+const DIALOG = '.rt-DialogContent';
+/** The confirmation prompt, which is a Radix AlertDialog rather than a Dialog. */
+const ALERT = '.rt-AlertDialogContent';
+
+/**
+ * Click a card action by dispatching on the element itself.
+ *
+ * A card is `role="button"` and opens the skill when clicked. The action strip
+ * stops propagation correctly, but a synthesised pointer click at the button's
+ * centre still lands on the card and opens the detail dialog instead. Clicking
+ * the node directly is unambiguous.
+ */
+async function clickButtonByText(page, text) {
+  const clicked = await page.evaluate((label) => {
+    const btn = [...document.querySelectorAll('button')].find((b) => b.textContent.trim() === label);
+    if (!btn) return false;
+    btn.click();
+    return true;
+  }, text);
+  if (!clicked) throw new Error(`No button labelled "${text}" on the page.`);
+}
 
 async function gotoSkills(page) {
   // Internal route is still /resources; every user-visible label says Skills.
@@ -162,6 +250,44 @@ async function gotoSkills(page) {
   await settle(page);
 }
 
+/**
+ * Size the viewport to the document so a full-viewport shot has no dead space
+ * below the content, without resorting to fullPage (which would also capture
+ * anything scrolled out of the fixed layout).
+ */
+async function fitViewportToContent(page, max = 1400) {
+  const height = await page.evaluate(() => {
+    const d = document.documentElement;
+    return Math.ceil(Math.max(d.scrollHeight, document.body.scrollHeight));
+  });
+  await page.setViewportSize({ width: WIDTH, height: Math.min(Math.max(height, 600), max) });
+  await settle(page);
+}
+
+/**
+ * Files for the upload-dialog shot. Optional: without them the dialog is still
+ * captured, just empty. Override with --sample=<dir>.
+ */
+function sampleBundleFile() {
+  // Off by default. Driving the hidden file input with setInputFiles gets the
+  // bundle rejected with "A SKILL.md file is required", including for a lone
+  // SKILL.md that readSkillBundleFiles should accept via its loneMarkdown
+  // branch. The app is fine through the real picker, so this is the harness,
+  // not a product bug: most likely the synthesised File lacks metadata the
+  // dialog's own file path supplies. A red validation error makes a worse
+  // screenshot than an empty form, so the dialog is captured empty, which
+  // still shows every field the page describes.
+  //
+  // Pass --sample=/path/to/SKILL.md to have another go at it.
+  const bundle = arg('sample', '');
+  if (!bundle) return null;
+  if (!existsSync(bundle)) {
+    console.log('  note: no sample bundle at', bundle, '- capturing the dialog empty.');
+    return null;
+  }
+  return bundle;
+}
+
 /** Let images, fonts and query fetches finish so captures are deterministic. */
 async function settle(page) {
   await page.waitForLoadState('networkidle').catch(() => {});
@@ -171,6 +297,7 @@ async function settle(page) {
 
 async function main() {
   await mkdir(OUT, { recursive: true });
+  const chromium = await loadChromium();
 
   let browser;
   try {
@@ -187,6 +314,7 @@ async function main() {
   if (!context) throw new Error('Chrome exposed no browser context.');
 
   const page = await context.newPage();
+  await blockConsentBanner(page);
   await page.setViewportSize({ width: WIDTH, height: 900 });
 
   const wanted = ONLY.length ? SHOTS.filter((s) => ONLY.includes(s.id)) : SHOTS;
@@ -196,6 +324,8 @@ async function main() {
   for (const shot of wanted) {
     const file = resolve(OUT, `${shot.id}.png`);
     try {
+      // Each shot starts from the same viewport: skills-page resizes it to fit.
+      await page.setViewportSize({ width: WIDTH, height: 900 });
       const clip = await shot.prepare(page);
       await (clip ?? page).screenshot({ path: file, scale: 'css' });
       done.push(shot);
