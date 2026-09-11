@@ -61,12 +61,6 @@ The frontmatter defines how the skill is identified and applied:
     the skill is relevant to the work in front of it, so make it specific.
 </ParamField>
 
-<ParamField path="target" type="string" default="assistant">
-    Which agent the skill applies to. `assistant` covers planning, building, and review. `verification` applies
-    only to the agent that tests your integration in a sandbox. Each agent reads only its own skills, so a
-    `verification` skill never reaches the planning agent.
-</ParamField>
-
 <Frame caption="A skill bundle is a SKILL.md index plus any resource files it references">
     <img src="/images/ai-tooling/skill-detail.png" alt="A skill open in Versori, showing its SKILL.md alongside a tree of resource files" />
 </Frame>
