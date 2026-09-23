@@ -1,0 +1,75 @@
+---
+title: "Cloud Agents"
+description: "What Cloud Agents are, how they differ from the agents you work with in chat, and what they can do on your behalf."
+---
+
+Cloud Agents are Versori agents that run on the platform rather than in your chat. You hand one a standing job, and it
+does that job without you — starting when something happens, working through the problem on its own, and presenting
+what it found when it is done.
+
+The agents you meet in the chat are ones you drive: you describe what you want, and the planning and coding agents
+respond while you watch. A Cloud Agent is the other way round. It starts from something other than you sitting at the
+screen — an integration failing in production, a message from your team, a piece of work handed off — and it keeps
+going whether or not you are there.
+
+<Info>
+    Cloud Agents belong to an organisation, not to an individual integration. You create one once, then attach it to
+    the work you want it to do.
+</Info>
+
+## Nothing is applied automatically
+
+A Cloud Agent proposes; you decide. When an agent produces a change to your integration, it is saved as a draft
+version alongside a written report of what it found and why. Nothing is deployed, and nothing replaces the files you
+are working on, until you review the change and deploy it yourself.
+
+This is deliberate. An agent working from a production failure has good evidence but no business context: it cannot
+know that the endpoint returning errors is being retired next week, or that a mapping looks wrong but matches a
+partner's agreed spec. Keeping a person between the proposal and production is what makes the agent safe to leave
+running.
+
+## Available now
+
+<CardGroup cols={2}>
+    <Card title="Issue Watcher" icon="binoculars" href="/latest/guides/getting-started/deploy/issue-watcher">
+        Investigates issues raised by your deployed integrations and proposes a fix for you to review.
+    </Card>
+</CardGroup>
+
+## Coming next
+
+Issue Watcher is the first Cloud Agent, not the shape of all of them. Watching a deployment is one job you can hand
+off; these are the next two we are building.
+
+<CardGroup cols={2}>
+    <Card title="Slack agent" icon="slack">
+        Tag a Cloud Agent in a Slack channel or thread and it picks the work up from there — reading the conversation,
+        making the change to your integration, and reporting back in the same thread. The feedback stays where your
+        team already discusses it.
+    </Card>
+    <Card title="Long-running research" icon="magnifying-glass">
+        Hand off research that takes longer than you want to sit and watch — working through an unfamiliar API,
+        comparing how several systems model the same data. Close the browser; the agent carries on and the findings
+        are waiting when you come back.
+    </Card>
+</CardGroup>
+
+<Note>
+    These are in development and not yet available. This page is updated as each one ships.
+</Note>
+
+## How a Cloud Agent is configured
+
+Every Cloud Agent follows the same two-step setup:
+
+1. **Create the agent** for your organisation, under **Cloud Agents** in organisation settings. This is where you give
+   it a name and any standing instructions you want it to follow — for example, *never change pricing logic*.
+2. **Attach it to the work you want it to do.** Until an agent is attached, it does nothing. What you attach it to
+   depends on the agent: Issue Watcher is attached to an integration environment, and it is at that point you set the
+   filters that decide which events it responds to.
+
+Because the agent lives at the organisation level and the attachment lives on the work, one agent carrying your team's
+rules can cover as many integrations as you like, and you edit those rules in one place.
+
+Standing instructions are guidance, not permissions. An agent cannot be instructed to widen what it is allowed to do —
+for example, to change another organisation's integration, or to write to a connected system.
