@@ -1,0 +1,62 @@
+---
+title: "Cloud Agents"
+description: "What Cloud Agents are, how they differ from the agents you work with in chat, and what they can do on your behalf."
+---
+
+Cloud agents run in the background, always on. Hand the agent a task and it will work
+Cloud agents are Versori agents that run on the platform rather than in your chat. You hand one a standing job, and it
+does that job without you — starting when something happens, working through the problem on its own, and presenting
+what it found when it is done.
+
+<Info>
+    Cloud Agents belong to an organisation, not to an individual integration. You create one once, then attach it to
+    the work you want it to do.
+</Info>
+
+## Trust and stability
+
+Cloud agents open up capabilities that can have a direct consequence on your Integration. Making changes to a deployed production instance of your integration requires careful consideration, therefore built into cloud agents is a human in the loop step, ensuring that nothing is changed without your approval.
+
+For example; An agent working from a production failure has good evidence but no business context: it cannot
+know that the endpoint returning errors is being retired next week, or that a mapping looks wrong but matches a
+partner‘s agreed specification. Keeping a person between the proposal and production is what makes the agent safe to leave
+running.
+
+## Available now
+
+<CardGroup cols={2}>
+    <Card title="Issue Watcher" icon="binoculars" href="/latest/guides/getting-started/monitor/issue-watcher">
+        Investigates issues raised by your deployed integrations and proposes a fix for you to review.
+    </Card>
+</CardGroup>
+
+## Coming next
+
+Issue Watcher is the first Cloud Agent, not the shape of all of them. Watching a deployment is one job you can hand
+off; these are the next two we are building.
+
+<CardGroup cols={2}>
+    <Card title="Slack agent" icon="slack">
+        Tag a Cloud Agent in a Slack channel or thread and it picks the work up from there — reading the conversation,
+        making the change to your integration, and reporting back in the same thread. The feedback stays where your
+        team already discusses it.
+    </Card>
+    <Card title="Long-running research" icon="magnifying-glass">
+        Hand off research that takes longer than you want to sit and watch — working through an unfamiliar API,
+        comparing how several systems model the same data. Close the browser; the agent carries on and the findings
+        are waiting when you come back.
+    </Card>
+</CardGroup>
+
+<Note>
+    These are in development and not yet available. This page will be updated as each one ships.
+</Note>
+
+## Usage
+
+Each Cloud agent setup can be used across ay number of projects
+
+<Note>
+    Agent instructions are guidance, not permissions. An agent cannot be instructed to widen what it is allowed to do —
+    for example, to change another organisation‘s integration, or to write to a connected system.
+</Note>

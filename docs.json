@@ -85,6 +85,13 @@
                     ]
                   },
                   {
+                    "group": "Monitor",
+                    "pages": [
+                      "latest/guides/getting-started/monitor",
+                      "latest/guides/getting-started/monitor/issue-watcher"
+                    ]
+                  },
+                  {
                     "group": "Miscellaneous",
                     "pages": [
                       "latest/guides/getting-started/misc/prompting-tips"
@@ -249,7 +256,10 @@
               {
                 "group": "Platform",
                 "pages": [
-                  "latest/ai-tooling/skills"
+                  "latest/ai-tooling/cloud-agents",
+                  "latest/ai-tooling/skills",
+                  "latest/ai-tooling/marketplace",
+                  "latest/ai-tooling/manage-skills"
                 ]
               },
               {
