@@ -249,7 +249,9 @@
               {
                 "group": "Platform",
                 "pages": [
-                  "latest/ai-tooling/skills"
+                  "latest/ai-tooling/skills",
+                  "latest/ai-tooling/marketplace",
+                  "latest/ai-tooling/manage-skills"
                 ]
               },
               {
