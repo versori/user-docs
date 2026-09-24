@@ -81,8 +81,14 @@
                   {
                     "group": "Deploy",
                     "pages": [
-                      "latest/guides/getting-started/deploy",
-                      "latest/guides/getting-started/deploy/issue-watcher"
+                      "latest/guides/getting-started/deploy"
+                    ]
+                  },
+                  {
+                    "group": "Monitor",
+                    "pages": [
+                      "latest/guides/getting-started/monitor",
+                      "latest/guides/getting-started/monitor/issue-watcher"
                     ]
                   },
                   {

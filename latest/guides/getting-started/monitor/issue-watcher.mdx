@@ -3,12 +3,8 @@ title: "Issue Watcher: Fixes Proposed From Real Failures"
 sidebarTitle: Issue Watcher
 ---
 
-Issue Watcher watches a deployed integration and investigates it when it fails. When your integration raises an issue,
-the agent reads the code that is actually deployed, works out what went wrong from the failing execution, and proposes
-the smallest fix it can — saved as a draft version with a written report for you to review.
-
-It is a [Cloud Agent](/latest/ai-tooling/cloud-agents): it runs on the platform rather than in your chat, and nothing
-it proposes reaches production until you deploy it.
+Issue Watcher runs alongside a deployed integration and investigates it when it fails. When your integration raises an issue,
+the agent reads the code that is actually deployed, works out what went wrong from the failing execution, and proposes a fix — saved as a version with a written report for you to review.
 
 <Frame caption="The Issue Watcher tab: every investigation, its report, and the transcript of what the agent did">
 <img src="/images/guides/deploy/run-report-001.png" alt="The Issue Watcher tab showing the run list, a report with its evidence and conclusion, and the transcript panel" />
@@ -29,21 +25,18 @@ that environment, the issue is handed to the agent and an investigation starts:
    `runtime-review-v1`, along with a report explaining what it found.
 
 <Info>
-    Issue Watcher only investigates failures that come from your integration's code. Infrastructure problems — a
-    container running out of memory, a deployment that did not start — are skipped, because there is nothing in your
-    workflow for an agent to fix.
+    Issue Watcher only investigates failures that originiate from your integration‘s core code. Issues that an agent is unable to fix, for example; infratstructure related errors, will require manual triage. For support, queries can be raised by email through support@versori.com
 </Info>
 
 ## Nothing deploys automatically
 
-The agent never deploys, and never overwrites the files you are working on. Its output is a draft version sitting
-alongside your others, which you deploy exactly as you would deploy your own work.
+The agent never deploys, and never overwrites the files you are working on. The output from the agents work is created as a version, which you deploy exactly as you would deploy your own work.
 
 <Frame caption="A proposed fix arrives as a draft version alongside your own, ready to review and deploy">
 <img src="/images/guides/deploy/draft-version-001.png" alt="The version list showing a draft version proposed by the agent next to a deployed version" />
 </Frame>
 
-Keeping that step manual is what makes the fix worth reading. The agent has the trace and the code, but it does not
+Keeping that step manual maintains trust. The agent has the trace and the code, but it does not
 know your release schedule, whether the failing endpoint is being retired, or whether a mapping that looks wrong is
 the one your partner asked for. The report is written to be reviewed in a minute or two, so that judgement stays with
 you.
@@ -66,11 +59,11 @@ Each investigation ends in one of these states:
 
 Every investigation also keeps a full transcript of what the agent did — the files it read, the searches it ran, the
 API calls it made and the checks it performed. Select **View transcript** on any run to open it. The report is the
-agent's conclusion; the transcript is the evidence behind it.
+agent‘s conclusion; the transcript is the evidence behind it.
 
 ## Setting it up
 
-Issue Watcher is enabled per organisation. Once it is available to you, open your integration's **Issues** tab and
+Issue Watcher is enabled per organisation. Once it is available to you, open your integration‘s **Issues** tab and
 select **Watch issues**.
 
 <Frame caption="Create a new agent, or attach one your organisation already has">
@@ -154,7 +147,7 @@ person.
 
 ## What to do next
 
-Review a proposal the same way you would review a colleague's: read the report, look at the diff, and check the
+Review a proposal the same way you would review a colleague‘s: read the report, look at the diff, and check the
 transcript if you want to see how the agent reached its conclusion. If you agree with the change, deploy the draft
 version. If you do not, leave it — deploying something else supersedes it, and the next investigation starts from
 whatever is live.
