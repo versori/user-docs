@@ -1,0 +1,174 @@
+---
+title: Monitoring your integration
+sidebarTitle: Monitor
+description: Use logs, issues, and email channels to monitor a deployed integration, and optionally attach Issue Watcher to investigate failures.
+---
+
+Once an integration is deployed, monitoring is how you know it is still doing what you built it to do. Two surfaces
+cover that: **logs** show you what each execution did, and **issues** record failures so you can act on them. Link an
+**email channel** to the environment and the people who need to know are told as soon as something is raised — without
+living in the tab.
+
+Use logs when you are investigating a specific run. Use issues and email when you need a durable record of what went
+wrong, and a way to hear about it.
+
+## Logs: what each execution did
+
+Your workflow writes logs through `ctx.log`. Those structured JSON logs land in the project's **Logs** tab, scoped to
+the environment the integration is running in. Each entry is tied to an execution, so you can follow a single run from
+trigger through to the step that failed.
+
+### Writing useful logs
+
+Log at the point something meaningful happens — a record is fetched, a mapping is applied, a downstream call returns
+an unexpected status. Include identifiers you will want to search for later, such as the execution ID, an order ID, or
+the system you called.
+
+```typescript
+import { fn } from '@versori/run';
+
+const syncOrder = fn('sync-order', async (ctx) => {
+    const { orderId } = ctx.data;
+
+    ctx.log.info('Syncing order', { orderId, executionId: ctx.executionId });
+
+    try {
+        // ... call the target system
+        ctx.log.info('Order synced', { orderId });
+    } catch (error) {
+        ctx.log.error('Failed to sync order', { orderId, error: error.message });
+        throw error;
+    }
+});
+```
+
+`ctx.log` supports the usual levels — `debug` for detail you do not need every day, `info` for the path a healthy
+execution takes, `error` for failures. Debug logs are still stored; they just stay out of the way until you need them.
+
+<Tip>
+Prefer a stable identifier and a clear message over a dump of the entire payload. Never log credentials, tokens, or
+personal data.
+</Tip>
+
+### Reading logs
+
+Open the **Logs** tab on the project and select the environment you want to inspect. Search for a message, an
+identifier, or an execution ID to narrow the stream to the run you care about.
+
+You can also pull the same logs from the CLI — useful when you are already in a terminal, or when you want a window of
+history rather than a live tail:
+
+```sh
+versori projects logs --environment production --since 1h
+versori projects logs --environment production --search "Failed to sync order"
+```
+
+`--since` accepts a duration such as `1h` or `24h`. `--search` filters to matching log lines.
+
+<Note>
+Logs tell you what the code did. They do not, on their own, page anyone. For that you raise an **issue** and link an
+email channel to the environment.
+</Note>
+
+## Issues: when something needs attention
+
+Issues are the integration's incident record. They appear in the **Issues** tab whether or not anyone is emailed —
+linking a channel only adds delivery, it does not create the issue.
+
+An issue is raised when:
+
+- A workflow errors and the error is not handled.
+- Your code calls `ctx.createIssue()` for a condition you care about even if execution continues.
+- The platform itself hits a problem, such as the environment running out of memory.
+
+Use `createIssue` when a failure is expected as a possibility and you still want it tracked — a downstream API
+returning 429s, a required field missing from a payload, a credential that looks expired:
+
+```typescript
+await ctx.createIssue({
+    severity: 'high', // 'critical' | 'high' | 'medium' | 'low'
+    title: 'Order sync failed',
+    message: `Shopify returned 429 while syncing order ${orderId}`,
+    annotations: {
+        orderId,
+        system: 'shopify',
+    },
+});
+```
+
+Each issue has a **severity** (`critical`, `high`, `medium`, `low`) and a **status** (`open`, `acked`, `resolved`,
+`closed`). Acknowledge an issue when someone is looking at it; resolve it when the underlying problem is fixed. The
+Issues tab supports search, filtering, and pagination, so you can keep a busy environment readable.
+
+<Tip>
+Raise issues for conditions you would want to be woken up about. Log everything else. A noisy Issues tab trains people
+to ignore it.
+</Tip>
+
+## Email channels: get told when issues are raised
+
+An **email channel** is an organisation-wide destination — a name, a primary recipient, and optional CC addresses.
+Linking that channel to a project environment is what turns a recorded issue into an email. The same channel can be
+linked to more than one environment; each environment can have its own filters.
+
+That split is deliberate. The channel answers *who gets told*. The link answers *which environment, and which issues*.
+
+<Steps>
+<Step title="Create a channel">
+Create an email channel on the organisation with a name and at least one recipient. Name it after the people or
+rotation it reaches — for example `on-call` or `integrations-team` — rather than after a single project.
+
+```sh
+versori notifications channels create --name on-call --email oncall@example.com
+```
+
+Use `--cc` (repeatable) for additional recipients.
+</Step>
+
+<Step title="Link it to an environment">
+Bind the channel to the project environment you want alerts from. After linking, issues raised in that environment are
+emailed through the channel as well as recorded in the Issues tab.
+
+```sh
+versori notifications project link --environment production --severity critical,high
+```
+
+If you omit `--channel-id` or `--environment`, the CLI prompts you to pick from what already exists.
+</Step>
+
+<Step title="Filter what gets emailed">
+Not every issue needs an inbox. When you link a channel you can restrict delivery by **severity**, **title**, or
+**message**, so production pages the on-call rotation for `critical` and `high` while staging stays quiet — or so only
+issues whose title contains `Order sync` land in a given inbox.
+
+| Filter | What it does |
+| --- | --- |
+| `--severity` | Only email these severities (`critical`, `high`, `medium`, `low`) |
+| `--filter-title` | Only email when the issue title contains this substring |
+| `--filter-message` | Only email when the issue message contains this substring |
+</Step>
+</Steps>
+
+Unlinking a channel from an environment stops new emails. The channel itself stays on the organisation, and every issue
+already raised stays in the Issues tab. Creating a channel without linking it to an environment also does nothing for
+delivery — same as an unlinked channel.
+
+<Info>
+If no email channel is linked to an environment, issues are still recorded and still visible. Email is how you hear
+about them; it is not how they exist.
+</Info>
+
+## Let an agent investigate
+
+Logs and email tell you that something went wrong. [Issue Watcher](/latest/guides/getting-started/monitor/issue-watcher)
+goes further: it watches a deployed environment, investigates the failing execution, and proposes a fix as a draft
+version for you to review. Nothing deploys until you do.
+
+It is a Cloud Agent — it runs on the platform rather than in your chat — and it uses the same evidence you would: the
+version that is actually running, the failing execution's trace, and the error logs. If an email channel is linked to
+that environment, the people who were told the integration broke are also told when the investigation finishes.
+
+<Card title="Issue Watcher" icon="binoculars" href="/latest/guides/getting-started/monitor/issue-watcher">
+When a deployed integration raises an issue, Issue Watcher reads the code that failed, works from the execution's
+trace and logs, and proposes the smallest fix it can.
+</Card>
