@@ -20,6 +20,75 @@ description: 'Product updates and announcements'
     ## Bug fixes
 
     - Fixed an issue where a skill already added to your organisation from the marketplace could still appear as available to add, instead of showing as installed.
+  
+</Update>
+<Update label="11th September 2026" description="2026.09.11">
+
+    ## Bug fixes
+
+    - Fixed an issue in the skills marketplace where a skill already added to your organisation could still show an "Add" button instead of reflecting its installed status.
+    ## Features
+
+    - A new skills marketplace is available under Skills: browse, search, filter, sort, and install skills for your organisation. You can also upload your own skills from a single file or a folder, including a README and a product image.
+    - The Skills page is now available to everyone, not just Versori accounts.
+    - You can now install marketplace skills directly from a Build or Plan conversation. The planning agent can recommend skills and install them for you, and chat cards show what each skill action did — what a search matched, which skill was loaded, and which file was read.
+    - Chats now show a context usage bar so you can see how full the conversation's context window is as you work.
+
+    ## Improvements
+
+    - Skills replaces Resources in the navigation, with a refreshed layout: larger header actions, aligned search/tiles/page spacing, taller tiles, and a category filter dropdown (with a clear-all action) in place of category tiles.
+    - Creating a new integration no longer prompts you to choose skills. Mandatory skills are attached automatically in the background, and skills are now managed at the organisation level only rather than per project.
+    - Marketplace install counts and the "most installed" sort are hidden until that data is ready, and the skills count badge is hidden when a list is empty.
+
+    ## Bug fixes
+
+    - Fixed an issue where planning artifacts could be lost or overwritten mid-response; they now save reliably as the agent works.
+    - Fixed the skill editor discarding unsaved edits on refresh, dropping some fields when saving a skill, and failing to load certain skills.
+    - Fixed missing tooltips on skill-related chat cards, and fixed the install-skill card being unusable in the legacy Plan tab.
+    - Fixed an incorrectly cropped Avalara icon shown against the Avalara category in the skills marketplace.
+</Update>
+
+<Update label="19th August 2026" description="2026.08.19">
+    ## Features
+
+    - You can now drag and drop tabs in the workspace to reorder them, so you can arrange Plan, Build, Connect, and the rest of your open tabs the way you work.
+
+</Update>
+
+<Update label="17th August 2026" description="2026.08.17">
+    ## Features
+
+    - OAuth 2.0 authorization code connections now support PKCE (Proof Key for Code Exchange), so providers that require it can be configured directly from the Connect tab.
+
+    ## Bug fixes
+
+    - Secret fields in connection forms (passwords and client secrets) are now masked by default, with a toggle to reveal them when you need to check what you typed. Previously these values were shown in plain text.
+
+</Update>
+
+<Update label="13th August 2026" description="2026.08.13">
+    ## Features
+
+    - The Build agent can now take more actions on your behalf during a chat: it can call a connected system to test or inspect an API, invoke your deployed integration in the current environment, or manually run one of your schedulers. Each action is shown as a confirmation card — nothing happens until you approve it, and actions that touch real data are clearly flagged as such.
+</Update>
+<Update label="3rd September 2026" description="2026.09.03">
+
+    ## Improvements
+
+    - The Versori logo has been updated to reflect our partnership with Avalara, and now appears across both light and dark themes.
+</Update>
+
+<Update label="23rd September 2026" description="2026.09.23">
+
+    ## Features
+
+    - **Issue Watcher.** When a deployed integration fails, Issue Watcher investigates the failure and proposes a fix
+      for you to review. It reads the version actually running, works from the failing execution's trace and logs, and
+      saves the smallest change it can as a draft version with a written report. Nothing is deployed automatically.
+      See [Issue Watcher](/latest/guides/getting-started/monitor/issue-watcher).
+    - **Cloud Agents.** Issue Watcher is the first of a family of agents that run on the platform rather than in your
+      chat, doing a standing job on your behalf whether or not you are watching. Agents belong to your organisation,
+      and you attach one to the work you want it to do. See [Cloud Agents](/latest/ai-tooling/cloud-agents).
 
 </Update>
 
@@ -60,6 +129,7 @@ description: 'Product updates and announcements'
     ## Features
 
     - The Build agent can now deploy your project for you. When it proposes a deployment, you'll see a confirmation card in the chat — approve it to deploy right away, or decline and keep working. Clear messages are shown if a deploy can't go ahead.
+    - A new Usage tab in Account settings shows your organisation's usage against its monthly and lifetime allowances, including any trial or custom allowance limits, so you can see at a glance how close you are to your limits.
 
 </Update>
 
