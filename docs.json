@@ -228,6 +228,7 @@
                     ]
                   },
                   "latest/cli/commands/skills",
+                  "latest/cli/commands/vscode",
                   "latest/cli/commands/users",
                   "latest/cli/commands/execution-pools",
                   "latest/cli/commands/completion"
