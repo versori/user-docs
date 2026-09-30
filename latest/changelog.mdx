@@ -3,6 +3,22 @@ title: 'Changelog'
 description: 'Product updates and announcements'
 ---
 
+<Update label="30th September 2026" description="2026.09.30">
+
+    ## Features
+
+    - A new Field Mapping tab lets you design and test field-level mappings between your source and destination schemas in one visual editor. The tab appears on its own as soon as your integration has mappings, and a guided tour walks you through it the first time you open it.
+    - Field Mapping is AI-assisted. Describe the transformation you want in plain language and the Build agent writes the expression or assembles the transformation pipeline for you, complete with an explanation and validation so you can check the result before you save it.
+    - You can edit the source and destination schemas straight from the Field Mapping tab. If an edit would remove a field that one of your mappings still relies on, you'll be warned before the change is saved.
+    - Mappings can now be customised per user. When you configure a user's activation in the Users tab, you can tailor that user's field mapping without affecting anyone else, and a badge shows you which mappings have been customised.
+
+    ## Improvements
+
+    - When the Build agent creates or edits a mapping, the chat now offers a "View Field Mapping" shortcut that opens it in the Field Mapping editor instead of the raw file.
+    - Mapping files are looked after by the Field Mapping tab, so they no longer clutter the Build file tree or the chat file picker.
+    - Saving in the Field Mapping tab now persists your changes immediately — there's no separate "Save All" step to remember.
+    - A new Labs toggle, "Mapper Skill in Build Agent", switches on built-in field-mapping guidance in the Build agent's responses without you needing to upload or select a skill.
+</Update>
 <Update label="16th September 2026" description="2026.09.16">
 
     ## Bug fixes
