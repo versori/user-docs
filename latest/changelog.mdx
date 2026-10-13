@@ -16,12 +16,15 @@ description: 'Product updates and announcements'
     - Accepting an organisation invitation is smoother, with clearer error messages when an invite can't be accepted and a refreshed loading experience.
     - Webhook names can now use integration variables, and the Webhooks tab recognises them correctly.
     - Verification and recovery emails now use the updated Versori logo.
+    - Avalara is now treated as a social login in your Account security settings, so you can connect and disconnect it alongside GitHub and Google. Signing in with Avalara no longer disables password changes, and if you signed up with Avalara you can set up a password.
+    - Account security now shows a notice when email and password sign-in is active alongside your connected social login.
 
     ## Bug fixes
 
     - Fixed the Users tab crashing with "Error loading Users tab" when a variable schema included an array without defined item types.
     - Fixed the signed-in session keeping a stale profile picture after you uploaded or removed it.
     - Fixed sign-in redirects after linking a social account, so you return to your organisation instead of losing your place.
+    - Fixed Avalara sign-in being wrongly shown as organisation SSO, which could lock password changes and hide it from your social logins.
 </Update>
 <Update label="16th September 2026" description="2026.09.16">
 
