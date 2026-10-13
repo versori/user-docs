@@ -3,6 +3,26 @@ title: 'Changelog'
 description: 'Product updates and announcements'
 ---
 
+<Update label="13th October 2026" description="2026.10.13">
+
+    ## Features
+
+    - Account security now lives in your Account settings. Change your password, and link or unlink GitHub, Google and organisation SSO sign-in providers, without leaving the app. If your organisation requires SSO, you'll be guided to sign in with it and password changes are disabled.
+    - You can now add your first name, last name and nickname to your profile, and upload or remove a profile picture that appears in the account menu.
+    - Email verification is now supported. Unverified accounts see a verification prompt over the app until the address is confirmed, and invited users who join through an organisation invite are verified automatically.
+
+    ## Improvements
+
+    - Accepting an organisation invitation is smoother, with clearer error messages when an invite can't be accepted and a refreshed loading experience.
+    - Webhook names can now use integration variables, and the Webhooks tab recognises them correctly.
+    - Verification and recovery emails now use the updated Versori logo.
+
+    ## Bug fixes
+
+    - Fixed the Users tab crashing with "Error loading Users tab" when a variable schema included an array without defined item types.
+    - Fixed the signed-in session keeping a stale profile picture after you uploaded or removed it.
+    - Fixed sign-in redirects after linking a social account, so you return to your organisation instead of losing your place.
+</Update>
 <Update label="16th September 2026" description="2026.09.16">
 
     ## Bug fixes
