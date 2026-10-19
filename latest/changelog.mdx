@@ -3,6 +3,26 @@ title: 'Changelog'
 description: 'Product updates and announcements'
 ---
 
+<Update label="19th October 2026" description="2026.10.19">
+
+    ## Features
+
+    - Auto mode is now available in Build chat for organisations with the feature enabled. Switch on the Auto toggle (after confirming in a consent dialog) and the Build agent runs its actions for you, marking them with an "Auto-ran" badge, and only applies edits once they have been accepted.
+    - A live "Test run · sandbox" card shows each step of a sandbox test as the agent works, with a clear result for every step: pass, fixed, fail, needs you, or unverified. If a test can't finish, the card tells you why.
+
+    ## Improvements
+
+    - Before a sandbox test that writes data, you can now choose Test, Test (reads only), or Not now. Each option is explained, and any unsaved files are saved first when you choose to run.
+    - In Auto mode, if a build leaves connections missing, you'll be prompted to connect them so the integration can be tested.
+    - When there are edits you haven't accepted, the deploy card now offers "Accept & deploy" or "Don't deploy".
+    - The Environment Config tab now follows your plan's entitlements. If it isn't included in your plan, the tab is greyed out and can't be opened, and Save is disabled. Hover over either to see how to get in touch with support.
+
+    ## Bug fixes
+
+    - Fixed the Variables tab crashing when a variable's JSON schema is malformed. The tab now shows an error you can recover from instead of failing.
+    - Fixed a chat card error that could stop you resuming a conversation after clicking a card.
+    - Fixed the Avalara icon missing from its provider card on the Account page.
+</Update>
 <Update label="13th October 2026" description="2026.10.13">
 
     ## Features
