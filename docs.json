@@ -53,7 +53,12 @@
               {
                 "anchor": "Getting Started",
                 "pages": [
-                  "latest/guides/getting-started/chat",
+                  {
+                    "group": "Plan & Build",
+                    "pages": [
+                      "latest/guides/getting-started/unified-chat"
+                    ]
+                  },
                   {
                     "group": "Plan",
                     "pages": [
